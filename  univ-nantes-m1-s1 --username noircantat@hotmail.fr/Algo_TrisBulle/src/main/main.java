@@ -19,25 +19,25 @@ public class main<E>
 		float time;
 		float moyenne;
 		moyenne=0f;
-		/*
+		
 		List<Integer> sortedlist = new Vector<Integer>();
 		List<Integer> randomlist = new Vector<Integer>();
 		List<Integer> sortedinversedlist = new Vector<Integer>();
-*/
+
 
 //		List<Integer> sortedlist = new LinkedList<Integer>();
 //		List<Integer> randomlist = new LinkedList<Integer>();
 //		List<Integer> sortedinversedlist = new LinkedList<Integer>();
 
-		List<Integer> sortedlist = new ArrayList<Integer>();
-		List<Integer> randomlist = new ArrayList<Integer>();
-		List<Integer> sortedinversedlist = new ArrayList<Integer>();
-		
+//		List<Integer> sortedlist = new ArrayList<Integer>();
+//		List<Integer> randomlist = new ArrayList<Integer>();
+//		List<Integer> sortedinversedlist = new ArrayList<Integer>();
+//		
 		System.out.println("Structure triée (meilleurs cas) :");
-				genereSortedList(sortedlist, 100);
+		genereSortedList(sortedlist, 10);
 		System.out.println(sortedlist.toString());
 		begin =System.currentTimeMillis();
-		Bulle.triBulle(randomlist);
+		Bulle.triBulle(sortedlist);
 		end =System.currentTimeMillis();
 		time = ((float)(end - begin))/1000f;
 		moyenne += time;
@@ -49,7 +49,7 @@ public class main<E>
 
 		for(int i = 0; i<3; i++)
 		{
-			genereRandomList(randomlist, 1000, 1000);
+			genereRandomList(randomlist, 10, 100);
 			System.out.println(randomlist.toString());
 			begin =System.currentTimeMillis();
 			Bulle.triBulle(randomlist);
@@ -65,7 +65,7 @@ public class main<E>
 		System.out.println();
 		
 		System.out.println("Structure triée à l'envers (pire cas) :");
-		genereSortedInversedList(sortedinversedlist, 100);
+		genereSortedInversedList(sortedinversedlist, 10);
 		System.out.println(sortedinversedlist.toString());
 		begin =System.currentTimeMillis();
 		Bulle.triBulle(sortedinversedlist);
