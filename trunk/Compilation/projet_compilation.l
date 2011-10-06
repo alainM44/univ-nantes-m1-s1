@@ -29,21 +29,21 @@ space [ \t\n]*
 /*rules analyseur lexico*/
 %%
 
-{deb}         {ECHO; printf("deb");return DEB;}
-{tabular}     {ECHO;return TABLEAU;}
-{opt_tableau} {ECHO;return OPTION_T;}
-{fusion}      {ECHO;return FUSION;}
-{trait_hor}   {ECHO;return TRAIT_HOR;}
-{separ_col}   {ECHO;return SEPAR_COL;}
-{fin_ligne}   {ECHO;return FIN_LIGNE;}
-{separ}       {ECHO;return SEPAR;}
-{fin}         {ECHO;return FIN;}
-{accol_G}     {ECHO;return ACCOL_G;}
-{accol_D}     {ECHO;return ACCOL_D;}
-nombre+[\.]?nombre     {return NOMBRE;}
-{word}        {ECHO;return MOT;}
-{space}       {return SPACE;}
-.             { ECHO;printf("\n"); return INUTILE;} 
+{deb}         {ECHO;printf("\n"); return DEB;}
+{tabular}     {ECHO;printf("\n");return TABLEAU;}
+{opt_tableau} {ECHO;printf("1opt\n");return OPTION_T;}
+{fusion}      {ECHO;printf("\n");return FUSION;}
+{trait_hor}   {ECHO;printf("\n");return TRAIT_HOR;}
+{separ_col}   {ECHO;printf("\n");return SEPAR_COL;}
+{fin_ligne}   {ECHO;printf("\n");return FIN_LIGNE;}
+{separ}       {ECHO;printf("\n");return SEPAR;}
+{fin}         {ECHO;printf("\n");return FIN;}
+{accol_G}     {ECHO;printf("acg\n");return ACCOL_G;}
+{accol_D}     {ECHO;printf("acd\n");return ACCOL_D;}
+nombre+[\.]?nombre     {ECHO;printf("\n");return NOMBRE;}
+{word}        {ECHO;printf("\n");return MOT;}
+{space}       {ECHO;printf("space\n");return SPACE;}
+.             {ECHO;printf("\n");return INUTILE;} 
 
 %%
 
