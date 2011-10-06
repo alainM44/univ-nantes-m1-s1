@@ -72,11 +72,13 @@
 
 #include <stdio.h> //FILE
 #include <stdlib.h> //atoi
-extern int yylex();
+extern int yylex(void);
+void yyerror(char *s);
+extern FILE* yyin;
 
 
 /* Line 189 of yacc.c  */
-#line 80 "y.tab.c"
+#line 82 "y.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -152,7 +154,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 156 "y.tab.c"
+#line 158 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -365,9 +367,9 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  5
+#define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   36
+#define YYLAST   35
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  18
@@ -376,7 +378,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  20
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  41
+#define YYNSTATES  40
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -423,30 +425,29 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,    15,    21,    24,    27,    29,    31,    34,
-      36,    40,    43,    47,    50,    53,    57,    61,    64,    66,
-      69
+       0,     0,     3,    14,    20,    23,    26,    28,    30,    33,
+      35,    39,    42,    46,    49,    52,    56,    60,    63,    65,
+      68
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      19,     0,    -1,    25,     3,    12,     4,    13,    20,    11,
-      12,     4,    13,    25,    -1,    12,    21,    13,    26,    22,
-      -1,    10,    21,    -1,     5,    21,    -1,    10,    -1,     5,
-      -1,     7,    26,    -1,    23,    -1,     7,    26,    22,    -1,
-      23,    22,    -1,    24,     9,    26,    -1,     8,    26,    -1,
-      15,    26,    -1,     8,    26,    24,    -1,    15,    26,    24,
-      -1,    17,    25,    -1,    17,    -1,    16,    26,    -1,    16,
-      -1
+      19,     0,    -1,     3,    12,     4,    13,    20,    11,    12,
+       4,    13,    25,    -1,    12,    21,    13,    26,    22,    -1,
+      10,    21,    -1,     5,    21,    -1,    10,    -1,     5,    -1,
+       7,    26,    -1,    23,    -1,     7,    26,    22,    -1,    23,
+      22,    -1,    24,     9,    26,    -1,     8,    26,    -1,    15,
+      26,    -1,     8,    26,    24,    -1,    15,    26,    24,    -1,
+      17,    25,    -1,    17,    -1,    16,    26,    -1,    16,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    30,    30,    31,    32,    32,    32,    32,    33,    33,
-      33,    33,    34,    35,    35,    35,    35,    38,    38,    39,
-      39
+       0,    32,    32,    34,    36,    37,    38,    39,    41,    42,
+      43,    44,    46,    48,    49,    50,    51,    55,    56,    58,
+      59
 };
 #endif
 
@@ -484,7 +485,7 @@ static const yytype_uint8 yyr1[] =
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,    11,     5,     2,     2,     1,     1,     2,     1,
+       0,     2,    10,     5,     2,     2,     1,     1,     2,     1,
        3,     2,     3,     2,     2,     3,     3,     2,     1,     2,
        1
 };
@@ -494,35 +495,33 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,    18,     0,     0,    17,     1,     0,     0,     0,     0,
-       0,     0,     7,     6,     0,     0,     5,     4,     0,     0,
-      20,     0,     0,    19,     0,     0,     0,     3,     9,     0,
-       0,     8,    13,    14,    11,     0,     2,    10,    15,    16,
-      12
+       0,     0,     0,     0,     1,     0,     0,     0,     0,     7,
+       6,     0,     0,     5,     4,     0,     0,    20,     0,     0,
+      19,     0,     0,     0,     3,     9,     0,     0,     8,    13,
+      14,    11,     0,    18,     2,    10,    15,    16,    12,    17
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     2,    11,    14,    27,    28,    29,     3,    21
+      -1,     2,     8,    11,    24,    25,    26,    34,    18
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -20
+#define YYPACT_NINF -18
 static const yytype_int8 yypact[] =
 {
-      -8,    -8,    14,    18,   -20,   -20,    10,    19,    11,    13,
-       3,    15,     3,     3,    17,    16,   -20,   -20,    20,    23,
-      20,    -5,    21,   -20,    20,    20,    20,   -20,    -5,    22,
-      -8,    -5,    -4,    -4,   -20,    20,   -20,   -20,   -20,   -20,
-     -20
+       5,     1,    20,    17,   -18,     9,    11,     2,    13,     2,
+       2,    12,    14,   -18,   -18,    15,    23,    15,    -6,    16,
+     -18,    15,    15,    15,   -18,    -6,    19,    18,    -6,    -5,
+      -5,   -18,    15,    18,   -18,   -18,   -18,   -18,   -18,   -18
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -20,   -20,   -20,     5,   -16,   -20,   -13,    -1,   -19
+     -18,   -18,   -18,     7,   -14,   -18,   -11,    -3,   -17
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -532,29 +531,28 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-       4,    23,    24,    25,    25,    31,    32,    33,    12,     1,
-      26,    26,    34,    13,     5,    37,    40,    16,    17,    38,
-      39,     6,     7,     8,     9,    10,    15,    22,    19,    36,
-      18,    35,     0,     0,    30,     0,    20
+      20,    21,    22,    22,    28,    29,    30,     9,     1,    23,
+      23,    31,    10,     3,    35,    38,    13,    14,    36,    37,
+       4,     5,     6,     7,    12,    15,    16,    19,    32,    27,
+      39,    17,     0,     0,     0,    33
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,    20,     7,     8,     8,    24,    25,    26,     5,    17,
-      15,    15,    28,    10,     0,    31,    35,    12,    13,    32,
-      33,     3,    12,     4,    13,    12,    11,     4,    12,    30,
-      13,     9,    -1,    -1,    13,    -1,    16
+      17,     7,     8,     8,    21,    22,    23,     5,     3,    15,
+      15,    25,    10,    12,    28,    32,     9,    10,    29,    30,
+       0,     4,    13,    12,    11,    13,    12,     4,     9,    13,
+      33,    16,    -1,    -1,    -1,    17
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    17,    19,    25,    25,     0,     3,    12,     4,    13,
-      12,    20,     5,    10,    21,    11,    21,    21,    13,    12,
-      16,    26,     4,    26,     7,     8,    15,    22,    23,    24,
-      13,    26,    26,    26,    22,     9,    25,    22,    24,    24,
-      26
+       0,     3,    19,    12,     0,     4,    13,    12,    20,     5,
+      10,    21,    11,    21,    21,    13,    12,    16,    26,     4,
+      26,     7,     8,    15,    22,    23,    24,    13,    26,    26,
+      26,    22,     9,    17,    25,    22,    24,    24,    26,    25
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1365,10 +1363,129 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
+        case 2:
 
 /* Line 1455 of yacc.c  */
-#line 1372 "y.tab.c"
+#line 32 "projet_compilation.y"
+    {printf("inutile DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D inutile\n");}
+    break;
+
+  case 3:
+
+/* Line 1455 of yacc.c  */
+#line 34 "projet_compilation.y"
+    {printf(" ACCOL_G option ACCOL_D blancs suitetab\n");}
+    break;
+
+  case 4:
+
+/* Line 1455 of yacc.c  */
+#line 36 "projet_compilation.y"
+    {printf("SEPAR option\n");}
+    break;
+
+  case 5:
+
+/* Line 1455 of yacc.c  */
+#line 37 "projet_compilation.y"
+    {printf("OPTION_T option\n");}
+    break;
+
+  case 6:
+
+/* Line 1455 of yacc.c  */
+#line 38 "projet_compilation.y"
+    {printf("SEPAR \n");}
+    break;
+
+  case 7:
+
+/* Line 1455 of yacc.c  */
+#line 39 "projet_compilation.y"
+    {printf("OPTION_T\n");}
+    break;
+
+  case 8:
+
+/* Line 1455 of yacc.c  */
+#line 41 "projet_compilation.y"
+    {printf("TRAIT_HOR blancs\n");}
+    break;
+
+  case 9:
+
+/* Line 1455 of yacc.c  */
+#line 42 "projet_compilation.y"
+    {printf("ligne\n");}
+    break;
+
+  case 10:
+
+/* Line 1455 of yacc.c  */
+#line 43 "projet_compilation.y"
+    {printf("TRAIT_HOR blancs suitetab\n");}
+    break;
+
+  case 11:
+
+/* Line 1455 of yacc.c  */
+#line 44 "projet_compilation.y"
+    {printf("ligne suitetab\n");}
+    break;
+
+  case 12:
+
+/* Line 1455 of yacc.c  */
+#line 46 "projet_compilation.y"
+    {printf("suitecol FIN_LIGNE blancs\n");}
+    break;
+
+  case 13:
+
+/* Line 1455 of yacc.c  */
+#line 48 "projet_compilation.y"
+    {printf("SEPAR_COL blancs\n");}
+    break;
+
+  case 14:
+
+/* Line 1455 of yacc.c  */
+#line 49 "projet_compilation.y"
+    {printf("lancs\n");}
+    break;
+
+  case 15:
+
+/* Line 1455 of yacc.c  */
+#line 50 "projet_compilation.y"
+    {printf("SEPAR_COL blancs suitecol\n");}
+    break;
+
+  case 16:
+
+/* Line 1455 of yacc.c  */
+#line 51 "projet_compilation.y"
+    {printf("MOT blancs suitecol\n");}
+    break;
+
+  case 17:
+
+/* Line 1455 of yacc.c  */
+#line 55 "projet_compilation.y"
+    {printf("INUTILE inutile\n");}
+    break;
+
+  case 18:
+
+/* Line 1455 of yacc.c  */
+#line 56 "projet_compilation.y"
+    {printf("INUTILE\n");}
+    break;
+
+
+
+/* Line 1455 of yacc.c  */
+#line 1489 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1580,18 +1697,38 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 41 "projet_compilation.y"
+#line 62 "projet_compilation.y"
 
-	    /*
 void yyerror(char *s)
 {
-    fprintf(stderr,"%s\n",s);
+fprintf(stderr,"yyerror : %s\n",s);
+return;
 }
-	    */
-int main(void)
+
+int main(int argc, char* argv[])
 {
-    /*yydebug=1;*/
-    yyparse();
-    return 0;
+  if (argc >1)
+    {
+      yyin=fopen(argv[1],"r");
+      if (!yyin) 
+	{
+	  printf("error");
+	  exit(1);
+	}
+      if (!yyparse() ) 
+	{
+	  fclose(yyin);
+	}
+      else
+	{
+	  printf("parse error");
+	  exit(1);
+	}
+    }
+  else 
+    {
+      printf("call : ./exo3 texxte.txt...");
+      exit(1);
+    }
 }
 
