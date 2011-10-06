@@ -52,8 +52,7 @@
      ACCOL_D = 268,
      NOMBRE = 269,
      MOT = 270,
-     SPACE = 271,
-     INUTILE = 272
+     SPACE = 271
    };
 #endif
 /* Tokens.  */
@@ -71,7 +70,6 @@
 #define NOMBRE 269
 #define MOT 270
 #define SPACE 271
-#define INUTILE 272
 
 
 

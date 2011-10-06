@@ -23,14 +23,14 @@ extern FILE* yyin;
 %token ACCOL_D
 %token NOMBRE
 %token MOT SPACE
-%token INUTILE
+
 
 %start fichier
 
 %%
 
-fichier   :  DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D inutile {printf("inutile DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D inutile\n");}
-;
+fichier   :  DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D  {printf(" DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D inutile\n");} 
+
 tableau   :  ACCOL_G option ACCOL_D blancs suitetab{printf(" ACCOL_G option ACCOL_D blancs suitetab\n");}
 ;
 option    : SEPAR option {printf("SEPAR option\n");}
@@ -52,9 +52,7 @@ suitecol  : SEPAR_COL blancs  {printf("SEPAR_COL blancs\n");}
 ;
 
 
-inutile   :INUTILE inutile  {printf("INUTILE inutile\n");}
-| INUTILE       {printf("INUTILE\n");}
-;
+
 blancs    : SPACE blancs 
           | SPACE
 ;
