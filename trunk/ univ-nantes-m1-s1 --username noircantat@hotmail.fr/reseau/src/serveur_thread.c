@@ -14,18 +14,23 @@ typedef struct hostent hostent;
 typedef struct servent servent;
 
 
-void* renvoi (void * sock){
-  fprintf(stdin,"debut sock");
+
+void* prise_en_charge_client (void * sock){
+  //fprintf(stderr,"debut sock \n");
+
+  //cast socket
   int *tmp=(int*)sock;
   int sdr= *tmp;
+
   char buffer[256];
   int longueur;
-  if ((longueur = read(sock,buffer, sizeof(buffer))) <=0)
-    return;
-
-  printf("message lu : %s \n", buffer);
+  if ((longueur = read(sdr,buffer, sizeof(buffer))) <=0)
+          return;
+    
+   printf("message lu : %s \n", buffer);
   buffer[0] ='R';
   buffer[1] ='E';
+
   buffer[longueur] ='#';
   buffer[longueur+1] ='\0';
 
@@ -47,11 +52,8 @@ void* renvoi (void * sock){
 
 int main(int argc, char **argv)
 {
-
   int socket_descriptor, nouv_socket_descriptor,    longueur_adresse_courant;
-  
   sockaddr_in adresse_locale, adresse_client_courant ;// structure d'adresse locale
-
   hostent* ptr_hote;
   servent* ptr_service;
   char machine [TAILLE_MAX_NOM+1];
@@ -118,7 +120,7 @@ int main(int argc, char **argv)
 
       //tdt du message
       printf("reception d'un message.\n");
-      pthread_create (&nouveauclient,NULL,renvoi,"1");
+      pthread_create (&nouveauclient,NULL,prise_en_charge_client,(int*)nouv_socket_descriptor);
       printf("sdf");
      //pthread_create()
     }
