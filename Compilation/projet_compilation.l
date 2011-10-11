@@ -8,19 +8,17 @@ extern int yylval;
 
 deb "\\"begin
 tabular tabular
-accol_G \{
-accol_D \}
-opt_tableau l
 fusion "\\"multicolumn
 trait_hor "\\"hline
-separ_col &
+separ_col "&"
 fin_ligne "\\""\\"
 separ \|
 fin "\\"end
-nombre [0-9]*
-word [a-zA-Z][a-zA-Z0-9_]*
+nombre [0-9]+"."?[0-9]*
+word [a-zA-Z][a-zA-Z0-9]*
 
-
+accol_G \{
+accol_D \}
 
 space [ \t\n]*
 
@@ -30,21 +28,20 @@ space [ \t\n]*
 /*rules analyseur lexico*/
 %%
 
-{deb}         {ECHO;printf("\n"); return DEB;}
-{tabular}     {ECHO;printf("\n");return TABLEAU;}
-l {ECHO;printf("\n");return OPTION_T;}
-{fusion}      {ECHO;printf("\n");return FUSION;}
-{trait_hor}   {ECHO;printf("\n");return TRAIT_HOR;}
-{separ_col}   {ECHO;printf("\n");return SEPAR_COL;}
-{fin_ligne}   {ECHO;printf("\n");return FIN_LIGNE;}
-{separ}       {ECHO;printf("\n");return SEPAR;}
-{fin}         {ECHO;printf("\n");return FIN;}
-{accol_G}     {ECHO;printf("\n");return ACCOL_G;}
-{accol_D}     {ECHO;printf("\n");return ACCOL_D;}
-nombre+[\.]?nombre     {ECHO;printf("\n");return NOMBRE;}
-{word}        {ECHO;printf("word\n");return MOT;}
-{space}       {ECHO;printf("\n");return SPACE;}
-.            {ECHO; yyerror ("unexpected character");}
+{deb}         {return DEB;}
+{tabular}     {return TABLEAU;}
+{fusion}      {return FUSION;}
+{trait_hor}   {return TRAIT_HOR;}
+{separ_col}   {return SEPAR_COL;}
+{fin_ligne}   {return FIN_LIGNE;}
+{separ}       {return SEPAR;}
+{fin}         {return FIN;}
+{accol_G}     {return ACCOL_G;}
+{accol_D}     {return ACCOL_D;}
+{nombre}      {return NOMBRE;}
+{word}        {return MOT;}
+{space}       {return SPACE;}
+.             
 
 %%
 
