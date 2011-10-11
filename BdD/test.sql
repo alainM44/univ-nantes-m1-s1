@@ -185,9 +185,23 @@ INSERT INTO Fait_Station VALUES (18,10,10,10,'Commerce');
 
 -- REQUETES
 
---1 Nombre de stations traversées en 1 journée;
+--R1 Nombre de stations traversées en 1 journée;
 
 SELECT Station , count(*)
 FROM Fait_Station F, Dim_Date DD
 WHERE DD.Clef_Date=18 and F.Clef_Date=DD.Clef_Date
 GROUP BY Station;
+
+--R2 GROUP BY CUBE
+
+
+SELECT
+DL.numero
+,DD.Clef_Date
+,DP.Clef_Personne
+,COUNT(Station) AS Nb_stations
+FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL 
+WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne
+GROUP BY CUBE(DL.numero,DD.Clef_Date,DP.Clef_Personne)
+ORDER BY DL.Numero,DD.Clef_Date,DP.Clef_Personne
+;
