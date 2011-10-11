@@ -46,15 +46,17 @@ ligne     : TRAIT_HOR {printf("TRAIT_HOR blancs\n");}
 ;
 colonnes  : colonne blancs colonnes {printf("colonne blancs colonnes\n");}
           | colonne blancs{printf("colonne blancs\n");}
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes {printf("FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes\n");}
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {printf("FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT\n");}
 ;
 colonne   : SEPAR_COL   {printf("SEPAR_COL \n");}
           | MOT   {printf("MOT \n");}
           | NOMBRE {printf("NOMBRE \n");}
 ;
-
-
+mots      : MOT blancs mots
+          | MOT blancs
+          | MOT
+;
 blancs    : SPACE blancs 
           | SPACE
 ;

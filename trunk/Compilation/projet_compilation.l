@@ -39,7 +39,7 @@ space [ \t\n]*
 {accol_G}     {return ACCOL_G;}
 {accol_D}     {return ACCOL_D;}
 {nombre}      {return NOMBRE;}
-{word}        {return MOT;}
+{word}        {ECHO; printf("\n"); return MOT;}
 {space}       {return SPACE;}
 .             
 
