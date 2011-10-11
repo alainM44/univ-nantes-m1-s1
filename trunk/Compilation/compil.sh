@@ -1,5 +1,7 @@
 #!/bin/sh
 
+rm *.c *.h
+rm proj
 echo "compile lex"
 lex projet_compilation.l
 echo "compile yacc"

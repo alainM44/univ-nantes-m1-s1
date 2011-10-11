@@ -24,33 +24,35 @@ extern FILE* yyin;
 %token NOMBRE
 %token MOT SPACE
 
-
 %start fichier
+
 
 %%
 
-fichier   :  DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D  {printf(" DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D inutile\n");} 
-
-tableau   :  ACCOL_G option ACCOL_D blancs suitetab{printf(" ACCOL_G option ACCOL_D blancs suitetab\n");}
+fichier   :  DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D blancs {printf(" DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D \n");}
+;
+tableau   :  ACCOL_G option ACCOL_D blancs lignes {printf(" ACCOL_G option ACCOL_D blancs suitetab\n");}
 ;
 option    : SEPAR option {printf("SEPAR option\n");}
-          | OPTION_T option {printf("OPTION_T option\n");}
+          | MOT option {printf("OPTION_T option\n");}
           | SEPAR {printf("SEPAR \n");}
-          | OPTION_T{printf("OPTION_T\n");}
+          | MOT {printf("OPTION_T\n");}
 ;
-suitetab  : TRAIT_HOR blancs {printf("TRAIT_HOR blancs\n");}
-          | ligne {printf("ligne\n");}
-          | TRAIT_HOR blancs suitetab {printf("TRAIT_HOR blancs suitetab\n");}
-          | ligne suitetab{printf("ligne suitetab\n");}
+lignes    : ligne FIN_LIGNE blancs lignes {printf("ligne FIN_LIGNE blancs lignes\n");}
+          |ligne FIN_LIGNE blancs {printf("ligne FIN_LIGNE blancs\n");}
 ;
-ligne     : suitecol FIN_LIGNE blancs{printf("suitecol FIN_LIGNE blancs\n");}
+ligne     : TRAIT_HOR {printf("TRAIT_HOR blancs\n");}
+          | colonnes {printf("colonnes\n");}
 ;
-suitecol  : SEPAR_COL blancs  {printf("SEPAR_COL blancs\n");}
-          | MOT blancs  {printf("lancs\n");}
-          | SEPAR_COL blancs suitecol {printf("SEPAR_COL blancs suitecol\n");}
-          | MOT blancs suitecol {printf("MOT blancs suitecol\n");}//ne pas oublier multicol
+colonnes  : colonne blancs colonnes {printf("colonne blancs colonnes\n");}
+          | colonne blancs{printf("colonne blancs\n");}
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT
 ;
-
+colonne   : SEPAR_COL   {printf("SEPAR_COL \n");}
+          | MOT   {printf("MOT \n");}
+          | NOMBRE {printf("NOMBRE \n");}
+;
 
 
 blancs    : SPACE blancs 
@@ -71,7 +73,7 @@ int main(int argc, char* argv[])
       yyin=fopen(argv[1],"r");
       if (!yyin) 
 	{
-	  printf("error");
+	  printf("error\n");
 	  exit(1);
 	}
       if (!yyparse() ) 
@@ -80,7 +82,7 @@ int main(int argc, char* argv[])
 	}
       else
 	{
-	  printf("parse error");
+	  printf("parse error\n");
 	  exit(1);
 	}
     }
