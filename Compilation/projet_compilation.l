@@ -1,7 +1,6 @@
 /*exo1.l */
 %{
 #include "projet_compilation_syn.h"
-extern int yylval;
 %}
 
 /*def*/
@@ -38,9 +37,9 @@ space [ \t\n]*
 {fin}         {return FIN;}
 {accol_G}     {return ACCOL_G;}
 {accol_D}     {return ACCOL_D;}
-{nombre}      {return NOMBRE;}
-{word}        {ECHO; printf("\n"); return MOT;}
-{space}       {return SPACE;}
+{nombre}      {strcpy(yylval.str,yytext);return NOMBRE;}
+{word}        {strcpy(yylval.str,yytext);return MOT;}
+{space}       {strcpy(yylval.str,yytext);return SPACE;}
 .             
 
 %%
