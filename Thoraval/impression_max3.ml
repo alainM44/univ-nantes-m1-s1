@@ -22,8 +22,6 @@ type canal_vers_client = Max of int
 (* ========================================================================== *)
 (* processus serveur*)
 (* ========================================================================== *)
-   
-   
    type etat_serveur = Attente
    
    class serveur reseau_vers_client reseau_vers_serveur id =
@@ -31,17 +29,16 @@ type canal_vers_client = Max of int
    inherit ['a] process Attente id
    val mutable ma_valeur : int = 0
    
-   method pret_a_envoyer _ =
+   method pret_a_envoyer _ =  
    true
 
-   method je_recois_et_j_attends _ msg =
+   method je_recois_et_j_attends i msg =
    self#log (" -- valeurServeur : " ^ string_of_int(ma_valeur)) ; (* pour tracer *)
    match msg with Val_client(le_max) -> 
-   if le_max > ma_valeur
-   then   (self#write_all reseau_vers_client (Max(le_max));
-ma_valeur <- le_max)
-   else   self#write_all reseau_vers_client (Max(ma_valeur));
-     self#log (" -- valeurclient : " ^ string_of_int(le_max)) ; (* pour tracer *)
+   if le_max >= ma_valeur
+   then  (ma_valeur <- le_max;
+	  self#write reseau_vers_client i  (Max(ma_valeur)); self#log (" --reponseIf "^ string_of_int(i)) ;)
+   else   (self#write reseau_vers_client i  (Max(ma_valeur));self#log (" --reponseElse "^ string_of_int(i));)
 (* -------------------------------------------------------------------------- *)
    
    
@@ -58,31 +55,47 @@ ma_valeur <- le_max)
 (* ========================================================================== *)
    
    
-   type etat_client = Initial | Valeur_envoyee
+   type etat_client = Initial | Patiente
    
-   class client reseau_vers_serveur  id=
+   class client reseau_vers_serveur reseau_vers_client id=
    object (self)
    inherit ['a] process Initial id
-   val mutable ma_valeur : int = Random.int(100)
-   
-   method pret_a_envoyer () =
-   true
-   
-   method j_envoie_et_c_est_fini () =
-     (* self#log (" -- valeur : " ^ string_of_int(ma_valeur)) ; (* pour tracer *)*)
-	self#write_all reseau_vers_serveur (Val_client(ma_valeur))
+   val mutable ma_valeur : int = Random.int(100);
+     
+     method garde_Init () =       
+       true;
+	 
+     method serveur_plus_petit msg =       
+       match msg with Max(max_serveur)->
+	 max_serveur<=ma_valeur
+	   
+     method j_envoie_et_j_attends _ _ =       
+       ma_valeur <- Random.int(100);
+       self#log (" -- valeurClientAttente : " ^ string_of_int(ma_valeur)) ; (* pour tracer *)
+       self#write_all reseau_vers_serveur (Val_client(ma_valeur));
 	
-	
+     method j_envoie_des_le_depart () =       
+       ma_valeur <- Random.int(100);
+       self#log (" -- valeurClientDeb : " ^ string_of_int(ma_valeur)) ; (* pour tracer *)
+       self#write_all reseau_vers_serveur (Val_client(ma_valeur))
 (* -------------------------------------------------------------------------- *)
 
-
- initializer
-  
+       
+     initializer
+       
     (** definition des transitions (une seule ici) **)
-        self#strans Initial Valeur_envoyee
-                       self#pret_a_envoyer
-                       self#j_envoie_et_c_est_fini
-	end
+       self#strans Initial Patiente
+	 self#garde_Init
+	 self#j_envoie_des_le_depart
+	 
+;
+       
+    (** definition des transitions (une seule ici) **)
+       self#trans_all Patiente Patiente
+	 reseau_vers_client
+	 self#serveur_plus_petit
+	 self#j_envoie_et_j_attends
+   end
 
 (* ========================================================================== *)
 (* initialisation et lancement du systeme *)
@@ -91,12 +104,12 @@ ma_valeur <- le_max)
            
 (* !!!!!!!!  supprimer cette mise en commentaire des 7 lignes pour compilation 
    !!!!!!!!!!!!!!! la remettre pour interpretation du fichier (directive #use) *)                                  
-let _ =             
+let _ =   
     load_settings true [| |];
     let le_reseau_vers_serveur = get_network "res_vers_serveur" 
     in let le_reseau_vers_client = get_network "res_vers_client" 
     in launch "serv" (new serveur le_reseau_vers_client le_reseau_vers_serveur);
-       launch "client" (new client le_reseau_vers_serveur);
+       launch "client" (new client le_reseau_vers_serveur le_reseau_vers_client);
        start ()
 (* supprimer cette mise en commentaire de 7 lignes pour compilation  !!!!!! *)
 
