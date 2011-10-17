@@ -1,15 +1,23 @@
 //projet_compilation.yacc
-
 %{
 #include <stdio.h> //FILE
 #include <stdlib.h> //atoi
+#include <string.h>
 extern int yylex(void);
+extern int yyleng;
 void yyerror(char *s);
 extern FILE* yyin;
+extern FILE* yyout;
+int nbcol = 0;
+int nbseparateur = 0;
+ void redigeOption( int border);
+ void redigeColonne(char* texte, int multicolumn, int colspan);
+ void redigeColonneNum(double val, int multicolumn, int colspan);
 %}
 
 //
 
+%union{ char* str; double nb;}
 %token DEB
 %token TABLEAU
 %token OPTION_T
@@ -21,41 +29,50 @@ extern FILE* yyin;
 %token FIN
 %token ACCOL_G
 %token ACCOL_D
-%token NOMBRE
-%token MOT SPACE
+%token<nb> NOMBRE
+%token<str> MOT SPACE
+%type<str> mots
 
 %start fichier
 
 
 %%
 
-fichier   :  DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D blancs {printf(" DEB ACCOL_G TABLEAU ACCOL_D tableau  FIN ACCOL_G TABLEAU ACCOL_D \n");}
+fichier   :  init tableau final {}
 ;
-tableau   :  ACCOL_G option ACCOL_D blancs lignes {printf(" ACCOL_G option ACCOL_D blancs suitetab\n");}
+init      :  DEB ACCOL_G TABLEAU ACCOL_D { fprintf(yyout, "<table ");} 
 ;
-option    : SEPAR option {printf("SEPAR option\n");}
-          | MOT option {printf("OPTION_T option\n");}
-          | SEPAR {printf("SEPAR \n");}
-          | MOT {printf("OPTION_T\n");}
+final     :  FIN ACCOL_G TABLEAU ACCOL_D blancs
 ;
-lignes    : ligne FIN_LIGNE blancs lignes {printf("ligne FIN_LIGNE blancs lignes\n");}
-          |ligne FIN_LIGNE blancs {printf("ligne FIN_LIGNE blancs\n");}
+tableau   : options  blancs lignes {fprintf(yyout,"</tbody>\n</table>");}
 ;
-ligne     : TRAIT_HOR {printf("TRAIT_HOR blancs\n");}
-          | colonnes {printf("colonnes\n");}
+options   :  ACCOL_G option ACCOL_D {fprintf(yyout,"<tr>");}
 ;
-colonnes  : colonne blancs colonnes {printf("colonne blancs colonnes\n");}
-          | colonne blancs{printf("colonne blancs\n");}
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes {printf("FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes\n");}
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {printf("FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT\n");}
+option    : SEPAR option {nbseparateur++;}
+          | MOT option {nbcol =+ yyleng;}
+| SEPAR {nbseparateur++; redigeOption(nbseparateur>=nbcol/2); }
+| MOT {nbcol =+ yyleng; redigeOption(nbseparateur>=nbcol/2);}
 ;
-colonne   : SEPAR_COL   {printf("SEPAR_COL \n");}
-          | MOT   {printf("MOT \n");}
-          | NOMBRE {printf("NOMBRE \n");}
+lignes    : ligne FIN_LIGNE blancs lignes{fprintf(yyout,"</tr>\n<tr>");}
+          |ligne FIN_LIGNE blancs {fprintf(yyout,"</tr>\n");}
 ;
-mots      : MOT blancs mots
+ligne     : TRAIT_HOR 
+          | colonnes 
+;
+colonnes  : colonne blancs colonnes 
+          | colonne blancs
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes 
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D 
+;
+colonne   : SEPAR_COL   
+          | MOT   {redigeColonne($1, 0, 0);}
+          | NOMBRE {redigeColonneNum($1, 0, 0);}
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {redigeColonne($9, 1, $3);}
+          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {redigeColonneNum($9, 1, $3);}
+;
+mots      : MOT blancs mots {$$ = strcat($3,$1);}
           | MOT blancs
-          | MOT
+| MOT
 ;
 blancs    : SPACE blancs 
           | SPACE
@@ -68,6 +85,36 @@ fprintf(stderr,"yyerror : %s\n",s);
 return;
 }
 
+char tab[]= "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"   \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n<head><head/>\n<body>";
+
+void redigeOption( int border)
+{
+  fprintf(yyout, "style=text-align: left; width: 90%%;\"border=\"");
+  if (border)
+    fprintf(yyout,"1");
+  else
+    fprintf(yyout,"0");
+  fprintf(yyout,"\"cellpadding=\"2\" cellspacing=\"2\">\n<tbody>");
+}
+
+void redigeColonne(char* texte, int multicolumn, int colspan)
+{
+  if(multicolumn)
+    fprintf(yyout,"<td style=\"text-align: center;\" colspan=\"%d\" rowspan = \"1\">%s</td>",colspan, texte);
+  else
+    fprintf(yyout,"<td style=\"text-align: center;\">%s</td>", texte);
+}
+
+void redigeColonneNum(double val, int multicolumn, int colspan)
+{
+  if(multicolumn)
+    fprintf(yyout,"<td style=\"text-align: center;\" colspan=\"%d\" rowspan = \"1\">%lf</td>",colspan,  val);
+  else
+    fprintf(yyout,"<td style=\"text-align: center;\">%lf</td>", val);
+}
+
+
+
 int main(int argc, char* argv[])
 {
   if (argc >1)
@@ -75,12 +122,23 @@ int main(int argc, char* argv[])
       yyin=fopen(argv[1],"r");
       if (!yyin) 
 	{
-	  printf("error\n");
+	  printf("error when open input file\n");
 	  exit(1);
 	}
+      if (argc >2)
+	{
+	  yyout=fopen(argv[2], "a");
+	}
+      if(!yyout)
+	{
+	  printf("error when open output file\n");
+	  exit(1);
+	}
+      fprintf(yyout, "%s", tab);
       if (!yyparse() ) 
 	{
 	  fclose(yyin);
+	  fclose(yyout);
 	}
       else
 	{
