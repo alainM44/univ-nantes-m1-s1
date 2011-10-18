@@ -1,8 +1,7 @@
-package main;
-
 import java.util.List;
 
 public interface GrapheOriente {
+    
 	//public void supprimer();
 public void ajouterN (int n);
 
