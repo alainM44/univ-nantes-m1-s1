@@ -280,15 +280,10 @@ GROUP BY (DD.Clef_Date, DD.Annee,DD.Mois,DD.Jour, DP.nom)
 
 --R9
 --PARTION BY
+--Affichage de toutes les distances parcourues ainsi que la somme des distances sur une année
 
-SELECT DD.Annee,sum(DT.Longueur), dense_rank() over ( partition by(DD.Clef_Date) order by sum(DT.Longueur) ASC)
+SELECT  DD.Annee,DT.longueur ,sum(DT.Longueur) over ( partition by(DD.Annee)) as total
 FROM Fait_Station F, Dim_Date DD,Dim_Trajet DT
 WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Trajet=DT.Clef_Trajet
-GROUP BY DD.Annee
-;
-
-SELECT DD.Clef_Date,DT.Clef_Trajet,sum(DT.Longueur)
-FROM Fait_Station F, Dim_Date DD,Dim_Trajet DT
-WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Trajet=DT.Clef_Trajet
-GROUP BY DD.Clef_Date,DT.Clef_Trajet
+order by DD.Annee asc
 ;
