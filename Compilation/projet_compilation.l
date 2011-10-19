@@ -27,20 +27,20 @@ space [ \t\n]*
 /*rules analyseur lexico*/
 %%
 
-{deb}         {return DEB;}
-{tabular}     {return TABLEAU;}
-{fusion}      {return FUSION;}
-{trait_hor}   {return TRAIT_HOR;}
-{separ_col}   {return SEPAR_COL;}
-{fin_ligne}   {return FIN_LIGNE;}
-{separ}       {return SEPAR;}
-{fin}         {return FIN;}
-{accol_G}     {return ACCOL_G;}
-{accol_D}     {return ACCOL_D;}
-{nombre}      {strcpy(yylval.str,yytext);return NOMBRE;}
-{word}        {strcpy(yylval.str,yytext);return MOT;}
-{space}       {strcpy(yylval.str,yytext);return SPACE;}
-.             
+{deb}         {ECHO;return DEB;}
+{tabular}     {ECHO;return TABLEAU;}
+{fusion}      {ECHO;return FUSION;}
+{trait_hor}   {ECHO;return TRAIT_HOR;}
+{separ_col}   {ECHO;fprintf(yyout,"sepa");return SEPAR_COL;}
+{fin_ligne}   {ECHO;return FIN_LIGNE;}
+{separ}       {ECHO;return SEPAR;}
+{fin}         {ECHO;return FIN;}
+{accol_G}     {ECHO;return ACCOL_G;}
+{accol_D}     {ECHO;return ACCOL_D;}
+{nombre}      {ECHO;/* strcpy(yylval.str,yytext);return NOMBRE; */}
+{word}        {ECHO;fprintf(yyout,"mot");/* strcpy(yylval.str,yytext);return MOT; */}
+{space}       {ECHO;/* strcpy(yylval.str,yytext);return SPACE; */}
+.             {}
 
 %%
 

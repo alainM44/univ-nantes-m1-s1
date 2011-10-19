@@ -8,6 +8,7 @@ extern int yyleng;
 void yyerror(char *s);
 extern FILE* yyin;
 extern FILE* yyout;
+extern FILE* yyerr;
 int nbcol = 0;
 int nbseparateur = 0;
  void redigeOption( int border);
@@ -44,36 +45,42 @@ init      :  DEB ACCOL_G TABLEAU ACCOL_D { fprintf(yyout, "<table ");}
 ;
 final     :  FIN ACCOL_G TABLEAU ACCOL_D blancs
 ;
-tableau   : options  blancs lignes {fprintf(yyout,"</tbody>\n</table>");}
+tableau   : options blancs lignes {fprintf(yyout,"</tbody>\n</table>");}
 ;
 options   :  ACCOL_G option ACCOL_D {fprintf(yyout,"<tr>");}
 ;
 option    : SEPAR option {nbseparateur++;}
           | MOT option {nbcol =+ yyleng;}
-| SEPAR {nbseparateur++; redigeOption(nbseparateur>=nbcol/2); }
-| MOT {nbcol =+ yyleng; redigeOption(nbseparateur>=nbcol/2);}
+          | SEPAR {nbseparateur++; redigeOption(nbseparateur>=nbcol/2); }
+          | MOT {nbcol =+ yyleng;printf("%d",nbcol); redigeOption(nbseparateur>=nbcol/2);}
 ;
+
 lignes    : ligne FIN_LIGNE blancs lignes{fprintf(yyout,"</tr>\n<tr>");}
-          |ligne FIN_LIGNE blancs {fprintf(yyout,"</tr>\n");}
+|{fprintf(yyout,"</tr>\n");}
 ;
-ligne     : TRAIT_HOR 
+
+
+ligne     : TRAIT_HOR
           | colonnes 
 ;
-colonnes  : colonne blancs colonnes 
-          | colonne blancs
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D MOT colonnes 
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D 
+
+colonnes  : colonne blancs SEPAR_COL blancs colonnes {fprintf(yyout,"colonne");}
+| colonne blancs
 ;
-colonne   : SEPAR_COL   
-          | MOT   {redigeColonne($1, 0, 0);}
-          | NOMBRE {redigeColonneNum($1, 0, 0);}
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {redigeColonne($9, 1, $3);}
-          |FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {redigeColonneNum($9, 1, $3);}
+
+
+
+colonne   : MOT   {fprintf(yyout,"test");}
+          | NOMBRE {fprintf(yyout,"test");}
+          | FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {fprintf(yyout,"test");}
+          | FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {fprintf(yyout,"test");}
 ;
-mots      : MOT blancs mots {$$ = strcat($3,$1);}
-          | MOT blancs
-| MOT
+
+mots      : MOT blancs mots {fprintf(yyout,"test");}
+          | MOT blancs  {fprintf(yyout,"test");}
+          | MOT     {fprintf(yyout,"test");}
 ;
+
 blancs    : SPACE blancs 
           | SPACE
 ;
