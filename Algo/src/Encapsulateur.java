@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class conteneurGraph<E> {
+public class Encapsulateur<E> {
 
     // Pour ce sujet la valeur sera de type bool ou unit
     E valeur;
@@ -13,25 +13,36 @@ public class conteneurGraph<E> {
     // elle permet juste de différencier différentes arêtes
     ArrayList<Integer> listeIdAretes;
 
-    conteneurGraph(E val, int id) {
+    Encapsulateur(E val, int id) {
 	valeur = val;
 	listeIdAretes = new ArrayList<Integer>(id);
     }
+    
+    public Encapsulateur(E val) {	
+    	valeur = val;
+	listeIdAretes = null;
+	}
 
     public E getValeur() {
 	return valeur;
     }
 
-    public void ajouterArete(int id) {
+    public void ajouterArete(Integer id) {
 	// Pas de vérification sinon l'on doit effectuer un parcours qui
 	// impacterait le cout de l'algo
 	listeIdAretes.add(id);
     }
 
-    public void supprimerArete(int id) {
+    public void supprimerArete(Integer id) {
 	// Pas de vérification sinon l'on doit effectuer un parcours qui
 	// impacterait le cout de l'algo
 	listeIdAretes.remove(id);
-
     }
+    
+	public boolean isEmpty()
+	{
+		return listeIdAretes.isEmpty();
+	}
+
+   
 }
