@@ -7,108 +7,92 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
+#include "../messages.h"
 
-int lectureNOctets(int descIn, int n, char*res);
-int fragment_file(int desc);
-int MTU = 1500;
+
 
 
 int main (int argc, const char*argv[]){
-  int file,fd,nblu,nbec;
+  int file,fileout,nblu,nbec;
   char num[200];
-  char paquet[200];
+  //  char data[200];
   char buffer[MTU];
   int nb_f;
   int reste;
- 
- struct stat statbuf ;
+  char fileout_name [30];
+  struct stat statbuf ;
   int filesize;
-  
+
+  strcpy(fileout_name,"out.jpg");
   stat(argv[1],&statbuf);  /// the_file, le fichier a lire
-  filesize = (long)(statbuf.st_size)/8; 
+  filesize = (long)(statbuf.st_size); 
   
-if (argc!=2)
+  if (argc!=2)
     {
       fprintf(stderr,"Nombre d'argument insuffisant\n");
       exit(EXIT_FAILURE);
     }
   //init des variables
- if (( nb_f= filesize/MTU )<=1)
-   {
-     fprintf(stderr,"Pas de fragmentation taille : %d \n",filesize);
-     exit(EXIT_FAILURE);
-   }
- reste = filesize-nb_f*MTU;
-
- fprintf(stderr,"On va fragmenter en %d paquets il restera un paquet de %d \n",nb_f,reste);
-  file=open(argv[1],O_RDWR);
- strcpy(buffer,"");
- strcpy(paquet,"");
-  for (int i=1;i<nb_f;i++)
+  if (( nb_f= filesize/MTU )<=1)
     {
-     
-      sprintf(num, "%i", i);
-      strcat(paquet,num);
-      strcat(paquet,".txt");
-      
-      fd = open(paquet,O_WRONLY| O_CREAT| O_TRUNC| O_BINARY,
-    S_IREAD| S_IWRITE| S_IEXEC);
-      nblu=read(file,(char *)buffer,MTU);
-      fprintf(stderr,"paquet : %d \n nb lu %d, buffer  %s",i,nblu,buffer);
-      if(  nbec=write(fd,(char *)buffer,1500)== -1)
-	{
-	  fprintf(stdout,"%s",strerror(errno));
-	  exit(EXIT_FAILURE);
-	}
-      fprintf(stderr,",nb write %d \n",nbec);
-      close(fd);
-      buffer[0]='\0';
-      strcpy(paquet,"");
-      nblu=0;
+      fprintf(stderr,"Pas de fragmentation taille : %d \n",filesize);
+      exit(EXIT_FAILURE);
     }
-  // dernier paquet du reste
-      sprintf(num, "%i", nb_f);
-      strcat(paquet,num);
-      strcat(paquet,".txt");
-      fd = open(paquet,O_CREAT|O_RDWR);
-      nblu=read(file,buffer,reste);
-      fprintf(stderr,"nb lu %d \n",nblu);
-      if(  nbec=write(fd,buffer,sizeof(buffer))== -1)
-	{
-	  fprintf(stdout,"%s",strerror(errno));
-	  exit(EXIT_FAILURE);
-	}
-      fprintf(stderr,"nb write %d \n",nbec);
-      close(fd);
+  reste = filesize-nb_f*MTU;
 
-  close(file);
+  
+  fprintf(stderr,"Fichier de %d .On va fragmenter en %d paquets il restera un paquet de %d ocets\n",filesize,nb_f,reste);
+  file=open(argv[1],O_RDWR);
+  fileout = open(fileout_name,O_WRONLY| O_CREAT);
+  lseek(fileout,0,SEEK_SET);
+  DATA data ;        
+      sprintf(data.tab, "%s", "\0");
+  for (int i=1;i<=nb_f;i++)
+    {
+
+      //   nblu=read(file,data.tab,MTU);
+      if((      nblu=read(file,data.tab,MTU))==-1 )
+        {
+          fprintf(stdout,"read : %s",strerror(errno));
+          exit(EXIT_FAILURE);
+        }
+
+      data.ID_data=i;
+      data.offset=nblu+1
+;      fprintf(stderr,"data %d contenant %d octets  ",data.ID_data,nblu);
+      if((  nbec=write(fileout,data.tab,MTU))== -1)
+        {
+          fprintf(stdout,"write %s",strerror(errno));
+          exit(EXIT_FAILURE);
+        }
+      fprintf(stderr,"%d o écrits \n",nbec);
+
+      //      nbec = write(fileout,data.tab,MTU);
+      //      strcpy(data.tab,"\0");
+      /*   { */
+      //          fprintf(stdout,"strcpy %s",strerror(errno)); */
+      /*     exit(EXIT_FAILURE); */
+      /*   } */
+      sprintf(data.tab, "%s", "\0");
+
+      //      data.tab="\0";
+    }
+  
+  
+  read(file,data.tab,reste);
+      fprintf(stderr,"reste %d contenant %d octets  ",data.ID_data,nblu);
+  data.ID_data=nb_f;
+  data.offset=nblu+1;
+  //	fprintf(stderr,"%s %d contenant %d octets\n",,data.ID_data,nblu);
+nbec= write(fileout,data.tab,reste);
+  fprintf(stderr,"%d o écrits \n",nbec);
+  
+
+  close(fileout);
 
   // on creer la copie
-buffer[0]='\0';
 
-      strcpy(paquet,"");
-
- int fd2 = open("RESULTAT.jpg",O_CREAT|O_RDWR);
-  for (int i=1;i<nb_f+1;i++)
-    {buffer[0]='\0';
-      sprintf(num, "%i", nb_f);
-      strcat(paquet,num);
-      strcat(paquet,".txt");
-      fd = open(paquet,O_RDWR);
-      nblu=read(file,buffer,MTU);
-      fprintf(stderr,"paquet : %d \n nb lu %d, buffer taille %d",i,nblu,sizeof(buffer));
-      if(  nbec=write(fd2,buffer,nblu)== -1)
-	{
-	  fprintf(stdout,"%s",strerror(errno));
-	  exit(EXIT_FAILURE);
-	}
-      fprintf(stderr,",nb write %d \n",nbec);
-      close(fd);
-      //      strcpy(buffer,"");
-buffer[0]='\0';
-      strcpy(paquet,"");
-    }
 
   return EXIT_SUCCESS;
 }
