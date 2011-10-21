@@ -6,19 +6,18 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
-int send_data (int sock_descriptor, MESSAGE_DATA data)
-{
- send(sock_descriptor,(char *)&data, sizeof(data),0);
 
-}
-MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA data)
-{
-  //  sleep(2);
- 	recv(sock_descriptor,(char *)&data,sizeof(data),MSG_WAITALL);
-	return data;
-}
+int send_data (int sock_descriptor, MESSAGE_DATA message)
+{ write(sock_descriptor,(char *)&message ,sizeof(message),0);}
 
-int client_request_connect( int socket_descriptor, char* host, sockaddr_in adresse_locale,  hostent * ptr_host)
+MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA message)
+{
+  if ( read(sock_descriptor,(char *)&message,sizeof(message)) <0)
+    perror("read\n");
+  return message;
+;}
+
+int  client_request_connect( int socket_descriptor, char* host, sockaddr_in adresse_locale,  hostent * ptr_host)
 {
  
   if((ptr_host = gethostbyname(host)) == NULL)
@@ -46,7 +45,7 @@ int client_request_connect( int socket_descriptor, char* host, sockaddr_in adres
     }
   //  printf("connexion etablie avec le serveur. \n");
   //  sleep(3);
-  return 0;
+  return socket_descriptor;
 
 }
 

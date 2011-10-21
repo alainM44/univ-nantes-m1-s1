@@ -1,18 +1,17 @@
+#include "network.h"
+#include "messages.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <linux/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
+#include <sys/time.h>
 
-typedef struct sockaddr sockaddr;
-typedef struct sockaddr_in sockaddr_in;
-typedef struct hostent hostent;
-typedef struct servent servent;
+
+int client_request_connect( int socket_descriptor, char* host, sockaddr_in adresse_locale,  hostent * ptr_host);
+int send_data (int sock_descriptor, MESSAGE_DATA data);
+MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA data);
 
 int main(int argc, char **argv)
 {
-  int socket_descriptor, longueur;
+  int socket_descriptor;
   sockaddr_in adresse_locale;
   hostent * ptr_host;
   servent * ptr_service;
@@ -20,10 +19,11 @@ int main(int argc, char **argv)
   char * prog;
   char * host;
   char* mesg;
+  int longueur;
 
-  if (argc != 3)
+  if (argc != 2)
     {
-      perror("usage : client<adresse-serveur> <message-a-transmettre>");
+      perror("usage : client<adresse-serveur>");
       exit(1);
     }
 
@@ -33,63 +33,50 @@ int main(int argc, char **argv)
 
   printf("nom de l'executable : %s \n", prog);
   printf("adresse du serveur : %s \n", host);
-  printf("message envoye : %s \n", mesg);
+  // printf("message envoye : %s \n", mesg);
 
-  if((ptr_host = gethostbyname(host)) == NULL)
-    {
-      perror("impossible de trouver le serveur a partir de son adresse.");
-      exit(1);
-    }
 
-  bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
-  adresse_locale.sin_family = AF_INET;
-  /*
-  if ((ptr_service = getservbyname("irc","tcp")) == NULL)
-    {
-      perror("impossible de creer la socket de connexion avec le serveur.");
-      exit(1);
-    }
   
-  adresse_locale.sin_port = htons(ptr_service->s_port);
-  */
+ int result = client_request_connect(socket_descriptor, host,adresse_locale,ptr_host); 
 
-  adresse_locale.sin_port = htons(5000);
-  printf("numero de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
+/*  int flag; */
+ MESSAGE_DATA reponse;
+ /* fd_set rfds; */
+ /* struct timeval tv; */
+ /* int retval; */
+ /* // Surveiller stdin (fd 0) en attente d'entrées */
+ /* FD_ZERO(&rfds); */
+ /* FD_SET(socket_descriptor, &rfds); */
+ /* /\* Pendant 5 secondes maxi *\/ */
+ /* tv.tv_sec = 5; */
+ /* tv.tv_usec = 0; */
+ /* retval = select(1, &rfds, NULL, NULL, &tv); */
+ /* /\* Considerer tv comme indéfini maintenant ! *\/ */
+ /*    if (retval) */
+ /*      { */
+ /*        fprintf(stderr,"Données disponibles maintenant\n"); */
+ /* 	//	reponse=receive_data(socket_descriptor,reponse); */
+ /* 	/\* FD_ISSET(0, &rfds) est vrai *\/ */
+ /*      } */
+ /*    else */
+ /*      printf("Pas de données depuis 5 secondes\n"); */
+ /*    exit(0); */
 
-  if ((socket_descriptor =socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      perror("impossible de creer la socket de connexion avec le serveur.");
-      exit(1);
-    }
-  
-  if((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0)
-    {
-      perror("impossible de se connecter au serveur.");
-      exit(1);
-    }
-    
-  printf("connexion etablie avec le serveur. \n");
-  printf("envoi d'un message au serveur. \n");
+ 
+ // fprintf(stderr,"avant wil\n");
+ // while( sizeof(reponse = receive_data(socket_descriptor,reponse))> 0   )
+ // sleep(2);
+ 
+ reponse=receive_data(result,reponse);
+ //write(1, reponse.data.tab, sizeof(reponse.data.tab));
+ //fprintf(stderr,"%s",reponse.data.tab);
+ printf("#%s#\n",reponse.data.tab);
+ 
+ 
+ printf("\nfin de la reception.\n");
+ close(socket_descriptor);
+ printf("connexion avec le serveur fermee, fin du programme.\n");
+ 
+ exit(0);
 
-  if((write(socket_descriptor, mesg, strlen(mesg))) < 0)
-    {
-      perror("impossible d'ecrire le message destine au serveur.");
-      exit(1);
-    }
-
-  sleep(3);
-
-  printf("message envoye au serveur. \n");
-
-  while((longueur = read(socket_descriptor, buffer, sizeof(buffer)))> 0)
-    {
-      printf("reponse du serveur : \n");
-      write(1, buffer, longueur);
-    }
-    
-  printf("\nfin de la reception.\n");
-  close(socket_descriptor);
-  printf("connexion avec le serveur fermee, fin du programme.\n");
-    
-  exit(0);
 } 
