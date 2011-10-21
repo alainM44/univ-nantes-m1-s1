@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
-const char* cheminRacine;
+char* cheminRacine;
 const char* courant;
 
 void createRacine (char* cheminRacine)
@@ -13,31 +14,36 @@ void createRacine (char* cheminRacine)
 }
 
 void ls ()
-{  
-  char record[5];
-  sprintf(record,"ls");
+{    
+  char record[1000];
+  sprintf(record,"ls %s", cheminRacine);
   system(record);
 }
 
-void cd (char* chemin)
+void cd ( char* chemin)
 {  
   /* char buffer[100];
   char* pwd;
   FILE * resultat;
   sprintf(pwd, "pwd");*/
-  char record[1000];
-  sprintf(record,"cd %s", chemin);//-c modifier pour la racine later
-  system(record);
+  // char record[1000];
+  strcpy(cheminRacine, chemin);
+  // sprintf(record,"cd %s", chemin);//-c modifier pour la racine later
+  // system(record);
 }
 
 void mkdir(char* nom_fichier)
 {
   char record[1000];
-  sprintf(record,"mkdir %s", nom_fichier);
+  sprintf(record,"mkdir %s/%s",cheminRacine, nom_fichier);
   system(record);
 }
 
 void main(int argc, char * argv)
 {
-  cd("/comptes/E074862X/test");
+  cheminRacine = (char *) malloc(sizeof(char)*256);
+  char * chem ="/comptes/E074862X/Hello";
+  cd(chem);
+  mkdir("maison");
+  ls();
 }
