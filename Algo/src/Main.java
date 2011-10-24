@@ -12,27 +12,42 @@ public class Main
 
 		int i;
 		ListGraph graphe = new ListGraph();
-		graphe.ajouterN(0);
-		graphe.ajouterN(1);
-		graphe.ajouterN(2);
-		i = graphe.ajouterA(0, 1);
+		graphe.ajouterN(3);
+		graphe.ajouterN(8);
+		graphe.ajouterN(6);
+		i = graphe.ajouterA(3, 8);
 		listeId.add(0, i);
-		i = graphe.ajouterA(0, 2);
+		System.out.println(graphe);
+
+		i = graphe.ajouterA(3, 6);
 		listeId.add(1, i);
-		i = graphe.ajouterA(1, 1);
+		System.out.println(graphe);
+
+		i = graphe.ajouterA(8, 8);
 		listeId.add(2, i);
-		i = graphe.ajouterA(2, 0);
+		System.out.println(graphe);
+
+		i = graphe.ajouterA(6, 3);
 		listeId.add(3, i);
-		i = graphe.ajouterA(2, 0);
+		System.out.println(graphe);
+
+		i = graphe.ajouterA(6, 3);
 		listeId.add(4, i);
+		System.out.println(graphe);
+
+		i = graphe.ajouterA(6, 3);
+		listeId.add(5, i);
+		System.out.println(graphe);
+
 		System.out.println(graphe.listeNoeuds().toString());
 //		graphe.supprimerA(listeId.get(4), 2, 0);
 //		listeId.remove(4);
-//		graphe.supprimerN(0);
+		graphe.supprimerN(3);
 		System.out.println(graphe.listeNoeuds().toString());
 		System.out.println(graphe.nbNoeuds);
-		System.out.println(graphe.nbAretes);
+		System.out.println(graphe.nbArc);
 		System.out.println(graphe);
+
 		
 
 	}

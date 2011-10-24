@@ -2,13 +2,13 @@ public abstract class AbstractGrapheOriente implements GrapheOriente
 {
 
 	int nbNoeuds;
-	int nbAretes;
+	int nbArc;
 	Integer idGenerator;
 
 	AbstractGrapheOriente()
 	{
 		nbNoeuds = 0;
-		nbAretes = 0;
+		nbArc = 0;
 		idGenerator = 0;
 	}
 
@@ -18,8 +18,8 @@ public abstract class AbstractGrapheOriente implements GrapheOriente
 		return nbNoeuds;
 	}
 	
-	public int NombreAretes()
+	public int NombreArcs()
 	{
-		return nbAretes;
+		return nbArc;
 	}
 }

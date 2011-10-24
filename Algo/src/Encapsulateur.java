@@ -1,48 +1,76 @@
 import java.util.ArrayList;
 
-public class Encapsulateur<E> {
+public class Encapsulateur<E>
+{
 
-    // Pour ce sujet la valeur sera de type bool ou unit
-    E valeur;
+	// Pour ce sujet la valeur sera de type bool ou unit
+	E valeur;
+	int nbArc;
+	// ArrayList est pertinante pour l'implémentation des listes d'adjacences ou
+	// pas
+	// (à vérifier pour les matrices)
+	// ATTENTION : Le contenu de la liste est sans importance vu qu'elle
+	// contient son id
+	// elle permet juste de différencier différentes arêtes
+	ArrayList<Integer> listeIdArc;
 
-    // ArrayList est pertinante pour l'implémentation des listes d'adjacences ou
-    // pas
-    // (à vérifier pour les matrices)
-    // ATTENTION : Le contenu de la liste est sans importance vu qu'elle
-    // contient son id
-    // elle permet juste de différencier différentes arêtes
-    ArrayList<Integer> listeIdAretes;
-
-    Encapsulateur(E val, int id) {
-	valeur = val;
-	listeIdAretes = new ArrayList<Integer>(id);
-    }
-    
-    public Encapsulateur(E val) {	
-    	valeur = val;
-	listeIdAretes = null;
+	Encapsulateur(E val, int id)
+	{
+		valeur = val;
+		listeIdArc = new ArrayList<Integer>();
+		listeIdArc.add(id);
+		nbArc = 1;
 	}
 
-    public E getValeur() {
-	return valeur;
-    }
+	public Encapsulateur(E val)
+	{
+		valeur = val;
+		listeIdArc = null;
+		nbArc = 0;
+	}
 
-    public void ajouterArete(Integer id) {
-	// Pas de vérification sinon l'on doit effectuer un parcours qui
-	// impacterait le cout de l'algo
-	listeIdAretes.add(id);
-    }
+	public E getValeur()
+	{
+		return valeur;
+	}
 
-    public void supprimerArete(Integer id) {
-	// Pas de vérification sinon l'on doit effectuer un parcours qui
-	// impacterait le cout de l'algo
-	listeIdAretes.remove(id);
-    }
-    
+	public int getNbArc()
+	{
+		return nbArc;
+	}
+
+	public ArrayList<Integer> getListe()
+	{
+		return listeIdArc;
+	}
+
+	public void ajouterArc(Integer id)
+	{
+		// Pas de vérification sinon l'on doit effectuer un parcours qui
+		// impacterait le cout de l'algo
+		listeIdArc.add(id);
+		nbArc++;
+	}
+
+	public void supprimerArc(Integer id)
+	{
+		// Pas de vérification sinon l'on doit effectuer un parcours qui
+		// impacterait le cout de l'algo
+		listeIdArc.remove(id);
+		nbArc--;
+	}
+
 	public boolean isEmpty()
 	{
-		return listeIdAretes.isEmpty();
+		return listeIdArc.isEmpty();
 	}
 
-   
+	/*
+	 * @param i : indique la variation a effectue sur le nombre d'arc (peut être positif ou negatif)
+	 */
+	public void changeNbArc(int i)
+	{
+		nbArc += i;
+	}
+
 }
