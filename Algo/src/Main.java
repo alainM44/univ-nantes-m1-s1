@@ -38,14 +38,18 @@ public class Main
 		i = graphe.ajouterA(6, 3);
 		listeId.add(5, i);
 		System.out.println(graphe);
+		
+		i = graphe.ajouterA(6, 8);
+		listeId.add(6, i);
+		System.out.println(graphe);
 
-		System.out.println(graphe.listeNoeuds().toString());
+		
 //		graphe.supprimerA(listeId.get(4), 2, 0);
 //		listeId.remove(4);
-		graphe.supprimerN(3);
+		graphe.supprimerN(6);
 		System.out.println(graphe.listeNoeuds().toString());
-		System.out.println(graphe.nbNoeuds);
-		System.out.println(graphe.nbArc);
+		System.out.println(graphe.nbNoeuds + " NbNoeuds");
+		System.out.println(graphe.nbArc + " NbArcs");
 		System.out.println(graphe);
 
 		

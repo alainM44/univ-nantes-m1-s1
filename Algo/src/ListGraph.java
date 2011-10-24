@@ -1,33 +1,27 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class ListGraph extends AbstractGrapheOriente
 {
 
 	// ArrayList pour le moment
-	ArrayList<LinkedList<Encapsulateur<Integer>>> graphe;
+	HashMap<Integer, LinkedList<Encapsulateur<Integer>>> graphe;
 
 	ListGraph()
 	{
 		super();
-		graphe = new ArrayList<LinkedList<Encapsulateur<Integer>>>();
+		graphe = new HashMap<Integer, LinkedList<Encapsulateur<Integer>>>();
 	}
 
 	@Override
 	public int ajouterA(int n1, int n2)
 	{
-		boolean trouve = false;
-		int i = 0;
-		LinkedList<Encapsulateur<Integer>> aux;
-		do
-		{
-			aux = graphe.get(i);
-			trouve = aux.getFirst().getValeur() == n1;
-			i++;
-		}
-		while (trouve);
+
+		LinkedList<Encapsulateur<Integer>> aux = graphe.get(n1);
 		Iterator<Encapsulateur<Integer>> iter = aux.iterator();
 		Encapsulateur<Integer> encaps;
 
@@ -35,7 +29,7 @@ public class ListGraph extends AbstractGrapheOriente
 		// On augmente le nb d'arc associe au noeud
 		iter.next().changeNbArc(1);
 		if (iter.hasNext())
-		{
+		{/////IMPORTANT a changer
 			encaps = iter.next();
 			while (iter.hasNext() && encaps.getValeur() != n2)
 			{
@@ -49,6 +43,7 @@ public class ListGraph extends AbstractGrapheOriente
 			aux.addLast(encaps);// Permet d'assurer que le premier element reste
 			// le meme le noeud
 		}
+
 		nbArc++;
 		return idGenerator;
 	}
@@ -59,23 +54,14 @@ public class ListGraph extends AbstractGrapheOriente
 		LinkedList<Encapsulateur<Integer>> aux = new LinkedList<Encapsulateur<Integer>>();
 		aux.add(new Encapsulateur<Integer>(n));// On stocke le nombre d'arc
 		// issus du noeud en question
-		graphe.add(aux);
+		graphe.put(n, aux);
 		nbNoeuds++;
 	}
 
 	@Override
 	public void supprimerA(int id, int n1, int n2)
 	{
-		boolean trouve = false;
-		int i = 0;
-		LinkedList<Encapsulateur<Integer>> aux;
-		do
-		{
-			aux = graphe.get(i);
-			trouve = aux.getFirst().getValeur() == n1;
-			i++;
-		}
-		while (trouve);
+		LinkedList<Encapsulateur<Integer>> aux = graphe.get(n1);
 		Iterator<Encapsulateur<Integer>> iter = aux.iterator();
 		Encapsulateur<Integer> encaps;
 
@@ -103,12 +89,14 @@ public class ListGraph extends AbstractGrapheOriente
 		Encapsulateur<Integer> noeud;
 		LinkedList<Encapsulateur<Integer>> noeudCourant;
 		Iterator<Encapsulateur<Integer>> iterAretes;
-		Iterator<LinkedList<Encapsulateur<Integer>>> iterNoeuds;
-
-		iterNoeuds = graphe.iterator();
-		while (iterNoeuds.hasNext())
+		Set<Integer> mesClefs = graphe.keySet();
+		Integer clefASupprimer = null;
+		
+		for (Integer clef : mesClefs)
 		{
-			noeudCourant = iterNoeuds.next();
+
+
+			noeudCourant = graphe.get(clef);
 			iterAretes = noeudCourant.iterator();
 			noeud = iterAretes.next();
 			areteTrouve = false;
@@ -118,7 +106,7 @@ public class ListGraph extends AbstractGrapheOriente
 				nbArc -= noeud.getNbArc();
 				// On met a jour la valeur du noeud
 				noeud.changeNbArc(noeud.getNbArc());
-				iterNoeuds.remove();
+				clefASupprimer = clef;
 			}
 			else
 			{
@@ -138,6 +126,7 @@ public class ListGraph extends AbstractGrapheOriente
 			}
 
 		}
+		graphe.remove(clefASupprimer);
 		nbNoeuds--;
 	}
 
@@ -175,7 +164,7 @@ public class ListGraph extends AbstractGrapheOriente
 	{
 		Iterator<LinkedList<Encapsulateur<Integer>>> iterNoeuds;
 		ArrayList<Integer> retour = new ArrayList<Integer>();
-		iterNoeuds = graphe.iterator();
+		iterNoeuds = graphe.values().iterator();
 		while (iterNoeuds.hasNext())
 		{
 			retour.add(iterNoeuds.next().getFirst().getValeur());
@@ -195,9 +184,9 @@ public class ListGraph extends AbstractGrapheOriente
 		String retour = "";
 		Encapsulateur<Integer> temp;
 		Iterator<Encapsulateur<Integer>> iterAretes;
-		for (int i = 0; i < nbNoeuds; i++)
+		for(Integer clefNoeud : graphe.keySet())
 		{
-			iterAretes = graphe.get(i).iterator();
+			iterAretes = graphe.get(clefNoeud).iterator();
 			retour += iterAretes.next().getValeur();
 			while (iterAretes.hasNext())
 			{
