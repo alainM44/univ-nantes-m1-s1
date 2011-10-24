@@ -1,17 +1,34 @@
+-- CONCEPTS ET UTILISATION DE MODELES POUR BD
+
+-- PROJET OLAP : Conception et utilisation d'un ntrepôts de données
+
+-- MARGUERITE Alain 
+-- RINCE Romain
+
+-- DERNIERE MISE A JOUR 19/10/11 à 18:48
+
+
+-- Destruction des tables dans les cas d'utilisations multiples du fichier SQL
+
 DROP TABLE Dim_Date CASCADE CONSTRAINT;
 DROP TABLE Dim_Trajet  CASCADE CONSTRAINT;
 DROP TABLE Dim_Ligne CASCADE CONSTRAINT;
 DROP TABLE Dim_Personne CASCADE CONSTRAINT;
 DROP TABLE Fait_Station CASCADE CONSTRAINT;
 
+-- Redefinition des paramètres d'affichage pour plus de clareté 
 SET LINESIZE 250
 
 
+-- Mémo pour le login
+-- source /etc/profile
+-- sqlplus admi9@cienetdb 
+-- afficher les tables select * from tab; 
 
-/* source /etc/profile
- sqlplus admi9@cienetdb */
-/* afficher les tables select * from tab; */
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------CREATION DES TABLES----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CREATE TABLE Dim_Date 
        (Clef_Date integer   NOT NULL PRIMARY KEY,
        Annee  integer,
@@ -19,6 +36,7 @@ CREATE TABLE Dim_Date
        Jour integer check (Jour < 31 and Jour >0 ),
        Periode_horaire integer    check (Periode_horaire < 7 and Periode_Horaire >0 ) -- Tranche de 4h : ex 1 -> 0.. 4 -> 
 );
+
 CREATE TABLE Dim_Trajet 
        (Clef_Trajet integer  NOT NULL PRIMARY KEY,
        P_depart VARCHAR(30), 
@@ -54,6 +72,11 @@ CREATE TABLE Fait_Station(
        CONSTRAINT CP_Station PRIMARY KEY (Clef_Date,Clef_Trajet,Clef_Ligne,Clef_Personne,Station)
 );
 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------INSERTIONS DES TUPLES--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 --INSERTIONS DE TUPLES
 -- afficher de date SELECT * from Dim_Date;I
 INSERT INTO Dim_Date  VALUES (1,2005,2,12,1);
@@ -76,7 +99,9 @@ INSERT INTO Dim_Date  VALUES (17,2011,11,25,3);
 INSERT INTO Dim_Date  VALUES (18,2011,11,25,4);
 INSERT INTO Dim_Date  VALUES (19,2012,11,25,5);
 INSERT INTO Dim_Date  VALUES (20,2012,11,25,6);
--- INSERT INTO Dim_Date  VALUES (10,2012,11,25,6); ne marche pas contrainte violée
+-- Exemple pour illustrer l'existence des contraintes
+-- INSERT INTO Dim_Date  VALUES (10,2012,11,25,6); 
+-- Ne marche pas contrainte violée
 
 
 INSERT INTO Dim_Trajet  VALUES (1,'St Mihiel','Commerce',5,20);
@@ -133,8 +158,7 @@ INSERT INTO Dim_Personne VALUES (10,'Brad','Pitt',47,'M','Mensuel','Marié');
 
 
 
-/* 10 trajets de Romain  */
-
+-- 10 trajets de Ramir
 INSERT INTO Fait_Station VALUES (1,1,1,1,'Michelet'); 
 INSERT INTO Fait_Station VALUES (2,2,2,1,'Michelet');
 INSERT INTO Fait_Station VALUES (3,3,1,1,'Michelet'); 
@@ -189,9 +213,13 @@ INSERT INTO Fait_Station VALUES (18,9,10,9,'Commerce');
 INSERT INTO Fait_Station VALUES (18,10,10,10,'Commerce'); 
 
 
--- -- REQUETES
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------REQUETES DE CONSULTATION DES L'ENTREPOT--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- --R1 Nombre de stations traversées en 1 journée;
+-- Introduction : 
+
+--R1 Nombre de stations traversées en 1 journée;
 SELECT Station , count(*)
 FROM Fait_Station F, Dim_Date DD
 WHERE DD.Clef_Date=18 and F.Clef_Date=DD.Clef_Date
@@ -287,3 +315,4 @@ FROM Fait_Station F, Dim_Date DD,Dim_Trajet DT
 WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Trajet=DT.Clef_Trajet
 order by DD.Annee asc
 ;
+
