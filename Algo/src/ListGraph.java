@@ -92,6 +92,7 @@ public class ListGraph extends AbstractGrapheOriente
 			// pas besoin de verification sur next, il s'agit en fait du noeud
 			if (iterAretes.next().getValeur() == n)
 			{
+				nbAretes-= noeudCourant.size();
 				iterNoeuds.remove();
 			}
 			else
@@ -103,11 +104,13 @@ public class ListGraph extends AbstractGrapheOriente
 					{
 						iterAretes.remove();
 						areteTrouve = true;
+						nbAretes--;
 					}
 				}
 			}
 
 		}
+		nbNoeuds--;
 	}
 
 	@Override
@@ -116,7 +119,7 @@ public class ListGraph extends AbstractGrapheOriente
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	Iterator<Encapsulateur<Integer>> iterAretes;
 	@Override
 	public List<Integer> listerArcsSortants(int n)
 	{
@@ -154,8 +157,31 @@ public class ListGraph extends AbstractGrapheOriente
 	@Override
 	public ArrayList<Integer> listeAretes()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		String retour= "" ;
+		Encapsulateur<Integer> temp;
+		Iterator<Encapsulateur<Integer>> iterAretes;
+		for(int i =0; i<nbNoeuds;i++)
+		{
+			iterAretes = graphe.get(i).iterator();
+			retour+=iterAretes.next().getValeur();
+			while(iterAretes.hasNext())
+			{
+				temp = iterAretes.next();
+			retour+="->"+temp.getValeur();
+			for(int j = 0; j<temp.listeIdAretes.size(); j++)
+			{
+				// a faire
+			}
+			}
+			retour+="\n";
+		}
+		return retour;
 }
+	
+}
+		

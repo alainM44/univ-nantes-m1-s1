@@ -26,12 +26,13 @@ public class Main
 		i = graphe.ajouterA(2, 0);
 		listeId.add(4, i);
 		System.out.println(graphe.listeNoeuds().toString());
-		graphe.supprimerA(listeId.get(4), 2, 0);
-		listeId.remove(4);
-		graphe.supprimerN(0);
+//		graphe.supprimerA(listeId.get(4), 2, 0);
+//		listeId.remove(4);
+//		graphe.supprimerN(0);
 		System.out.println(graphe.listeNoeuds().toString());
 		System.out.println(graphe.nbNoeuds);
 		System.out.println(graphe.nbAretes);
+		System.out.println(graphe);
 		
 
 	}

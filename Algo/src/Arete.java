@@ -1,4 +1,3 @@
-//La classe noeud permet de de resoudre un conflit entre int e
 public class Arete
 {
 int noeud1;

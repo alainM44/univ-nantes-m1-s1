@@ -50,5 +50,5 @@ public interface GrapheOriente
 	public int NombreNoeuds();
 
 	public int NombreAretes();
-
+	
 }
