@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public interface GrapheOriente
 {
@@ -39,13 +38,13 @@ public interface GrapheOriente
 	
 	public ArrayList<Integer> listeAretes();
 
-	public List<Integer> listerSuccesseurs(int n);
+	public ArrayList<Integer> listerSuccesseurs(int n);
 
-	public List<Integer> listerPredecesseurs(int n);
+	public ArrayList<Integer> listerPredecesseurs(int n);
 
-	public List<Integer> listerArcsEntrants(int n);
+	public ArrayList<Arete> listerArcsEntrants(int n);
 
-	public List<Integer> listerArcsSortants(int n);
+	public ArrayList<Arete> listerArcsSortants(int n);
 
 	public int NombreNoeuds();
 
