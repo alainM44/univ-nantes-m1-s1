@@ -36,15 +36,15 @@ public interface GrapheOriente
 	
 	public ArrayList<Integer> listeNoeuds();
 	
-	public ArrayList<Integer> listeArcs();
+	public ArrayList<Arc> listeArcs();
 
 	public ArrayList<Integer> listerSuccesseurs(int n);
 
 	public ArrayList<Integer> listerPredecesseurs(int n);
 
-	public ArrayList<Arete> listerArcsEntrants(int n);
+	public ArrayList<Arc> listerArcsEntrants(int n);
 
-	public ArrayList<Arete> listerArcsSortants(int n);
+	public ArrayList<Arc> listerArcsSortants(int n);
 
 	public int NombreNoeuds();
 

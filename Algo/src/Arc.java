@@ -1,13 +1,13 @@
 /*
  * Utiliser pour les methodes listerArcsEntrants et listerArcsSortants
  */
-public class Arete
+public class Arc
 {
 	int noeud1;
 	int noeud2;
 	int id;
 
-	public Arete(int n1, int n2, int id)
+	public Arc(int n1, int n2, int id)
 	{
 		noeud1 = n1;
 		noeud2 = n2;
