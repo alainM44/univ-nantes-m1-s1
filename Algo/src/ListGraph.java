@@ -24,6 +24,7 @@ public class ListGraph extends AbstractGrapheOriente
 		Iterator<Encapsulateur<Integer>> iter = aux.iterator();
 		Encapsulateur<Integer> encaps;
 
+		nbArc++;
 		idGenerator++;
 		// On augmente le nb d'arc associe au noeud
 		iter.next().changeNbArc(1);
@@ -41,7 +42,6 @@ public class ListGraph extends AbstractGrapheOriente
 		aux.addLast(encaps);// Permet d'assurer que le premier element reste
 		// le meme le noeud
 
-		nbArc++;
 		return idGenerator;
 	}
 
@@ -85,7 +85,7 @@ public class ListGraph extends AbstractGrapheOriente
 		Encapsulateur<Integer> areteCourante;
 		Encapsulateur<Integer> noeud;
 		LinkedList<Encapsulateur<Integer>> noeudCourant;
-		Iterator<Encapsulateur<Integer>> iterAretes;
+		Iterator<Encapsulateur<Integer>> iterArc;
 		Set<Integer> mesClefs = graphe.keySet();
 		Integer clefASupprimer = null;
 
@@ -93,8 +93,8 @@ public class ListGraph extends AbstractGrapheOriente
 		{
 
 			noeudCourant = graphe.get(clef);
-			iterAretes = noeudCourant.iterator();
-			noeud = iterAretes.next();
+			iterArc = noeudCourant.iterator();
+			noeud = iterArc.next();
 			areteTrouve = false;
 			// pas besoin de verification sur next, il s'agit en fait du noeud
 			if (noeud.getValeur() == n)
@@ -106,15 +106,15 @@ public class ListGraph extends AbstractGrapheOriente
 			}
 			else
 			{
-				while (iterAretes.hasNext() && !areteTrouve)
+				while (iterArc.hasNext() && !areteTrouve)
 				{
-					areteCourante = iterAretes.next();
+					areteCourante = iterArc.next();
 					if (areteCourante.getValeur() == n)
 					{
 						nbArc -= areteCourante.getNbArc();
 						// On met a jour la valeur du noeud
 						noeud.changeNbArc(-areteCourante.getNbArc());
-						iterAretes.remove();
+						iterArc.remove();
 						areteTrouve = true;
 
 					}
@@ -127,13 +127,13 @@ public class ListGraph extends AbstractGrapheOriente
 	}
 
 	@Override
-	public ArrayList<Arete> listerArcsEntrants(int n)
+	public ArrayList<Arc> listerArcsEntrants(int n)
 	{
-		ArrayList<Arete> listeRetour = new ArrayList<Arete>();
+		ArrayList<Arc> listeRetour = new ArrayList<Arc>();
 		Set<Integer> clefsNoeuds = graphe.keySet();
 		Iterator<Encapsulateur<Integer>> iterArete;
 		Encapsulateur<Integer> noeudCourant;
-		Encapsulateur<Integer> areteCourante;
+		Encapsulateur<Integer> arcCourant;
 
 		for (Integer clefNoeud : clefsNoeuds)
 		{
@@ -141,14 +141,13 @@ public class ListGraph extends AbstractGrapheOriente
 			noeudCourant = iterArete.next();
 			while (iterArete.hasNext())
 			{
-				areteCourante = iterArete.next();
-				if (areteCourante.getValeur() == n)
+				arcCourant = iterArete.next();
+				if (arcCourant.getValeur() == n)
 				{
-					for (int i = 0; i < areteCourante.getNbArc(); i++)
+					for (int i = 0; i < arcCourant.getNbArc(); i++)
 					{
-						listeRetour.add(new Arete(noeudCourant.getValeur(),
-								areteCourante.getValeur(), areteCourante
-										.getId(i)));
+						listeRetour.add(new Arc(noeudCourant.getValeur(),
+								arcCourant.getValeur(), arcCourant.getId(i)));
 					}
 				}
 			}
@@ -157,24 +156,65 @@ public class ListGraph extends AbstractGrapheOriente
 	}
 
 	@Override
-	public ArrayList<Arete> listerArcsSortants(int n)
+	public ArrayList<Arc> listerArcsSortants(int n)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Arc> listeRetour = new ArrayList<Arc>();
+		Iterator<Encapsulateur<Integer>> iterArc = graphe.get(n).iterator();
+		Encapsulateur<Integer> arcCourant;
+
+		iterArc.next();
+		while (iterArc.hasNext())
+		{
+			arcCourant = iterArc.next();
+			for (int i = 0; i < arcCourant.getNbArc(); i++)
+			{
+				listeRetour.add(new Arc(n, arcCourant.getValeur(), arcCourant
+						.getId(i)));
+			}
+		}
+		return listeRetour;
 	}
 
 	@Override
 	public ArrayList<Integer> listerPredecesseurs(int n)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Integer> listeRetour = new ArrayList<Integer>();
+		Set<Integer> clefsNoeuds = graphe.keySet();
+		Iterator<Encapsulateur<Integer>> iterArete;
+		Encapsulateur<Integer> noeudCourant;
+		Encapsulateur<Integer> arcCourant;
+
+		for (Integer clefNoeud : clefsNoeuds)
+		{
+			iterArete = graphe.get(clefNoeud).iterator();
+			noeudCourant = iterArete.next();
+			while (iterArete.hasNext())
+			{
+				arcCourant = iterArete.next();
+				if (arcCourant.getValeur() == n)
+				{
+					listeRetour.add(noeudCourant.getValeur());
+					break;
+				}
+			}
+		}
+		return listeRetour;
 	}
 
 	@Override
 	public ArrayList<Integer> listerSuccesseurs(int n)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Integer> listeRetour = new ArrayList<Integer>();
+		Iterator<Encapsulateur<Integer>> iterArc = graphe.get(n).iterator();
+		Encapsulateur<Integer> arcCourant;
+
+		iterArc.next();
+		while (iterArc.hasNext())
+		{
+			arcCourant = iterArc.next();
+			listeRetour.add(arcCourant.getValeur());
+		}
+		return listeRetour;
 	}
 
 	@Override
@@ -191,9 +231,29 @@ public class ListGraph extends AbstractGrapheOriente
 	}
 
 	@Override
-	public ArrayList<Integer> listeArcs()
+	public ArrayList<Arc> listeArcs()
 	{
-		return null;
+		ArrayList<Arc> listeRetour = new ArrayList<Arc>();
+		Set<Integer> clefsNoeuds = graphe.keySet();
+		Iterator<Encapsulateur<Integer>> iterArc;
+		Encapsulateur<Integer> noeudCourant;
+		Encapsulateur<Integer> arcCourant;
+
+		for (Integer clefNoeud : clefsNoeuds)
+		{
+			iterArc = graphe.get(clefNoeud).iterator();
+			noeudCourant = iterArc.next();
+			while (iterArc.hasNext())
+			{
+				arcCourant = iterArc.next();
+				for (int i = 0; i < arcCourant.getNbArc(); i++)
+				{
+					listeRetour.add(new Arc(noeudCourant.getValeur(),
+							arcCourant.getValeur(), arcCourant.getId(i)));
+				}
+			}
+		}
+		return listeRetour;
 	}
 
 	@Override
@@ -201,14 +261,14 @@ public class ListGraph extends AbstractGrapheOriente
 	{
 		String retour = "";
 		Encapsulateur<Integer> temp;
-		Iterator<Encapsulateur<Integer>> iterAretes;
+		Iterator<Encapsulateur<Integer>> iterArc;
 		for (Integer clefNoeud : graphe.keySet())
 		{
-			iterAretes = graphe.get(clefNoeud).iterator();
-			retour += iterAretes.next().getValeur();
-			while (iterAretes.hasNext())
+			iterArc = graphe.get(clefNoeud).iterator();
+			retour += iterArc.next().getValeur();
+			while (iterArc.hasNext())
 			{
-				temp = iterAretes.next();
+				temp = iterArc.next();
 				retour += "->" + temp.getValeur() + temp.getListe();
 			}
 			retour += "\n";

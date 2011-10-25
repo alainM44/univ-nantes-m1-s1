@@ -11,7 +11,7 @@ public class Main
 		ArrayList<Integer> listeId = new ArrayList<Integer>();
 
 		int i;
-		ListGraph graphe = new ListGraph();
+		GrapheOriente graphe = new ListGraph();
 		graphe.ajouterN(3);
 		graphe.ajouterN(8);
 		graphe.ajouterN(6);
@@ -44,13 +44,18 @@ public class Main
 		System.out.println(graphe);
 
 		
-//		graphe.supprimerA(listeId.get(4), 2, 0);
-//		listeId.remove(4);
-		graphe.supprimerN(6);
-		System.out.println(graphe.listeNoeuds().toString());
-		System.out.println(graphe.nbNoeuds + " NbNoeuds");
-		System.out.println(graphe.nbArc + " NbArcs");
+
+		System.out.println(graphe.listeNoeuds());
+		System.out.println(graphe.NombreNoeuds() + " NbNoeuds");
+		System.out.println(graphe.NombreArcs() + " NbArcs");
 		System.out.println(graphe);
+		System.out.println(graphe.listerArcsEntrants(8));
+		System.out.println(graphe.listeNoeuds());
+		System.out.println(graphe.listeArcs());
+		System.out.println(graphe.listerArcsSortants(3));
+		System.out.println(graphe.listerPredecesseurs(6));
+		System.out.println(graphe.listerSuccesseurs(6));
+
 
 		
 
