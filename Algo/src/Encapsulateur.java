@@ -38,6 +38,11 @@ public class Encapsulateur<E>
 	{
 		return nbArc;
 	}
+	
+	public int getId(int indice)
+	{
+		return listeIdArc.get(indice);
+	}
 
 	public ArrayList<Integer> getListe()
 	{
