@@ -29,6 +29,15 @@ public class Encapsulateur<E>
 		nbArc = 0;
 	}
 
+	public void setValeur(E valeur) {
+		this.valeur = valeur;
+	}
+
+	public void setNbArc(int nbArc) {
+		this.nbArc = nbArc;
+	}
+
+
 	public E getValeur()
 	{
 		return valeur;
