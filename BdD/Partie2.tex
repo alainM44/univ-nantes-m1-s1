@@ -1,0 +1,103 @@
+\chapter{Consultation de l'entrepôt}
+\section{Requête 1 : GROUP BY }
+Nombre de stations traversées en 1 journée;
+\begin{verbatim}
+SELECT Station , count(*)
+FROM Fait_Station F, Dim_Date DD
+WHERE DD.Clef_Date=18 and F.Clef_Date=DD.Clef_Date
+GROUP BY Station;
+\end{verbatim}
+
+\section{Requête 2 : GROUP BY CUBE}
+\begin{verbatim}
+ SELECT
+DL.numero
+,DD.Clef_Date
+,DP.Nom
+,COUNT(Station) AS Nb_stations
+FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL 
+WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne
+GROUP BY CUBE(DL.numero,DD.Clef_Date,DP.Nom)
+ORDER BY DL.Numero,DD.Clef_Date,DP.Nom;
+\end{verbatim}
+
+\clearpage
+\section{Requête 3 : Rank}
+Donne les 10 dernières stations traversées
+\begin{verbatim}
+ SELECT * FROM(
+  SELECT
+    RANK() OVER (ORDER BY DD.Clef_Date DESC) AS ranking,
+    F.Clef_Date,
+    F.Clef_Trajet,
+    F.Clef_Ligne,
+    DP.Nom,
+    F.Station
+  FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL ,Dim_Trajet DT
+WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne and  F.Clef_Trajet=DT.Clef_Trajet 
+)
+Where ranking <10;
+\end{verbatim}
+
+\section{Requête 4 : GROUPING SETS }
+Nombre de fois qu'une station est utilisée par date et par ligne, puis les deux réunies (dernière ligne). On obtiendrait la même chose avec un ROLLUP
+\begin{verbatim}
+SELECT DD.Clef_Date, DL.Numero as ID_ligne, count(F.Station)
+FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL ,Dim_Trajet DT
+WHERE F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne and  F.Clef_Trajet=DT.Clef_Trajet
+GROUP BY GROUPING SETS((DD.Clef_Date,DL.Numero),(DD.Clef_Date),());
+\end{verbatim}
+
+\section{Requête 5 : GROUPING and GROUP BY ROLLUP}
+Nombre de fois qu'une station est utilisée par date et par ligne, puis les deux réunies (dernière ligne). On obtiendrait la même chose avec un ROLLUP
+\begin{verbatim}
+SELECT DD.Clef_Date, DL.Numero, count(F.Station), GROUPING(DD.Clef_Date) as daate, GROUPING(DL.Numero) as ligne
+FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL ,Dim_Trajet DT
+WHERE F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne and  F.Clef_Trajet=DT.Clef_Trajet
+GROUP BY ROLLUP (DD.Clef_Date,DL.Numero);
+\end{verbatim}
+
+\section{Requête 6 : TOP N}
+TOP N Les 3 stations les plus fréquentées (avec leur nombre d'utilisation)
+\begin{verbatim}
+SELECT * FROM (
+       SELECT F.station,count(station) as nb
+FROM Fait_Station F
+GROUP BY F.station
+ORDER BY nb DESC
+)
+WHERE  ROWNUM <=3; 
+\end{verbatim}
+
+\section{Requête 7 : NTIL}
+--Cette requete donne un partion des trajets en fonction de leur popularité : la partion 1 est la plus populaire ..
+\begin{verbatim}
+select DT.P_DEPART , DT.P_ARRIVEE, count(*) as nb, NTILE(3) over (order by count(*) desc) 
+FROM Fait_Station F ,Dim_Trajet DT
+WHERE   F.Clef_Trajet=DT.Clef_Trajet
+GROUP BY ( DT.P_DEPART , DT.P_ARRIVEE); 
+\end{verbatim}
+
+\section{Requête 8 : WINDOW}
+Temps passé par Ramir Rincé dans les transports en commun
+\begin{verbatim}
+SELECT DD.Clef_Date, DD.Annee,DD.Mois,DD.Jour, DP.nom, sum(DT.Duree) as temps,
+       sum(sum(DT.Duree)) over (order by DD.Clef_Date rows unbounded preceding)as cumul
+FROM Fait_Station F, Dim_Date DD, Dim_Personne DP, Dim_Ligne DL ,Dim_Trajet DT
+WHERE DP.Clef_Personne=1 and F.Clef_Date=DD.Clef_Date and  F.Clef_Personne=DP.Clef_Personne and F.Clef_Ligne=DL.Clef_Ligne and  F.Clef_Trajet=DT.Clef_Trajet
+GROUP BY (DD.Clef_Date, DD.Annee,DD.Mois,DD.Jour, DP.nom);
+
+\end{verbatim}
+
+\section{Requête 9 : PARTION BY }
+L'utilisation de PARTITION BU nous permet ici d'afficher toutes les distances parcourues ainsi que la somme des distances sur une année
+\begin{verbatim}
+SELECT  DD.Annee,DT.longueur ,sum(DT.Longueur) over ( partition by(DD.Annee)) as total
+FROM Fait_Station F, Dim_Date DD,Dim_Trajet DT
+WHERE  F.Clef_Date=DD.Clef_Date and  F.Clef_Trajet=DT.Clef_Trajet;
+order by DD.Annee asc
+
+\end{verbatim}
+
+\clearpage
+ 

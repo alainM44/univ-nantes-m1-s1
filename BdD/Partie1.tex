@@ -1,0 +1,33 @@
+\chapter{Conception de l'entrepôt}
+\section{Sujet d'étude}
+Le domaine étudié dans ce projet est celui d'un réseau de transport en commun d'une grande ville.
+La mise en place et le maintien d'un tel réseau nécessite la connaissances d'une immense quantité d'informations.
+Un entrepôt de données OLAP semble tout à fait adapté pour un tel usage puisqu'il permet le stockage et l'accès à l'information d'une très grande base de données.
+Le choix du shéma en étoile assura une certaine s'implicité de création et d'utilisation de la base de données.
+De plus nos choix de conceptions vont permettre une double utilité à cet entrepôt :
+
+\begin{itemize}
+  \item 
+    \textbf{Une aide à la décision quant l'aménagement et à l'entretien du réseau.}\\
+  En effet, cet entrepôt sera en mesure de renseigner l'organisme responsable du réseau d'un grand nombre de  statistiques et d'informations quant à fréquentation des utilisateurs.
+  Il sera par exemple possible d'avoir une idée de quelles zones requièrent le plus d'aménagements par rapport au taux de fréquentations.
+  L'organisme aura donc toujours connaissance de l'état d'utilisation de son parc de manière globale.
+  \item	
+  \textbf{Une génération d'informations précieuses d'un point de vue commerciale.}\\
+    Toutes les données necessaires pour établir une stratégie commerciale ( profils clients, zone dynamiques ou non ... ) pourront être fournies facilement par l'entrepôt présenté dans ce rapport.  
+    Cet aspect et non négligeable et permet d'obtenir des informations sur les clients sans les importuner par des enquêtes.
+\end{itemize}
+
+
+\clearpage
+ 
+\section{Tables et dimensions}
+L'entrepôt sera composé de 4 tables de dimensions et d'une table de faits : 
+\begin{figure}[!h] 
+\centering
+  \includegraphics[scale=0.60]{ProjetBD.jpeg}
+\end{figure} 
+
+La granularité choisie permet de connaître chaques utilisations d'une station (arrêt de tram ou de bus ...).
+Ainsi lorsqu'un utilisateur à une station donnée, monte, sors ou reste dans le véhicule, le fait est enregistré dans la table de faits. 
+La structure de la base de données peut alors fournir un grand nombre d'informations sur ce fait : à quel trajet il appartient, sur quelle ligne etc...
