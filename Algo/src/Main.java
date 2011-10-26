@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+
 public class Main
 {
 
@@ -12,52 +13,43 @@ public class Main
 
 		int i;
 		GrapheOriente graphe = new ListGraph();
+		
 		graphe.ajouterN(3);
 		graphe.ajouterN(8);
 		graphe.ajouterN(6);
+		graphe.ajouterN(5);
+		graphe.ajouterN(4);
 		i = graphe.ajouterA(3, 8);
-		listeId.add(0, i);
+		listeId.add( i);
 		System.out.println(graphe);
 
-		i = graphe.ajouterA(3, 6);
-		listeId.add(1, i);
-		System.out.println(graphe);
 
-		i = graphe.ajouterA(8, 8);
-		listeId.add(2, i);
-		System.out.println(graphe);
 
-		i = graphe.ajouterA(6, 3);
-		listeId.add(3, i);
-		System.out.println(graphe);
 
-		i = graphe.ajouterA(6, 3);
-		listeId.add(4, i);
-		System.out.println(graphe);
-
-		i = graphe.ajouterA(6, 3);
-		listeId.add(5, i);
-		System.out.println(graphe);
 		
 		i = graphe.ajouterA(6, 8);
-		listeId.add(6, i);
+		listeId.add( i);
+		System.out.println(graphe);
+		
+		i = graphe.ajouterA(3, 4);
+		listeId.add( i);
+		System.out.println(graphe);
+		
+		i = graphe.ajouterA(4, 6);
+		listeId.add( i);
 		System.out.println(graphe);
 
-		
-
-		System.out.println(graphe.listeNoeuds());
-		System.out.println(graphe.NombreNoeuds() + " NbNoeuds");
-		System.out.println(graphe.NombreArcs() + " NbArcs");
-		System.out.println(graphe);
-		System.out.println(graphe.listerArcsEntrants(8));
-		System.out.println(graphe.listeNoeuds());
-		System.out.println(graphe.listeArcs());
-		System.out.println(graphe.listerArcsSortants(3));
-		System.out.println(graphe.listerPredecesseurs(6));
-		System.out.println(graphe.listerSuccesseurs(6));
-
-
-		
+		TestMonGraphe test = new TestMonGraphe(graphe);
+		test.DFS(6, true);
+		try
+		{
+			test.BFS(6, true);
+		} catch (InterruptedException e)
+		{
+			System.out.println("chat");
+			e.printStackTrace();
+		}
+		System.out.println(test.acyclicite());
 
 	}
 }
