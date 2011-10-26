@@ -31,7 +31,8 @@ int nbseparateur = 0;
 %token ACCOL_G
 %token ACCOL_D
 %token<nb> NOMBRE
-%token<str> MOT SPACE
+%token<str> MOT 
+%token SPACE
 %type<str> mots
 
 %start fichier
@@ -45,44 +46,44 @@ init      :  DEB ACCOL_G TABLEAU ACCOL_D { fprintf(yyout, "<table ");}
 ;
 final     :  FIN ACCOL_G TABLEAU ACCOL_D blancs
 ;
-tableau   : options blancs lignes {fprintf(yyout,"</tbody>\n</table>");}
+tableau   : options blancs lignes {fprintf(yyout,"</tr>\n</tbody>\n</table>");}
 ;
-options   :  ACCOL_G option ACCOL_D {fprintf(yyout,"<tr>");}
+options   :  ACCOL_G option ACCOL_D {redigeOption(nbseparateur>=nbcol/2);}
 ;
 option    : SEPAR option {nbseparateur++;}
           | MOT option {nbcol =+ yyleng;}
-          | SEPAR {nbseparateur++; redigeOption(nbseparateur>=nbcol/2); }
-          | MOT {nbcol =+ yyleng;printf("%d",nbcol); redigeOption(nbseparateur>=nbcol/2);}
+          | SEPAR {nbseparateur++;}
+          | MOT {nbcol =+ yyleng;}
 ;
 
-lignes    : ligne FIN_LIGNE blancs lignes{fprintf(yyout,"</tr>\n<tr>");}
-|{fprintf(yyout,"</tr>\n");}
+lignes    : ligne FIN_LIGNE blancs lignes{}
+          |ligne FIN_LIGNE blancs {fprintf(yyout,"\n<tr>");}
 ;
 
 
 ligne     : TRAIT_HOR
-          | colonnes 
+| colonnes {fprintf(yyout,"</tr>\n<tr>");}
 ;
 
-colonnes  : colonne blancs SEPAR_COL blancs colonnes {fprintf(yyout,"colonne");}
+colonnes  : colonne blancs SEPAR_COL blancs colonnes {}
 | colonne blancs
 ;
 
 
 
-colonne   : MOT   {fprintf(yyout,"test");}
-          | NOMBRE {fprintf(yyout,"test");}
-          | FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {fprintf(yyout,"test");}
-          | FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {fprintf(yyout,"test");}
+colonne   : MOT   {redigeColonne($1, 0,0 );}
+          | NOMBRE {redigeColonneNum($1, 0, 0);}
+| FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G MOT ACCOL_D {redigeColonne($9, 1, $3);}
+| FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {redigeColonneNum($9, 1, $3);}
 ;
 
-mots      : MOT blancs mots {fprintf(yyout,"test");}
-          | MOT blancs  {fprintf(yyout,"test");}
-          | MOT     {fprintf(yyout,"test");}
+mots      : MOT blancs mots {}
+          | MOT blancs  {}
+          | MOT     {}
 ;
 
-blancs    : SPACE blancs 
-          | SPACE
+blancs    : SPACE blancs {}
+          |  {}
 ;
 
 %%
@@ -134,7 +135,7 @@ int main(int argc, char* argv[])
 	}
       if (argc >2)
 	{
-	  yyout=fopen(argv[2], "a");
+	  yyout=fopen(argv[2], "w");
 	}
       if(!yyout)
 	{
@@ -149,7 +150,7 @@ int main(int argc, char* argv[])
 	}
       else
 	{
-	  printf("parse error\n");
+	  printf("parse error \n");
 	  exit(1);
 	}
     }
