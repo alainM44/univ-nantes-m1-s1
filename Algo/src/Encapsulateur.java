@@ -25,7 +25,7 @@ public class Encapsulateur<E>
 	public Encapsulateur(E val)
 	{
 		valeur = val;
-		listeIdArc = null;
+		listeIdArc = new ArrayList<Integer>();
 		nbArc = 0;
 	}
 
