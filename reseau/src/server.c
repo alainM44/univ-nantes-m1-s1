@@ -1,33 +1,19 @@
 #include "network.h"
 #include "messages.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
 
 
 void renvoi (int sock);
-int frag_and_send(int sock,char file[]);
-
-
+void frag_and_send(int sock,char file[]);
 
 int main (int argc, char ** argv){
-  //  int res;
-  int sd, longueur_adresse_courant,res, socket_descriptor;
-  
+  int sd, longueur_adresse_courant, socket_descriptor;
   sockaddr_in adresse_locale, adresse_client_courant ;// structure d'adresse locale
   hostent* ptr_host;
-  servent* ptr_service;
   char nom_machine [TAILLE_MAX_NOM+1];
   int nouv_socket_descriptor;
 
   fprintf(stderr,"lauching server \n");
-
   /* Le serveur se met en place  */
-  
   if ((sd = server_answer_connect(socket_descriptor,nom_machine,adresse_locale,ptr_host)) <  0   )
     
     {
@@ -50,33 +36,30 @@ int main (int argc, char ** argv){
 
     
   }
+  close(sd);
+  close(nouv_socket_descriptor);
   fprintf(stderr,"end server\n");
   return 0;
 }
 
 void renvoi (int sock){
-  char buffer[256];
-  int longueur;
+  int i;
   MESSAGE_DATA message;
-  sprintf(message.data.tab, "%s", "datatatatatatatatatat");
-  //fprintf(stderr,"rep : %s. \n",message.data.tab);
-  //  sprintf(buffer,"%s","reponse du serveur : connexion acceptée");
-  send_data (sock,message);
-  //mise en attente du prog pour simuler un delai de transmission
-  //  sleep(3);
-  fprintf(stderr,"rep : %s. \n",message.data.tab);
-  //  write(sock,buffer,strlen(buffer)+1);
-  //  fprintf(stderr,"message envoye. \n");
-  close(sock);
-  return;
+  frag_and_send(sock,"Rapport.pdf");
+      // frag_and_send(sock,"test.txt");
+
+  if( (i= close(sock)) <0  )
+    fprintf(stderr,"close sock %s",strerror(errno)); 
+  exit (EXIT_SUCCESS);
 }
 
-int frag_and_send(int sock,char file_to_frag[])
+
+
+
+void frag_and_send(int sock, char file_to_frag[])
 {
-  int file,nblu,nbec,res;
-  char num[200];
-  //  char data[200];
-  char buffer[MTU];
+  FILE* file;
+   int nblu,nbec,res;
   int nb_f;
   int reste;
   struct stat statbuf ;
@@ -85,59 +68,70 @@ int frag_and_send(int sock,char file_to_frag[])
   
   stat(file_to_frag,&statbuf);  /// the_file, le fichier a lire
   filesize = (long)(statbuf.st_size); 
- 
+
   //init des variables
-  if (( nb_f= filesize/MTU )<=1)
+  if (( nb_f= filesize/TAILLEMAXDATA )<1)
     {
-      fprintf(stderr,"Pas de fragmentation taille : %d \n",filesize);
+      fprintf(stderr,"Pas de fragmentation taille : %d pour une division de %d\n",filesize,TAILLEMAXDATA);
       exit(EXIT_FAILURE);
     }
-  reste = filesize-nb_f*MTU;
+  reste = filesize-nb_f*TAILLEMAXDATA;
 
   
-  fprintf(stderr,"Fichier de %d .On va fragmenter en %d paquets il restera un paquet de %d ocets\n",filesize,nb_f,reste);
-  file=open(file_to_frag,O_RDWR);/////////////a securiser
+  fprintf(stderr,"Fichier %s de %d .On va fragmenter en %d paquets il restera un paquet de %d ocets\n",file_to_frag,filesize,nb_f,reste);
+
+  if( (file=fopen(file_to_frag,"rb"))<0 )
+    {
+      fprintf(stdout,"open : %s",strerror(errno));
+      exit(EXIT_FAILURE);
+    }
+
+
   MESSAGE_DATA message;
-  DATA data ;        
-  sprintf(data.tab, "%s", "\0");
+
+  message.data.ID_data=0;
+  message.data.offset=1;
+  message.data.MF=0;
+  message.data.taille=0;
+ 
   for (int i=1;i<=nb_f;i++)
     {
-      if( (nblu=read(file,data.tab,MTU))==-1 )
+      if( (nblu=fread(message.data.tab,1,TAILLEMAXDATA,file))==-1 )
         {
           fprintf(stdout,"read : %s",strerror(errno));
           exit(EXIT_FAILURE);
         }
-      
-      data.ID_data=i;
-      data.offset+=nblu+1;
-      
-      message.data=data;
-      /* fprintf(stderr,"data %d contenant %d octets  ",data.ID_data,nblu);*/
+      message.data.taille=nblu;
+      message.data.ID_data=i;
+      message.data.offset+=nblu;
+      message.data.MF=1;
+      message.ID_message=i;
+
+      fprintf(stderr,"message numéro %d contenant %d octets\n ",message.data.ID_data,nblu);
+      //  fprintf(stderr,"test");           
       if( (res= send_data(sock,message)) ==-1)
         {
-          fprintf(stdout,"sed_data %s",strerror(errno));
+          fprintf(stderr,"sed_data %s",strerror(errno));
           exit(EXIT_FAILURE);
         }
-      
-      fprintf(stderr,"paquet %d envoyé offset : %d  \n",data.ID_data,data.offset);
-	  
-      sprintf(data.tab, "%s", "\0");
-      
-      //      data.tab="\0";
-      
+
+      fprintf(stderr,"paquet %d envoyé offset : %d  \n",message.data.ID_data,message.data.offset);
     }
+
+
+  //on lit le reste
+
+
+  if((nblu=fread(message.data.tab,1,reste,file))<0)
+    fprintf(stderr,"sed_data %s",strerror(errno)); 
   
-  if((nblu=read(file,data.tab,reste))<0)
-    perror("read");
-  
-  //fprintf(stderr,"reste %d contenant %d octets  ",data.ID_data,nblu);
-  data.ID_data+=1;
-  data.offset+=nblu+1;
-  
-  //	fprintf(stderr,"%s d%d contenant %d octets\n",,data.ID_data,nblu);
-  
-  message.data=data;
-  /* fprintf(stderr,"data %d contenant %d octets  ",data.ID_data,nblu);*/
+  //  fprintf(stderr,"reste %d contenant %d octets  ",mesedata.ID_data,nblu);
+  message.data.ID_data+=1;
+  message.data.offset+=nblu;
+  message.data.taille=nblu;
+  message.data.MF=0;
+  message.ID_message=nb_f+1;
+
   if( ( res= send_data(sock,message)) ==-1)
     {
       fprintf(stdout,"sed_data %s",strerror(errno));
@@ -145,8 +139,13 @@ int frag_and_send(int sock,char file_to_frag[])
     }
   
   //  fprintf(stderr,"%d o écrits \n",nbec);
-  fprintf(stderr,"paquet %d envoyé offset : %d  \n",data.ID_data,data.offset);  
-  
+  fprintf(stderr,"Dernier paquet %d, contenant %d o envoyés (reste %d) offset : %d  \n",message.data.ID_data,nblu,reste,message.data.offset);  
+
+
+  fclose(file);
+  fprintf(stderr,"FIN FRAG");
+
+
 }
   
 	  
