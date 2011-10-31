@@ -19,6 +19,7 @@ public class Main
 		graphe.ajouterN(6);
 		graphe.ajouterN(5);
 		graphe.ajouterN(4);
+		graphe.ajouterN(7);
 		i = graphe.ajouterA(3, 8);
 		listeId.add( i);
 		System.out.println(graphe);
@@ -27,15 +28,23 @@ public class Main
 
 
 		
-		i = graphe.ajouterA(6, 8);
+		i = graphe.ajouterA(8, 6);
 		listeId.add( i);
 		System.out.println(graphe);
 		
-		i = graphe.ajouterA(3, 4);
+		i = graphe.ajouterA(6, 5);
 		listeId.add( i);
 		System.out.println(graphe);
 		
-		i = graphe.ajouterA(4, 6);
+		i = graphe.ajouterA(6, 4);
+		listeId.add( i);
+		System.out.println(graphe);
+		
+		i = graphe.ajouterA(5, 7);
+		listeId.add( i);
+		System.out.println(graphe);
+		
+		i = graphe.ajouterA(7, 8);
 		listeId.add( i);
 		System.out.println(graphe);
 
@@ -49,7 +58,7 @@ public class Main
 			System.out.println("chat");
 			e.printStackTrace();
 		}
-		System.out.println(test.acyclicite());
+		System.out.println("\n===Acyclicité===\n"+test.acyclicite());
 
 	}
 }

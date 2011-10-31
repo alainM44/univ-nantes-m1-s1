@@ -9,11 +9,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class TestMonGraphe
 {
-	GrapheOriente monGraphe;
-//	HashMap<Integer, Integer> piDFS;
-//	HashMap<Integer, Integer> piBFS;
-//	HashMap<Integer, Integer> dDFS = new HashMap<Integer, Integer>();
-//	HashMap<Integer, Integer> dBFS = new HashMap<Integer, Integer>();
+	GrapheOriente	monGraphe;
+
+	// HashMap<Integer, Integer> piDFS;
+	// HashMap<Integer, Integer> piBFS;
+	// HashMap<Integer, Integer> dDFS = new HashMap<Integer, Integer>();
+	// HashMap<Integer, Integer> dBFS = new HashMap<Integer, Integer>();
 
 	public TestMonGraphe(GrapheOriente graphe)
 	{
@@ -57,12 +58,12 @@ public class TestMonGraphe
 		for (int i : d.keySet())
 		{
 			System.out.print("[" + i + "]" + pi.get(d.get(i)) + "->" + d.get(i)
-					+ " ");
+			        + " ");
 		}
 	}
 
 	private int Visiter(int n, int temps, HashMap<Integer, Integer> couleur,
-			HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
+	        HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
 	{
 		ArrayList<Integer> voisins = monGraphe.listerSuccesseurs(n);
 		d.put(temps, n);
@@ -81,6 +82,10 @@ public class TestMonGraphe
 		return temps;
 	}
 
+	/*
+	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
+	 * graphe
+	 */
 	public void BFS(int n, boolean option) throws InterruptedException
 	{
 		int temps = 0;
@@ -91,7 +96,7 @@ public class TestMonGraphe
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> d = new HashMap<Integer, Integer>();
 		ArrayBlockingQueue<Integer> file = new ArrayBlockingQueue<Integer>(
-				monGraphe.NombreNoeuds());
+		        monGraphe.NombreNoeuds());
 
 		for (Integer noeud : listeNoeud)
 		{
@@ -123,48 +128,94 @@ public class TestMonGraphe
 					{
 						file.put(noeud);
 						pi.put(noeud, noeud);
-						break;//Sinon on pourrait ajouter plusieurs noeuds à la file
+						break;// Sinon on pourrait ajouter plusieurs noeuds à la
+						      // file
 					}
 				}
 			}
 		}
 
-		System.out.println("\n===BFS===");
-		for (int i : d.keySet())
-		{
-			System.out.print("[" + i + "]" + pi.get(d.get(i)) + "->" + d.get(i)
-					+ " ");
-		}
+
+	}
+	/*
+	 * @param n : noeud de départ, option : si vrai alors parcourir tout le graphe
+	 * typeParcours : 0 pour DFS, 1 pour BFS
+	 */
+	public void afficheParcours(int typeParcours, int n, boolean option)
+	{
+switch (typeParcours)
+{
+case 0:
+	//Ajouter le parcours changer DFS et BFS pour les retours 
+	System.out.println("\n===DFS===");
+	break;
+case 1:
+	System.out.println("\n===BFS===");
+	break;
+
+}
+//		System.out.println("\n===BFS===");
+//		for (int i : d.keySet())
+//		{
+//			System.out.print("[" + i + "]" + pi.get(d.get(i)) + "->" + d.get(i)
+//			        + " ");
+//		}
 	}
 
 	public boolean acyclicite()
 	{
 		HashMap<Integer, TreeSet<Integer>> listeAcces = new HashMap<Integer, TreeSet<Integer>>();
 		ArrayList<Arc> listeArcs = monGraphe.listeArcs();
-		for(Arc monArc : listeArcs)
+		for (Arc monArc : listeArcs)
 		{
 			int n1 = monArc.getN1();
 			int n2 = monArc.getN2();
-			if (listeAcces.get(n1) ==null)
+			if (n1 != n2)
 			{
-				TreeSet<Integer> aux = new TreeSet<Integer>();
-				aux.add(n2);
-				listeAcces.put(n1, aux);
-			}
-			else
-			{
-				listeAcces.get(n1).add(2);
-			}
-			//a refaire
-			for(Integer noeud : listeAcces.keySet())
-			{
-				if(listeAcces.get(noeud).contains(noeud));
-				return true;
+				if (listeAcces.get(n1) == null)
+				{
+					TreeSet<Integer> aux = new TreeSet<Integer>();
+					aux.add(n2);
+					listeAcces.put(n1, aux);
+				}
+				else
+				{
+					listeAcces.get(n1).add(n2);
+				}
 			}
 		}
-		return false;
-		
+		return trouveBoucle(listeAcces);
+
 	}
 
-	
+	private boolean trouveBoucle(HashMap<Integer, TreeSet<Integer>> listeAcces)
+	{
+		boolean termine = false;
+		TreeSet<Integer> acces;
+		TreeSet<Integer> temp;
+		int tailleAvantModif;
+		while (!termine)
+		{
+			termine = true;
+			for (Integer noeud : listeAcces.keySet())
+			{
+				temp = new TreeSet<Integer>();
+				acces = listeAcces.get(noeud);
+				tailleAvantModif = acces.size();
+				for (Integer noeudAccessible : acces)
+				{
+					if (listeAcces.get(noeudAccessible) != null)
+						temp.addAll(listeAcces.get(noeudAccessible));
+				}
+				acces.addAll(temp);
+				if (acces.contains(noeud))
+					return true;
+				if (tailleAvantModif != acces.size())
+					termine = false;
+			}
+		}
+
+		return false;
+	}
+
 }
