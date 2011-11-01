@@ -3,31 +3,30 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 
-/*
- * La classe va appliquer les différents algorithmes demandés
- * peut-être aussi les benchmarks
+/**
+ * La classe va appliquer les différents algorithmes demandés peut-être aussi
+ * les benchmarks
  */
 public class TestMonGraphe
 {
 	GrapheOriente	monGraphe;
-
-	// HashMap<Integer, Integer> piDFS;
-	// HashMap<Integer, Integer> piBFS;
-	// HashMap<Integer, Integer> dDFS = new HashMap<Integer, Integer>();
-	// HashMap<Integer, Integer> dBFS = new HashMap<Integer, Integer>();
 
 	public TestMonGraphe(GrapheOriente graphe)
 	{
 		monGraphe = graphe;
 	}
 
-	/*
-	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
-	 * graphe, horloge : hashmap fourni en paramêtre qui indice les noeuds par
-	 * des temps(permet de conserver l'horloge chez l'appelant)
+	/**
+	 * @param n
+	 *            : noeud de départs
+	 * @param option
+	 *            : si vrai alors parcourir tout le graphe
+	 * @param horloge
+	 *            : hashmap fourni en paramêtre qui indice les noeuds par des
+	 *            temps(permet de conserver l'horloge chez l'appelant)
 	 * 
 	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
-	 * départ.
+	 *         départ.
 	 */
 	public HashMap<Integer, Integer> DFS(int n, boolean option, HashMap<Integer, Integer> horloge)
 	{
@@ -78,13 +77,17 @@ public class TestMonGraphe
 		return temps;
 	}
 
-	/*
-	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
-	 * graphe, horloge : hashmap fourni en paramêtre qui indice les noeuds par
-	 * des temps(permet de conserver l'horloge chez l'appelant)
+	/**
+	 * @param n
+	 *            : noeud de départ
+	 * @param option
+	 *            : si vrai alors parcourir tout le graphe
+	 * @param horloge
+	 *            : hashmap fourni en paramêtre qui indice les noeuds par des
+	 *            temps(permet de conserver l'horloge chez l'appelant)
 	 * 
 	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
-	 * départ.
+	 *         départ.
 	 */
 	public HashMap<Integer, Integer> BFS(int n, boolean option, HashMap<Integer, Integer> horloge)
 	{
@@ -155,9 +158,13 @@ public class TestMonGraphe
 		return pi;
 	}
 
-	/*
-	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
-	 * graphe typeParcours : 0 pour DFS, 1 pour BFS
+	/**
+	 * @param n
+	 *            : noeud de départ
+	 * @param option
+	 *            : si vrai alors parcourir tout le graphe
+	 * @param typeParcours
+	 *            : 0 pour DFS, 1 pour BFS
 	 */
 	public void afficheParcours(int typeParcours, int n, boolean option)
 	{
