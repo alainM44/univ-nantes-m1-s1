@@ -5,8 +5,8 @@ import java.util.Collection;
 
 public class MatGraph extends AbstractGrapheOriente{
 
-	
-	
+
+
 	ArrayList2D<Encapsulateur<Boolean>>graph;	
 	ArrayList<Encapsulateur<Integer>> tabnoeuds;
 
@@ -20,7 +20,7 @@ public class MatGraph extends AbstractGrapheOriente{
 	public int ajouterA(int n1, int n2) {//position du noeud 
 		idGenerator++;
 		nbArc++;	
-	
+
 		graph.get(n1,n2).listeIdArc =new ArrayList<Integer>();
 		graph.get(n1,n2).ajouterArc(idGenerator);
 		graph.get(n1,n2).setValeur(true);
@@ -80,30 +80,24 @@ public class MatGraph extends AbstractGrapheOriente{
 		graph.suppLigne(pos); //en O de N
 		nbNoeuds--;
 	}
-	
-	//PAS DANS LE SOUJET
+
+
 	@Override
 	public ArrayList<Arc> listeArcs() {
-		ArrayList<Integer> result = new ArrayList<Integer>();
-		int nblignes =graph.getNbLignes();
-		int listsize;
-		int lignesize;
-		for(int i=1;i<=nblignes;i++)
-		{
-			lignesize=graph.getLine(i).size();
-			for(int j=1;i<=lignesize;j++)
-			{
-				listsize =graph.getLine(i).get(j).getListe().size();
-				for(int k=1;i<=listsize;j++)
-				{
-					result.add(graph.getLine(i).get(j).getListe().get(k));
-				}
+		ArrayList<Arc> result = new ArrayList<Arc>();
+		int nbarctemp = nbArc;
 
+		for(int i=0;i<nbNoeuds;i++)
+		{
+			for(int j=0;j<nbNoeuds;j++)
+			{
+				nbarctemp-=graph.get(i,j).listeIdArc.size();
+				result.addAll( (Collection)(graph.get(i,j).listeIdArc));//!!!
+				if(nbarctemp==0)
+					break;
 			}
 		}
-
-
-		return null;//result;
+		return result;
 	}
 
 	@Override
@@ -129,12 +123,12 @@ public class MatGraph extends AbstractGrapheOriente{
 		}
 		if (pos==-1)
 			System.out.println("erreur noeud inexistant");
-		
+
 		for(int j=0;j<nbNoeuds;j++)
 		{
 			if( graph.get(j, pos).getValeur() )
 				result.add(tabnoeuds.get(j).valeur);
-			
+
 		}
 		return result;
 	}
@@ -152,15 +146,15 @@ public class MatGraph extends AbstractGrapheOriente{
 		}
 		if (pos==-1)
 			System.out.println("erreur noeud inexistant");
-		
+
 		int	lignesize=graph.getLine(pos).size();
 		for(int j=0;j<lignesize;j++)
 		{
 			if( graph.get(pos, j).getValeur() )
 				result.add(tabnoeuds.get(j).valeur);
-			
+
 		}
-			return result;
+		return result;
 	}
 
 
@@ -178,20 +172,20 @@ public class MatGraph extends AbstractGrapheOriente{
 		}
 		if (pos==-1)
 			System.out.println("erreur noeud inexistant");
-	
+
 		for(int j=0;j<nbNoeuds;j++)
 		{
 			if( graph.get(j,pos).getValeur() )
 				result.addAll( (Collection)(graph.get(j,pos).listeIdArc));//!!!
-			
+
 		}
 		return result;
-	
+
 	}
 
 	@Override
 	public ArrayList<Arc> listerArcsSortants(int n) {
-		
+
 		ArrayList<Arc> result = new ArrayList<Arc>();
 		int pos=-1;
 		for(int i=0;i<nbNoeuds;i++)
@@ -203,12 +197,12 @@ public class MatGraph extends AbstractGrapheOriente{
 		}
 		if (pos==-1)
 			System.out.println("erreur noeud inexistant");
-		
+
 		for(int j=0;j<nbNoeuds;j++)
 		{
 			if( graph.get(pos,j).getValeur() )
 				result.addAll( (Collection)(graph.get(pos, j).listeIdArc));//!!!
-			
+
 		}
 		return result;
 	}
@@ -237,23 +231,18 @@ public class MatGraph extends AbstractGrapheOriente{
 			}
 			result+="\n";
 		}
-//tableau
+		//tableau
 		for(int i =0; i<tabnoeuds.size();i++)
 			result+=i+":"+String.valueOf(tabnoeuds.get(i).getValeur())+";";
 		result+="\n";
 		result+="nb noeuds : "+nbNoeuds+"\n";
 		result+="nb arcs : "+nbArc+"\n";
-		
-		
-		
+
+
+
 		return result;
 
 	}
-
-//	public String put_tab(){
-//		String result = new String();
-//
-//	}
 
 
 }
