@@ -23,16 +23,19 @@ public class TestMonGraphe
 
 	/*
 	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
-	 * graphe
+	 * graphe, horloge : hashmap fourni en paramêtre qui indice les noeuds par
+	 * des temps(permet de conserver l'horloge chez l'appelant)
+	 * 
+	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
+	 * départ.
 	 */
-	public void DFS(int n, boolean option)
+	public HashMap<Integer, Integer> DFS(int n, boolean option, HashMap<Integer, Integer> horloge)
 	{
 		int temps = 0;
 		ArrayList<Integer> listeNoeud = monGraphe.listeNoeuds();
 		// 0 est la couleur blanche, 1 la couleur grise, 2 la couleur noire
 		HashMap<Integer, Integer> couleur = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-		HashMap<Integer, Integer> d = new HashMap<Integer, Integer>();
 
 		for (Integer noeud : listeNoeud)
 		{
@@ -40,7 +43,7 @@ public class TestMonGraphe
 		}
 
 		pi.put(n, n);
-		temps = Visiter(n, temps, couleur, pi, d);
+		temps = Visiter(n, temps, couleur, pi, horloge);
 
 		if (option)
 		{
@@ -49,21 +52,14 @@ public class TestMonGraphe
 				if (couleur.get(noeud) == 0)
 				{
 					pi.put(noeud, noeud);
-					temps = Visiter(noeud, temps, couleur, pi, d);
+					temps = Visiter(noeud, temps, couleur, pi, horloge);
 				}
 			}
 		}
-		System.out.println("\n===DFS===");
-
-		for (int i : d.keySet())
-		{
-			System.out.print("[" + i + "]" + pi.get(d.get(i)) + "->" + d.get(i)
-			        + " ");
-		}
+		return pi;
 	}
 
-	private int Visiter(int n, int temps, HashMap<Integer, Integer> couleur,
-	        HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
+	private int Visiter(int n, int temps, HashMap<Integer, Integer> couleur, HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
 	{
 		ArrayList<Integer> voisins = monGraphe.listerSuccesseurs(n);
 		d.put(temps, n);
@@ -84,9 +80,13 @@ public class TestMonGraphe
 
 	/*
 	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
-	 * graphe
+	 * graphe, horloge : hashmap fourni en paramêtre qui indice les noeuds par
+	 * des temps(permet de conserver l'horloge chez l'appelant)
+	 * 
+	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
+	 * départ.
 	 */
-	public void BFS(int n, boolean option) throws InterruptedException
+	public HashMap<Integer, Integer> BFS(int n, boolean option, HashMap<Integer, Integer> horloge)
 	{
 		int temps = 0;
 		int noeudCourant;
@@ -94,21 +94,25 @@ public class TestMonGraphe
 		// 0 est la couleur blanche, 1 la couleur grise, 2 la couleur noire
 		HashMap<Integer, Integer> couleur = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-		HashMap<Integer, Integer> d = new HashMap<Integer, Integer>();
-		ArrayBlockingQueue<Integer> file = new ArrayBlockingQueue<Integer>(
-		        monGraphe.NombreNoeuds());
+		ArrayBlockingQueue<Integer> file = new ArrayBlockingQueue<Integer>(monGraphe.NombreNoeuds());
 
 		for (Integer noeud : listeNoeud)
 		{
 			couleur.put(noeud, 0);
 		}
 
-		file.put(n);
+		try
+		{
+			file.put(n);
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 		pi.put(n, n);
 		while (!file.isEmpty())
 		{
 			noeudCourant = file.poll();
-			d.put(temps, noeudCourant);
+			horloge.put(temps, noeudCourant);
 			temps++;
 			for (Integer voisin : monGraphe.listerSuccesseurs(noeudCourant))
 			{
@@ -116,7 +120,14 @@ public class TestMonGraphe
 				{
 					couleur.put(voisin, 1);
 					pi.put(voisin, noeudCourant);
-					file.put(voisin);
+					try
+					{
+						file.put(voisin);
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			couleur.put(noeudCourant, 2);
@@ -126,7 +137,14 @@ public class TestMonGraphe
 				{
 					if (couleur.get(noeud) == 0)
 					{
-						file.put(noeud);
+						try
+						{
+							file.put(noeud);
+						} catch (InterruptedException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						pi.put(noeud, noeud);
 						break;// Sinon on pourrait ajouter plusieurs noeuds à la
 						      // file
@@ -134,32 +152,34 @@ public class TestMonGraphe
 				}
 			}
 		}
-
-
+		return pi;
 	}
+
 	/*
-	 * @param n : noeud de départ, option : si vrai alors parcourir tout le graphe
-	 * typeParcours : 0 pour DFS, 1 pour BFS
+	 * @param n : noeud de départ, option : si vrai alors parcourir tout le
+	 * graphe typeParcours : 0 pour DFS, 1 pour BFS
 	 */
 	public void afficheParcours(int typeParcours, int n, boolean option)
 	{
-switch (typeParcours)
-{
-case 0:
-	//Ajouter le parcours changer DFS et BFS pour les retours 
-	System.out.println("\n===DFS===");
-	break;
-case 1:
-	System.out.println("\n===BFS===");
-	break;
+		HashMap<Integer, Integer> horloge = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 
-}
-//		System.out.println("\n===BFS===");
-//		for (int i : d.keySet())
-//		{
-//			System.out.print("[" + i + "]" + pi.get(d.get(i)) + "->" + d.get(i)
-//			        + " ");
-//		}
+		switch (typeParcours)
+		{
+		case 0:
+			pi = DFS(n, option, horloge);
+			System.out.println("\n===DFS===");
+			break;
+		case 1:
+			pi = BFS(n, option, horloge);
+			System.out.println("\n===BFS===");
+			break;
+
+		}
+		for (int i : horloge.keySet())
+		{
+			System.out.print("[" + i + "]" + pi.get(horloge.get(i)) + "->" + horloge.get(i) + " ");
+		}
 	}
 
 	public boolean acyclicite()
@@ -218,4 +238,53 @@ case 1:
 		return false;
 	}
 
+	public boolean connexite()
+	{
+		HashMap<Integer, Integer> horloge;
+		HashMap<Integer, Integer> pi;
+		ArrayList<Integer> listeNoeuds = monGraphe.listeNoeuds();
+		int nbNoeuds = monGraphe.NombreNoeuds();
+
+		for (Integer noeud : listeNoeuds)
+		{
+			horloge = new HashMap<Integer, Integer>();
+			pi = DFS(noeud, false, horloge);
+			if (pi.size() != nbNoeuds)
+				return false;
+		}
+		return true;
+	}
+
+	public boolean simple()
+	{
+		ArrayList<Arc> listeArcs = monGraphe.listeArcs();
+		HashMap<Integer, TreeSet<Integer>> chercheNonSimple = new HashMap<Integer, TreeSet<Integer>>();
+		int n1;
+		int n2;
+
+		for (Arc monArc : listeArcs)
+		{
+			n1 = monArc.getN1();
+			n2 = monArc.getN2();
+			if (n1 == n2)
+				return false;
+			else
+				if (chercheNonSimple.get(n1) == null)
+				{
+					TreeSet<Integer> aux = new TreeSet<Integer>();
+					aux.add(n2);
+					chercheNonSimple.put(n1, aux);
+				}
+				else
+					if (chercheNonSimple.get(n1).contains(n2))
+					{
+						return false;
+					}
+					else
+					{
+						chercheNonSimple.get(n1).add(n2);
+					}
+		}
+		return true;
+	}
 }

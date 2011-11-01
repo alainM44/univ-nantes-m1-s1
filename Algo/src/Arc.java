@@ -3,9 +3,9 @@
  */
 public class Arc
 {
-	int noeud1;
-	int noeud2;
-	int id;
+	private int noeud1;
+	private int noeud2;
+	private int id;
 
 	public Arc(int n1, int n2, int id)
 	{
