@@ -45,46 +45,68 @@ public class MatMain {
 			//GrapheOriente graphe = new ListGraph();
 			GrapheOriente graphe = new MatGraph();
 			
+			graphe.ajouterN(0);
+			graphe.ajouterN(1);
+			graphe.ajouterN(2);
 			graphe.ajouterN(3);
-			graphe.ajouterN(8);
-			graphe.ajouterN(6);
-			graphe.ajouterN(5);
 			graphe.ajouterN(4);
+			graphe.ajouterN(5);
 			//i = graphe.ajouterA(3, 8);
 			i = graphe.ajouterA(0, 1);
 			listeId.add( i);
 			System.out.println(graphe);
 
+			i = graphe.ajouterA(1, 2);
+			listeId.add( i);
+			System.out.println(graphe);
 
+			i = graphe.ajouterA(2, 3);
+			listeId.add( i);
+			System.out.println(graphe);
 
+			i = graphe.ajouterA(3, 4);
+			listeId.add( i);
+			System.out.println(graphe);
 
-			
-			//i = graphe.ajouterA(6, 8);
-			i = graphe.ajouterA(2, 1);
+			i = graphe.ajouterA(4, 1);
+			listeId.add( i);
+			System.out.println(graphe);
+
+			i = graphe.ajouterA(2, 5);
 			listeId.add( i);
 			System.out.println(graphe);
 			
-			//i = graphe.ajouterA(3, 4);
-			i = graphe.ajouterA(0, 4);
-			
+			i = graphe.ajouterA(5, 0);
 			listeId.add( i);
 			System.out.println(graphe);
 			
-			//i = graphe.ajouterA(4, 6);
-			i = graphe.ajouterA(4, 2);
-			listeId.add( i);
-			System.out.println(graphe);
+//			graphe.supprimerN(4);
+//			System.out.println(graphe);
+//
+//			graphe.ajouterN(4);
+//
+//			
+//			i = graphe.ajouterA(4, 1);
+//			listeId.add( i);
+//			System.out.println(graphe);
+//
+//			i = graphe.ajouterA(3, 4);
+//			listeId.add( i);
+//			System.out.println(graphe);
 
 			TestMonGraphe test = new TestMonGraphe(graphe);
-			test.DFS(6, true);
-			try
-			{
-				test.BFS(6, true);
-			} catch (InterruptedException e)
-			{
-				System.out.println("chat");
-				e.printStackTrace();
-			}
+			System.out.println(test.connexite());
+			System.out.println(graphe.listeArcs());//TODO listeArc déconne, à refaire
+			System.out.println(test.acyclicite());
+//			test.DFS(6, true);
+//			try
+//			{
+//				test.BFS(6, true);
+//			} catch (InterruptedException e)
+//			{
+//				System.out.println("chat");
+//				e.printStackTrace();
+//			}
 		//	System.out.println(test.acyclicite());
 
 		
