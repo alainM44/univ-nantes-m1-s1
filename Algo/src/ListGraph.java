@@ -20,8 +20,7 @@ public class ListGraph extends AbstractGrapheOriente
 	public int ajouterA(int n1, int n2)
 	{
 
-		LinkedList<Encapsulateur<Integer>> aux = graphe.get(n1);
-		Iterator<Encapsulateur<Integer>> iter = aux.iterator();
+		Iterator<Encapsulateur<Integer>> iter = graphe.get(n1).iterator();
 		Encapsulateur<Integer> encaps;
 
 		nbArc++;
@@ -39,7 +38,7 @@ public class ListGraph extends AbstractGrapheOriente
 		}
 
 		encaps = new Encapsulateur<Integer>(n2, idGenerator);
-		aux.addLast(encaps);// Permet d'assurer que le premier element reste
+		graphe.get(n1).addLast(encaps);// Permet d'assurer que le premier element reste
 		// le meme le noeud
 
 		return idGenerator;
