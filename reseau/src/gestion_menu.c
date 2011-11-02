@@ -7,35 +7,47 @@
 
 
 int menu(int sock,char folder_name []){
-  char *path ;
-  path = malloc(100);
-  give_path(path);
-  path[strlen(path)-1]='/';
-   strcat(path,folder_name);
-  path[strlen(path)-1]='/';
-
-  //  fprintf(stderr,"path2 #%s#\n",path);
   bool end;
   end=false;
   char *record;
   char param[100];
   char out_name[100];
+  char cmd[100];
   int comande;
   MESSAGE message;
+  char *path ;
+  path = malloc(100);
+  give_path(path);
+  create_main_folder("CLIENT",path,folder_name);
+
+  fprintf(stderr,"path1 #%s#\n",path);
+  path[strlen(path)]='/';
+fprintf(stderr,"path11 #%s#\n",path);
+   strcat(path,folder_name);
+    path[strlen(path)+1]='/';
+
+   fprintf(stderr,"path2 #%s#\n",path);
+
   record=malloc(1000);
   //  param=malloc(1000);
   //  sprintf(record,"%s","clear");
   system(record);
   while(!end){
-       clean_stdin();
-    give_path(path);
+    clean_stdin();
+ /* give_path(path); */
+ /*  path[strlen(path)-1]='/'; */
+ /*   strcat(path,folder_name); */
+ /*  path[strlen(path)-1]='/'; */
+
+    //    give_path(path);
+    //    strncat(path,
     fprintf(stderr,"\n**************************************\n***********MENU CLIENT FTP************\n**************************************\nN°   COMMAND \n1 -> Listing folder \n2 -> Dowload file  \n3 -> Upload file \n4 -> switch to the folder \n5 -> Enter a commande \n6 -> Quit \n\n your current folder : #%s#\nEnter a command number  : ",path);
     // getline(char **lineptr, size_t *n, FILE *stream);
     scanf("%d",&comande);
     fprintf(stderr,"commande choisie : %d",comande);
  
     system(record);
-   clean_stdin();
+    clean_stdin();
     switch(comande) {
 
     case 1 :
@@ -50,16 +62,18 @@ int menu(int sock,char folder_name []){
       message.tab[strlen(param)]='\0';
       send_commande(sock,message) ;
       //init de out_name
-      strncpy(out_name,path,strlen(path));
-      out_name[strlen(out_name)]='\0';
-    fprintf(stderr,"outname1 #%s#\n",out_name);
+      strcpy(out_name,path);
+      out_name[strlen(path)]='/';
+      out_name[strlen(path)+1]='\0';
+      fprintf(stderr,"outname1 #%s#\n",out_name);
+      fprintf(stderr,"param #%s#\n",param);
       strcat(out_name,param);
-      out_name[strlen(out_name)-1]='\0';
+      out_name[strlen(out_name)]='\0';
 
-    fprintf(stderr,"outname2 #%s#\n",out_name);
+      fprintf(stderr,"outname2 #%s#\n",out_name);
 
-    //      receve_and_merge(sock,out_name);
-      fprintf(stderr," Low dowload of file #%s# please wait... : ",message.tab);
+           receve_and_merge(sock,out_name);
+	   // fprintf(stderr," Low dowload of file #%s# please wait... : ",message.tab);
       //      sleep(2);
       break;
     case 3 :
@@ -79,10 +93,18 @@ int menu(int sock,char folder_name []){
     case 5 : 
       fprintf(stderr,"Enter the command: ");
       gets(param);
-      //scanf("%s",param);
-      fprintf(stderr,"%s",param);
-      system(param);
-      // sleep(2);
+      strcpy(cmd,param);
+      strcat(cmd," ");
+      strcat(cmd,path);
+
+      //      cmd[strlen(path)]='/';
+      // cmd[strlen(path)+1]='\0';
+      //      fprintf(stderr,"param #%s#\n",param);
+      // strcat(cmd,param);
+      cmd[strlen(cmd)]='\0';
+      fprintf(stderr,"#%s#",cmd);
+      system(cmd);
+
       break;
     case 6 :
       message.type=QUIT;
@@ -130,47 +152,53 @@ void give_path(char strOut[]){
   //sprintf(strOut,"%s",std);
   //strOut=malloc(strlen(std)*sizeof(char));
   strncpy(strOut,std, strlen(std));
-  //  fprintf(stderr,"give path#%s#\n",strOut);
+  fprintf(stderr,"give path#%s#\n",strOut);
 }
 
-char* create_main_folder (const char name[],char fname[]){ // client ou server // retourne le chemin pour la supression
+char* create_main_folder (const char name[],const char*path, char fname[]){ // client ou server // retourne le chemin pour la supression
   int pid = getpid();
   char * pids;
   pids=malloc(30);
   sprintf(pids,"%d",pid);
   FILE*fichier;
   char mk [7]="mkdir ";
+  //  char cd [7]="cd" 
+    //    cd =malloc(100);
   char *cmd;
   cmd =malloc(100);
-  char* path;
-  path = malloc(100);
+  /* char* path; */
+  /* path = malloc(100); */
   char *final_name;
   final_name =malloc(100);
-  give_path(path);
+  //  give_path(path);
+  fprintf(stderr,"mkdir1#%s#\n",path);
   strcpy(final_name,name);
   final_name=strncat(final_name,pids,strlen(pids));  
-  //    fprintf(stderr,"#%s#\n",final_name);
+    fprintf(stderr,"final name1#%s#\n",final_name);
   strncpy(cmd,mk,7);
-  //  fprintf(stderr,"#%s#\n",cmd);
+  fprintf(stderr,"finalnale2#%s#\n",cmd);
   cmd=strncat(cmd,path,strlen(path));
   //on rajoute le /
   cmd=strncat(cmd,"/",1);
   
   cmd=strncat(cmd,final_name,strlen(final_name));
-  //    fprintf(stderr,"#%s#\n",cmd);
-    
+    fprintf(stderr,"cmd#%s#\n",cmd);
+
+
   system(cmd);
   fprintf(stderr,"Folder %s created\n",final_name);
-  free(path);
+  //  free(path);
   free(cmd);
   free(pids);
  
   
   
-  
+  // fprintf(stderr,"fina#%s#\n",final_name);
   strncpy(fname,final_name,strlen(final_name));
-  final_name[strlen(final_name)]='\0';
- free(final_name);
+
+  fname[strlen(final_name)]='\0';
+  fprintf(stderr,"fname#%s#\n",fname);
+  free(final_name);
 }
 
 

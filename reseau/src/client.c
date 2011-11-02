@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   char * host;
   char* mesg;
   int longueur;
-  char folder_name[30];
+  char folder_name[100];
   if (argc != 2)
     {
       perror("usage : client<adresse-serveur>");
@@ -32,11 +32,11 @@ int main(int argc, char **argv)
 
 
   
-  final_socket = client_request_connect(socket_descriptor, host,adresse_locale,ptr_host); 
-  
-  create_main_folder("CLIENT",folder_name);
+      final_socket = client_request_connect(socket_descriptor, host,adresse_locale,ptr_host);
+   
+
   // folder_name[strlen(folder_name)]='\0';
-  fprintf(stderr,"cli#%s#\n",folder_name);
+  // fprintf(stderr,"cli#%s#\n",folder_name);
   menu(final_socket,folder_name);
   //  receve_and_merge(final_socket,"out.pdf");
    

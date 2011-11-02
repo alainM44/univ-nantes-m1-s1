@@ -262,18 +262,19 @@ void receive_serveur (int sock_descriptor,MESSAGE message,bool*fin){
   
   if ( read(sock_descriptor,(char *)&message,sizeof(message)) <0)
     perror("read de receive \n");
-
+      fprintf(stderr, "Attente de reception%s.\n",strerror(errno));
 
   switch(message.type)
     {
     case 0 :// fprintf(stderr,"#%s#",message.tab);
-      frag_and_send(sock_descriptor,message.tab);
+            frag_and_send(sock_descriptor,message.tab);
       
       break;
-    case 1 :  fprintf(stderr,"1");
+    case 1 : 
+      //        frag_and_send(sock_descriptor,message.tab);fprintf(stderr,"1");
 
       break;
-    case 2 : *fin=true; 
+    case 3 : *fin=true; 
 
       break;
     

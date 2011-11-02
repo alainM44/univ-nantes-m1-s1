@@ -13,9 +13,9 @@
 #include "messages.h"
 
 
-char* create_main_folder (const char name[],char final_name[]); //retourne le chemin pour la suppresion
+char* create_main_folder (const char name[],const char * path,char final_name[]); //retourne le chemin pour la suppresion
 void give_path(char strOut[]);
-int menu(int sock,char folder_name []);
+int menu(int soc,char folder_name []);
 void clean_stdin(void);
 
 
