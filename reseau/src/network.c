@@ -1,21 +1,25 @@
 #include "network.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <linux/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <string.h>
 
 int send_data (int sock_descriptor, MESSAGE_DATA message)
-{ write(sock_descriptor,(char *)&message ,sizeof(message),0);}
+{
+  if  ( write(sock_descriptor,(char *)&message,sizeof(message)) <0)
+    {
+      fprintf(stderr,"errr write");
+      //perror("write\n");
+      fprintf(stderr, "Erreur write %s.\n",strerror(errno));
 
+    }  
+
+  return 0;
+}
+ 
 MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA message)
 {
   if ( read(sock_descriptor,(char *)&message,sizeof(message)) <0)
     perror("read\n");
   return message;
-;}
+}
 
 int  client_request_connect( int socket_descriptor, char* host, sockaddr_in adresse_locale,  hostent * ptr_host)
 {

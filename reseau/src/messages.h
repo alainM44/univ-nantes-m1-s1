@@ -19,7 +19,9 @@ typedef struct commande COMMANDE;
 struct data {
   int ID_data;
   int offset; 
+  int taille;
   int Frag;
+  int MF;
   char tab [TAILLEMAXDATA];
 
 };

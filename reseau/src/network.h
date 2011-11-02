@@ -9,6 +9,10 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/stat.h>
 
 typedef struct sockaddr sockaddr;
 typedef struct sockaddr_in sockaddr_in;
