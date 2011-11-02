@@ -86,13 +86,15 @@ public class MatGraph extends AbstractGrapheOriente{
 	public ArrayList<Arc> listeArcs() {
 		ArrayList<Arc> result = new ArrayList<Arc>();
 		int nbarctemp = nbArc;
-
+		int taillelistearcs;	
 		for(int i=0;i<nbNoeuds;i++)
 		{
 			for(int j=0;j<nbNoeuds;j++)
 			{
-				nbarctemp-=graph.get(i,j).listeIdArc.size();
-				result.addAll( (Collection)(graph.get(i,j).listeIdArc));//!!!
+				taillelistearcs =graph.get(i,j).listeIdArc.size();
+				nbarctemp-=taillelistearcs;
+				for(int k=0;k<taillelistearcs;k++)
+					result.add(new Arc(i, j, graph.get(i,j).listeIdArc.get(k)));
 				if(nbarctemp==0)
 					break;
 			}
@@ -162,6 +164,7 @@ public class MatGraph extends AbstractGrapheOriente{
 	@Override
 	public ArrayList<Arc> listerArcsEntrants(int n) {
 		ArrayList<Arc> result = new ArrayList<Arc>();
+		int taillelistearcs;	
 		int pos=-1;
 		for(int i=0;i<nbNoeuds;i++)
 		{
@@ -176,7 +179,11 @@ public class MatGraph extends AbstractGrapheOriente{
 		for(int j=0;j<nbNoeuds;j++)
 		{
 			if( graph.get(j,pos).getValeur() )
-				result.addAll( (Collection)(graph.get(j,pos).listeIdArc));//!!!
+			{
+				taillelistearcs= graph.get(j,pos).getListe().size();
+				for(int k=0;k<taillelistearcs;k++)
+					result.add(new Arc(j, pos, graph.get(j,pos).listeIdArc.get(k)));
+			}
 
 		}
 		return result;
@@ -185,7 +192,7 @@ public class MatGraph extends AbstractGrapheOriente{
 
 	@Override
 	public ArrayList<Arc> listerArcsSortants(int n) {
-
+		int taillelistearcs;	
 		ArrayList<Arc> result = new ArrayList<Arc>();
 		int pos=-1;
 		for(int i=0;i<nbNoeuds;i++)
@@ -200,8 +207,12 @@ public class MatGraph extends AbstractGrapheOriente{
 
 		for(int j=0;j<nbNoeuds;j++)
 		{
-			if( graph.get(pos,j).getValeur() )
-				result.addAll( (Collection)(graph.get(pos, j).listeIdArc));//!!!
+			if( graph.get(j,pos).getValeur() )
+			{
+				taillelistearcs= graph.get(j,pos).getListe().size();
+				for(int k=0;k<taillelistearcs;k++)
+					result.add(new Arc(j, pos, graph.get(j,pos).listeIdArc.get(k)));
+			}
 
 		}
 		return result;
@@ -234,9 +245,9 @@ public class MatGraph extends AbstractGrapheOriente{
 		//tableau
 		for(int i =0; i<tabnoeuds.size();i++)
 			result+=i+":"+String.valueOf(tabnoeuds.get(i).getValeur())+";";
-		result+="\n";
-		result+="nb noeuds : "+nbNoeuds+"\n";
-		result+="nb arcs : "+nbArc+"\n";
+//		result+="\n";
+//		result+="nb noeuds : "+nbNoeuds+"\n";
+//		result+="nb arcs : "+nbArc+"\n";
 
 
 
