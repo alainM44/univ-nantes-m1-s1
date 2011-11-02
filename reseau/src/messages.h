@@ -9,11 +9,11 @@
 
 
 
-struct commande {
-  int Id_commande;
-  char tab [TAILLEMAXCOMMANDE];
-};
-typedef struct commande COMMANDE;
+/* struct commande { */
+/*   int Id_commande; */
+/*  ; */
+/* }; */
+/* typedef struct commande COMMANDE; */
 
 
 struct data {
@@ -27,19 +27,24 @@ struct data {
 };
 typedef struct data DATA;
 
- 
-struct message_c{
-  int ID_message;
+typedef enum {DAT=0,COM=1,QUIT=2}MessageClient; 
 
-  COMMANDE commande;
+struct message{
+  int ID_message;
+  MessageClient type;
+  char tab [TAILLEMAXCOMMANDE] ;
 };
-typedef struct message_c MESSAGE_COMMANDE ;
+typedef struct message MESSAGE ;
+
+
+
 
 struct message_d{
   int ID_message;
   DATA data;
 };
 typedef struct message_d MESSAGE_DATA;
+
 
 
 
