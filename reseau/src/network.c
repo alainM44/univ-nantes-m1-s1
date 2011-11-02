@@ -260,18 +260,33 @@ void send_commande (int sock_descriptor, MESSAGE message){
 }
 void receive_serveur (int sock_descriptor,MESSAGE message,bool*fin){
   
+  char out_name [100];
   if ( read(sock_descriptor,(char *)&message,sizeof(message)) <0)
     perror("read de receive \n");
       fprintf(stderr, "Attente de reception%s.\n",strerror(errno));
 
   switch(message.type)
     {
+      //down
     case 0 :// fprintf(stderr,"#%s#",message.tab);
             frag_and_send(sock_descriptor,message.tab);
-      
+	    
       break;
+      //upload
     case 1 : 
-      //        frag_and_send(sock_descriptor,message.tab);fprintf(stderr,"1");
+ //init de out_name
+      /* strcpy(out_name,path); */
+      /* out_name[strlen(path)]='/'; */
+      /* out_name[strlen(path)+1]='\0'; */
+      /* fprintf(stderr,"outname1 #%s#\n",out_name); */
+      /* fprintf(stderr,"param #%s#\n",param); */
+      /* strcat(out_name,param); */
+      /* out_name[strlen(out_name)]='\0'; */
+
+       fprintf(stderr,"messtabserveur #%s#\n",message.tab); 
+
+      receve_and_merge(sock_descriptor,message.tab);
+
 
       break;
     case 3 : *fin=true; 

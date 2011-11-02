@@ -57,6 +57,7 @@ fprintf(stderr,"path11 #%s#\n",path);
     case 2 :
       fprintf(stderr," File name to download : ",comande);
       gets(param);
+      //prepare command to send
       message.type=0;
       strncpy(message.tab,param,strlen(param));
       message.tab[strlen(param)]='\0';
@@ -78,8 +79,17 @@ fprintf(stderr,"path11 #%s#\n",path);
       break;
     case 3 :
       fprintf(stderr," File name to upload : ",comande);
-      scanf("%s",param);
-      //      frag_and_send(sock,param);
+      gets(param);
+      //prepare command to send
+      message.type=1;
+      strncpy(message.tab,"out",3);
+      strncat(message.tab,param,strlen(param));
+      fprintf(stderr,"messtab#%s#\n",message.tab);
+      //      message.tab[strlen(param)]='\0';
+      send_commande(sock,message) ;
+      
+      frag_and_send(sock,param);
+
       fprintf(stderr," Low uoload of fie : %s  please wait... : ",param);
       sleep(2);
       break;
