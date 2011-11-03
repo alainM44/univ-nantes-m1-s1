@@ -80,6 +80,10 @@ public class MatMain {
 			listeId.add( i);
 			System.out.println(graphe);
 			
+			i = graphe.ajouterA(5, 0);
+			listeId.add( i);
+			System.out.println(graphe);
+			
 //			graphe.supprimerN(4);
 //			System.out.println(graphe);
 //
@@ -98,6 +102,7 @@ public class MatMain {
 			System.out.println(test.connexite());
 			System.out.println(graphe.listeArcs());//TODO listeArc déconne, à refaire
 			System.out.println(test.acyclicite());
+			System.out.println(test.simple());
 //			test.DFS(6, true);
 //			try
 //			{
