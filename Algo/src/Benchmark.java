@@ -9,7 +9,6 @@ public class Benchmark
 		boolean verif;
 		ArrayList<Integer> listeId = new ArrayList<Integer>();
 
-		int i;
 
 		System.out.println("===CREATION DES " + n + " NOEUDS===");
 
@@ -51,7 +50,7 @@ public class Benchmark
 		System.out.println("temps = " + mili);
 
 		System.out.println("===SIMPLE===");
-		
+
 		mili = System.currentTimeMillis();
 		verif = test.simple();
 		mili = System.currentTimeMillis() - mili;
@@ -66,6 +65,34 @@ public class Benchmark
 		System.out.println(verif);
 		System.out.println("temps = " + mili);
 
+		System.out.println("===SUCCESSEURS===");
+		mili = System.currentTimeMillis();
+		listeNoeuds = graphe.listerSuccesseurs(0);
+		mili = System.currentTimeMillis() - mili;
+		System.out.println(listeNoeuds);
+		System.out.println("temps = " + mili);
+
+		System.out.println("===PREDECESSEURS===");
+		mili = System.currentTimeMillis();
+		listeNoeuds = graphe.listerPredecesseurs(n-1);
+		mili = System.currentTimeMillis() - mili;
+		System.out.println(listeNoeuds);
+		System.out.println("temps = " + mili);
+		
+		System.out.println("===ARCS SORTANTS===");
+		mili = System.currentTimeMillis();
+		listeArcs = graphe.listerArcsSortants(0);
+		mili = System.currentTimeMillis() - mili;
+		System.out.println(listeArcs);
+		System.out.println("temps = " + mili);
+		
+		System.out.println("===ARCS ENTRANTS===");
+		mili = System.currentTimeMillis();
+		listeArcs = graphe.listerArcsEntrants(n-1);
+		mili = System.currentTimeMillis() - mili;
+		System.out.println(listeArcs);
+		System.out.println("temps = " + mili);
+
 		mili = System.currentTimeMillis();
 		test.afficheParcours(0, 0, true);
 		mili = System.currentTimeMillis() - mili;
@@ -75,7 +102,7 @@ public class Benchmark
 		test.afficheParcours(1, 0, true);
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("\ntemps = " + mili);
-		
+
 		System.out.println("===SUPPRESSION DES ARCS===");
 
 		mili = System.currentTimeMillis();
@@ -93,8 +120,6 @@ public class Benchmark
 		supprimerNoeuds(graphe, n);
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("temps = " + mili);
-
-
 
 	}
 

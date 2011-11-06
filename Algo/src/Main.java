@@ -58,7 +58,7 @@ public class Main
 //		System.out.println("\n===Connexité===\n" + test.connexite());
 //		System.out.println("\n===Simple===\n" + test.simple());
 		
-		Benchmark.bench(graphe, 100);
+		Benchmark.bench(graphe, 2000);
 
 	}
 }
