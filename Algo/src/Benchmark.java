@@ -41,13 +41,13 @@ public class Benchmark
 
 		TestMonGraphe test = new TestMonGraphe(graphe);
 
-		System.out.println("===ACYCLIQUE===");
-
-		mili = System.currentTimeMillis();
-		verif = test.acyclicite();
-		mili = System.currentTimeMillis() - mili;
-		System.out.println(verif);
-		System.out.println("temps = " + mili);
+//		System.out.println("===ACYCLIQUE===");
+//
+//		mili = System.currentTimeMillis();
+//		verif = test.acyclicite();
+//		mili = System.currentTimeMillis() - mili;
+//		System.out.println(verif);
+//		System.out.println("temps = " + mili);
 
 		System.out.println("===SIMPLE===");
 
@@ -69,28 +69,28 @@ public class Benchmark
 		mili = System.currentTimeMillis();
 		listeNoeuds = graphe.listerSuccesseurs(0);
 		mili = System.currentTimeMillis() - mili;
-		System.out.println(listeNoeuds);
+//		System.out.println(listeNoeuds);
 		System.out.println("temps = " + mili);
 
 		System.out.println("===PREDECESSEURS===");
 		mili = System.currentTimeMillis();
 		listeNoeuds = graphe.listerPredecesseurs(n-1);
 		mili = System.currentTimeMillis() - mili;
-		System.out.println(listeNoeuds);
+//		System.out.println(listeNoeuds);
 		System.out.println("temps = " + mili);
 		
 		System.out.println("===ARCS SORTANTS===");
 		mili = System.currentTimeMillis();
 		listeArcs = graphe.listerArcsSortants(0);
 		mili = System.currentTimeMillis() - mili;
-		System.out.println(listeArcs);
+//		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);
 		
 		System.out.println("===ARCS ENTRANTS===");
 		mili = System.currentTimeMillis();
 		listeArcs = graphe.listerArcsEntrants(n-1);
 		mili = System.currentTimeMillis() - mili;
-		System.out.println(listeArcs);
+//		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);
 
 		mili = System.currentTimeMillis();

@@ -69,17 +69,16 @@ public class MatGraph extends AbstractGrapheOriente{
 	@Override
 	public void supprimerN(int n) {
 		int pos=0;
-		ArrayList<Arc> arcasup= listerArcsEntrants(tabnoeuds.get(n).getValeur());
+//		ArrayList<Arc> arcasup= listerArcsEntrants(tabnoeuds.get(n).getValeur());
 		
-		int taillelistearcs=arcasup.size();	
-		for(int i=0;i<taillelistearcs;i++)
-		{
-			graph.get(i, tabnoeuds.get(n).valeur).setValeur(false);
+//		int taillelistearcs=arcasup.size();	
+//		for(int i=0;i<taillelistearcs;i++)
+//		{
+//			graph.get(i, tabnoeuds.get(n).valeur).setValeur(false);
 //			graph.get(tabnoeuds.get(n).getValeur(),i).listeIdArc.remove(arcasup.get(i)); // INUTILITE DE NB AR
 			//nbArc--;
-			System.out.println("sup");
 //			
-		}
+//		}
 		for(int i=0; i<nbNoeuds-1;i++) // parcours de n
 		{
 			if (tabnoeuds.get(i).getValeur() ==n)
@@ -89,7 +88,6 @@ public class MatGraph extends AbstractGrapheOriente{
 			}
 		}
 		nbArc-=tabnoeuds.get(pos).getNbArc();
-		System.out.println("nba"+nbArc);
 		graph.suppCol(pos);
 		graph.suppLigne(pos); //en O de N
 	
@@ -227,7 +225,6 @@ public class MatGraph extends AbstractGrapheOriente{
 			if( graph.get(pos,j).getValeur() )
 			{
 				taillelistearcs= graph.get(pos,j).getListe().size();
-				System.out.println(graph.get(pos,j).getListe());
 				for(int k=0;k<taillelistearcs;k++)
 					result.add(new Arc(n, j, graph.get(pos,j).listeIdArc.get(k)));
 			}
