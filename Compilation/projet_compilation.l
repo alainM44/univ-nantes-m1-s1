@@ -4,15 +4,14 @@
 %}
 
 /*def*/
-
-deb "\\"begin
-tabular tabular
+garbage [a-zA-Z0-9"&""\\" \t\n]*
+deb "\\"begin\{tabular\}
 fusion "\\"multicolumn
 trait_hor "\\"hline
 separ_col "&"
 fin_ligne "\\""\\"
 separ \|
-fin "\\"end
+fin "\\"end\{tabular\}
 nombre [0-9]+"."?[0-9]*
 word [a-zA-Z][a-zA-Z0-9]*
 
@@ -24,23 +23,24 @@ space [ \t\n]*
 
 
 
+
 /*rules analyseur lexico*/
 %%
 
-{deb}         {return DEB;}
-{tabular}     {return TABLEAU;}
-{fusion}      {return FUSION;}
-{trait_hor}   {return TRAIT_HOR;}
-{separ_col}   {return SEPAR_COL;}
-{fin_ligne}   {return FIN_LIGNE;}
-{separ}       {return SEPAR;}
-{fin}         {return FIN;}
-{accol_G}     {return ACCOL_G;}
-{accol_D}     {return ACCOL_D;}
-{nombre}      {yylval.nb=atof(yytext);return NOMBRE; }
-{word}        {yylval.str=yytext;printf("%s\n",yylval.str);return MOT;}
-{space}       {yylval.str=yytext;return SPACE;}
-.             {fprintf(yyout,"erreur");}
+{deb}         {printf("DEB ");return DEB;}
+{fusion}      {printf("FUSION ");return FUSION;}
+{trait_hor}   {printf("TRAIT_HOR ");return TRAIT_HOR;}
+{separ_col}   {printf("SEPAR_COL ");return SEPAR_COL;}
+{fin_ligne}   {printf("FIN_LIGNE ");return FIN_LIGNE;}
+{separ}       {printf("SEPAR ");return SEPAR;}
+{fin}         {printf("FIN ");return FIN;}
+{accol_G}     {printf("ACCOL_G ");return ACCOL_G;}
+{accol_D}     {printf("ACCOL_D ");return ACCOL_D;}
+{nombre}      {printf("NOMBRE ");yylval.nb=atof(yytext);return NOMBRE; }
+{word}        {printf("MOT ");yylval.str=strdup(yytext);return MOT;}
+{space}       {printf("SPACE ");yylval.str=strdup(yytext);return SPACE;}
+{garbage}     {printf("GARBAGE ");ECHO;return GARBAGE;}
+.             {printf("/nerreur/n");}
 
 %%
 

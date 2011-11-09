@@ -50,9 +50,10 @@
      FIN = 266,
      ACCOL_G = 267,
      ACCOL_D = 268,
-     NOMBRE = 269,
-     MOT = 270,
-     SPACE = 271
+     GARBAGE = 269,
+     NOMBRE = 270,
+     MOT = 271,
+     SPACE = 272
    };
 #endif
 /* Tokens.  */
@@ -67,9 +68,10 @@
 #define FIN 266
 #define ACCOL_G 267
 #define ACCOL_D 268
-#define NOMBRE 269
-#define MOT 270
-#define SPACE 271
+#define GARBAGE 269
+#define NOMBRE 270
+#define MOT 271
+#define SPACE 272
 
 
 
@@ -84,7 +86,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 88 "y.tab.h"
+#line 90 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
