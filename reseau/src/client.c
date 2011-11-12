@@ -16,35 +16,21 @@ int main(int argc, char **argv)
   char* mesg;
   int longueur;
   char folder_name[100];
+  int pid=getpid();
   if (argc != 2)
     {
       perror("usage : client<adresse-serveur>");
       exit(1);
     }
-
   prog = argv[0];
   host = argv[1];
-  mesg = argv[2];
-
-  printf("nom de l'executable : %s \n", prog);
-  printf("adresse du serveur : %s \n", host);
-  // printf("message envoye : %s \n", mesg);
-
-
   
       final_socket = client_request_connect(socket_descriptor, host,adresse_locale,ptr_host);
-   
 
-  // folder_name[strlen(folder_name)]='\0';
-  // fprintf(stderr,"cli#%s#\n",folder_name);
   menu(final_socket,folder_name);
-  //  receve_and_merge(final_socket,"out.pdf");
-   
- 
- 
-  //printf("\nfin de la reception.\n");
+
   close(final_socket);
-  printf("connexion avec le serveur fermee, fin du programme.\n");
+  printf("connexion avec le serveur fermee, fin du client%d .\n",pid);
  
   exit(0);
 

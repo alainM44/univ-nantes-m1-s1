@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 	  perror("erreur : impossible d'accepter la connexion avec le client");
 	  exit(1);
 	}
-
+ 
       switch(fork())
 	{
 	case 0 ://fils
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 	  close(nouv_socket_descriptor);
 	  break;
 	}
-      //tdt du message
+     //tdt du message
       printf("reception d'un message.\n");
 
       close(nouv_socket_descriptor);
