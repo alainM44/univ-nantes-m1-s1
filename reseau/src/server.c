@@ -1,6 +1,7 @@
- #include "network.h"
-#include "messages.h"
-#include "gestion_menu.h"
+/* FICHIER SERVEUR*/
+#include "common/network.h"
+#include "common/messages.h"
+#include "common/gestion_menu.h"
 
 
 
