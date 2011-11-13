@@ -1,0 +1,34 @@
+\chapter{Benchmark}
+\section{Type de graphe utilisé pour les tests de performances}
+Les graphes contiendront 100, 500, 1000, 1500 et 2000 nœuds. Les graphes ont tous une structure
+commune.
+Si l'on numérote nos nœuds de 1 à n alors le graphe est défini tel que : \\
+$\forall i\in Noeuds, \forall j  \in Noeuds, i<j \Leftrightarrow  \exists (i \Rightarrow j ) \in Arcs$
+Voici un exemple sur 4 nœuds : \\
+\begin{figure}[!h] 
+\begin{center}
+  \includegraphics[scale=0.60]{graph.png}
+\end{center}
+\end{figure} 
+
+Il y aura donc au total $\frac{n^2-n}{2}$ arcs. Ce graphe a l'avantage d'être un cas assez long à traiter pour
+certains de nos tests. Nous nous sommes limiter à 2000 nœuds car au dessus de ça, la mémoire
+d'Eclipse déborde. Les tests ont d'ailleurs tous été effectués sur la même machine ; le Heap Space de
+Java étant fixé à 768Mo.
+
+\section{Benchmark}
+Le tableau des résultats ainsi que les graphe de comparaison des temps entre les deux
+implémentations sont placés en annexe à la fin de ce rapport.
+Il faut préciser que les tests effectuant la création/suppression des nœuds/arcs correspond à la
+création/suppression de l'ensemble des nœuds/arcs du graphe. La complexité de l'algorithme est
+alors multiplié par un facteur qui correspond au nombre de nœuds/arcs. De plus le nombre d'arcs est
+quadratique par rapport au nombre de nœuds.
+Ces résultats mettent très clairement en évidence les algorithmes qui mériteraient d'être modifiés tel
+que l'acyclicité ou l'ajoute d'arc pour l'implémentation en liste. Mais ces problèmes ont déjà été
+évoqués.
+Ce que l'on constate par ailleurs, c'est la rapidité d'accès de la matrice par rapport à la liste. L'accès
+à un arc, la suppression d'un arc, d'un nœud ou l'accès au prédécesseurs est très faible voire
+négligeable sur la matrice ; en contrepartie celle-ci va consommer un espace extrêmement important
+en mémoire. Et chaque ajout de nœud coûtera de plus en plus cher en mémoire. L'implémentation
+en liste à l'avantage d'être plus modulable
+
