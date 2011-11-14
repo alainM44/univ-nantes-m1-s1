@@ -11,16 +11,20 @@ extern FILE* yyout;
 extern FILE* yyerr;
 int nbcol = 0;
 int nbseparateur = 0;
- void redigeOption( int border);
- char* redigeColonne(char* texte, int multicolumn, int colspan);
- char* redigeColonneNum(double val, int multicolumn, int colspan);
+ void redigeOption( int border, char* pos);
+ char* redigeColonne(char* texte, char* pos, int multicolumn, int colspan);
+ char* redigeColonneReel(double val, char* pos, int multicolumn, int colspan);
+ char* redigeColonneEntier(int val, char* pos, int multicolumn, int colspan);
+char * positionnement = "center";
 %}
 
 //
 
-%union{ char* str; double nb;}
+%union{ char* str; double reel; int entier;}
 %token DEB
-%token TABLEAU
+%token TABLE
+%token TABULAR
+%token CAPTION
 %token OPTION_T
 %token FUSION
 %token TRAIT_HOR
@@ -30,34 +34,51 @@ int nbseparateur = 0;
 %token FIN
 %token ACCOL_G
 %token ACCOL_D
-%token GARBAGE
-%token<nb> NOMBRE
+%token DML
+%token CROCH_G
+%token CROCH_D
+%token<entier> ENTIER
+%token<reel> REEL
 %token<str> MOT 
 %token<str> SPACE
 %type<str> mots
 %type<str> blancs
 %type<str> colonne
 %type<str> colonnes
+%type<str> phrase
 
 %start fichier
 
 
 %%
 
-fichier   :  poubelle init tableau FIN blancs {fprintf(yyout,"</html>");}
+fichier   : tab {fprintf(yyout,"</html>");}
 ;
-poubelle  : GARBAGE poubelle
-          |MOT poubelle
-          |ACCOL_D poubelle
-          |ACCOL_G poubelle
-          |
+tab       : init tableau end blancs
 ;
-init      :  DEB { fprintf(yyout, "<table ");} 
+
+init      :  DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs posdeb blancs  DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
 ;
-tableau   : options blancs lignes {fprintf(yyout,"</tbody>\n</table>\n");}
+
+posdeb       :  DEB ACCOL_G MOT ACCOL_D {positionnement = $3;}
 ;
-options   :  ACCOL_G option ACCOL_D {redigeOption(nbseparateur>=nbcol/2);}
+
+end       : FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs caption FIN ACCOL_G TABLE ACCOL_D
 ;
+
+posend    : FIN ACCOL_G MOT ACCOL_D
+;
+
+caption : CAPTION ACCOL_G phrase ACCOL_D blancs {fprintf(yyout,"%s",$3);}
+        |
+;
+
+tableau   : options lignes {fprintf(yyout,"</tbody>\n</table>\n");}
+;
+
+options   :  ACCOL_G option ACCOL_D {redigeOption(nbseparateur>=nbcol/2, positionnement);}
+;
+
 option    : SEPAR option {nbseparateur++;}
           | MOT option {nbcol =+ strlen($1);}
           | SEPAR {nbseparateur++;}
@@ -73,26 +94,27 @@ ligne     : TRAIT_HOR
 | colonnes {fprintf(yyout,"<tr>%s</tr>\n",$1);free($1);}
 ;
 
-colonnes  : colonne blancs SEPAR_COL blancs colonnes {$$= strcat($1, $5);}
-| colonne blancs {$$ = $1;}
-| colonne {$$ = $1;}
+colonnes  :blancs colonne blancs SEPAR_COL  colonnes {$$= strcat($2, $5);}
+| blancs colonne blancs {$$ = $2;}
 ;
 
-
-
-colonne   : MOT   {$$ = redigeColonne($1, 0,0 );}
-          | NOMBRE {$$ = redigeColonneNum($1, 0, 0);}
-| FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G mots ACCOL_D {$$ = redigeColonne($9, 1, $3);}
-| FUSION ACCOL_G NOMBRE ACCOL_D ACCOL_G option ACCOL_D ACCOL_G NOMBRE ACCOL_D {$$ = redigeColonneNum($9, 1, $3);}
+colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );}
+          | ENTIER {$$ = redigeColonneEntier($1, positionnement, 0, 0);}
+          | REEL {$$ = redigeColonneReel($1, positionnement, 0, 0);}
+| FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase ACCOL_D {$$ = redigeColonne($9, positionnement, 1, $3);}
+| FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER ACCOL_D {$$ = redigeColonneEntier($9, positionnement, 1, $3);}
+| FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL ACCOL_D {$$ = redigeColonneReel($9, positionnement, 1, $3);}
 ;
-
-mots      : MOT blancs mots {$1= strcat($1, $2);$$ =strcat( $1, $3);}
-| MOT blancs  {$$ = $1;}
-          | MOT     {$$ = $1;}
+phrase : phrase blancs  mots {$$= strcat(strcat($1, $2),$3);}
+       | mots        {$$ = $1;}
+;
+mots      : MOT     {$$ = $1;}
+          | ACCOL_G DML MOT SPACE phrase  ACCOL_D {$$= $5;}
+|DML MOT ACCOL_G phrase ACCOL_D {$$ = $4;}
 ;
 
 blancs    : SPACE blancs {$$ = strcat($1, $2);}
-          | SPACE {$$ = $1;}
+| {$$ ="";}
 ;
 
 %%
@@ -104,9 +126,9 @@ return;
 
 char tab[]= "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"   \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n<head><head/>\n<body>";
 
-void redigeOption( int border)
+void redigeOption( int border, char * pos)
 {
-  fprintf(yyout, "style=text-align: left; width: 90%%; border=\"");
+  fprintf(yyout, "style=text-align: %s; width: 90%%; border=\"", pos);
   if (border)
     fprintf(yyout,"1");
   else
@@ -114,34 +136,47 @@ void redigeOption( int border)
   fprintf(yyout,"\"cellpadding=\"2\" cellspacing=\"2\">\n<tbody>\n<tr>");
 }
 
-char* redigeColonne(char* texte, int multicolumn, int colspan)
+char* redigeColonne(char* texte, char* pos, int multicolumn, int colspan)
 {
   char* retour = malloc(sizeof(char)*1000);
   if(multicolumn)
     {
-      sprintf(retour,"<td style=\"text-align: center;\" colspan=\"%d\" rowspan = \"1\">%s</td>", colspan, texte);
+      sprintf(retour,"<td style=\"text-align: %s;\" colspan=\"%d\" rowspan = \"1\">%s</td>", pos, colspan, texte);
     }
   else
     {
-      sprintf(retour,"<td style=\"text-align: center;\">%s</td>", texte);
+      sprintf(retour,"<td style=\"text-align: %s ;\">%s</td>", pos, texte);
     }
   return retour;
 }
 
-char* redigeColonneNum(double val, int multicolumn, int colspan)
+char* redigeColonneReel(double val, char* pos, int multicolumn, int colspan)
 {
    char* retour = malloc(sizeof(char)*1000);
   if(multicolumn)
     {
-      sprintf(retour,"<td style=\"text-align: center;\" colspan=\"%d\" rowspan = \"1\">%.2f</td>", colspan, val);
+      sprintf(retour,"<td style=\"text-align: %s;\" colspan=\"%d\" rowspan = \"1\">%.2f</td>", pos, colspan, val);
     }
   else
     {
-      sprintf(retour,"<td style=\"text-align: center;\">%.2f</td>", val);
+      sprintf(retour,"<td style=\"text-align: %s;\">%.2f</td>", pos, val);
     }
   return retour;
 }
 
+char* redigeColonneEntier(int val, char* pos, int multicolumn, int colspan)
+{
+   char* retour = malloc(sizeof(char)*1000);
+  if(multicolumn)
+    {
+      sprintf(retour,"<td style=\"text-align: %s;\" colspan=\"%d\" rowspan = \"1\">%d</td>", pos, colspan, val);
+    }
+  else
+    {
+      sprintf(retour,"<td style=\"text-align: %s;\">%d</td>", pos, val);
+    }
+  return retour;
+}
 
 
 int main(int argc, char* argv[])

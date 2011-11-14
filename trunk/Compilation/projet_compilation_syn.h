@@ -40,38 +40,48 @@
       know about them.  */
    enum yytokentype {
      DEB = 258,
-     TABLEAU = 259,
-     OPTION_T = 260,
-     FUSION = 261,
-     TRAIT_HOR = 262,
-     SEPAR_COL = 263,
-     FIN_LIGNE = 264,
-     SEPAR = 265,
-     FIN = 266,
-     ACCOL_G = 267,
-     ACCOL_D = 268,
-     GARBAGE = 269,
-     NOMBRE = 270,
-     MOT = 271,
-     SPACE = 272
+     TABLE = 259,
+     TABULAR = 260,
+     CAPTION = 261,
+     OPTION_T = 262,
+     FUSION = 263,
+     TRAIT_HOR = 264,
+     SEPAR_COL = 265,
+     FIN_LIGNE = 266,
+     SEPAR = 267,
+     FIN = 268,
+     ACCOL_G = 269,
+     ACCOL_D = 270,
+     DML = 271,
+     CROCH_G = 272,
+     CROCH_D = 273,
+     ENTIER = 274,
+     REEL = 275,
+     MOT = 276,
+     SPACE = 277
    };
 #endif
 /* Tokens.  */
 #define DEB 258
-#define TABLEAU 259
-#define OPTION_T 260
-#define FUSION 261
-#define TRAIT_HOR 262
-#define SEPAR_COL 263
-#define FIN_LIGNE 264
-#define SEPAR 265
-#define FIN 266
-#define ACCOL_G 267
-#define ACCOL_D 268
-#define GARBAGE 269
-#define NOMBRE 270
-#define MOT 271
-#define SPACE 272
+#define TABLE 259
+#define TABULAR 260
+#define CAPTION 261
+#define OPTION_T 262
+#define FUSION 263
+#define TRAIT_HOR 264
+#define SEPAR_COL 265
+#define FIN_LIGNE 266
+#define SEPAR 267
+#define FIN 268
+#define ACCOL_G 269
+#define ACCOL_D 270
+#define DML 271
+#define CROCH_G 272
+#define CROCH_D 273
+#define ENTIER 274
+#define REEL 275
+#define MOT 276
+#define SPACE 277
 
 
 
@@ -81,12 +91,12 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 21 "projet_compilation.y"
- char* str; double nb;
+#line 23 "projet_compilation.y"
+ char* str; double reel; int entier;
 
 
 /* Line 1676 of yacc.c  */
-#line 90 "y.tab.h"
+#line 100 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
