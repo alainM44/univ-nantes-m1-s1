@@ -1,8 +1,28 @@
 \chapter{Application réalisée}
 \section{Description de l'application}
- blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+\subsection{Fonctionnalités réalisées}
+Les programmes qui sont ici proposé réalise les opération suivantes.
+\begin{itemize}
+	\item{}
+	Une connexion entre un serveur et des clients.
+	\item{}
+	Chaque client connecté se voit attribué un dossier propre au nom de son PID.
+	\item{}
+	Chaque client peut connaître le contenu du serveur, ainsi qu'opérer des commandes de la nature que \$ ls sur son dossier courant.
+	\item{}
+	Chaque client peut «downloader» et «uploader» des fichiers présent dans le dossier du serveur.
+	\begin{itemize}
+		\item{}
+		Dans le cas d'un download, le nouveau fichier à le même nom que le fichier source
+		\item{}
+		Dans le cas d'un upload, le nouveau fichier sera de la forme out \textit{nomfichier}.		
+	 \end{itemize}
+\end{itemize}
+\subsection{Idées d'évolutions}
+
 \section{Structure du programme}
-Le client et le serveur ont chacun un programme spécifique. Ils ont cependant tous les deux accés au fonctions définies dans les fichiers network et gestion_menu.
+Le client et le serveur ont chacun un programme spécifique. Ils ont cependant tous les deux accès au fonctions définies dans les fichiers network et gestionmenu. Les fonctions proposées par les fichiers network sont les plus importantes. Elle permettent entre autres d'établir la connexion entre le client et le serveur. C'est aussi là que se trouvent les fonctions de fragmentation et de fusion des différents messages.
+Les fichiers gestionmenu contiennent toutes les fonctions nécessaires mais qui n'ont pas de rôles pour les transferts de données (routine du menu, gestion des dossiers ...). Certaines de ces fonctions reprennent celles des fichiers network.  
 
 
 \clearpage
