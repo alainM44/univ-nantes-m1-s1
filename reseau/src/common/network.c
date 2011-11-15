@@ -70,7 +70,7 @@ int server_answer_connect( int sock_descriptor,char nom_machine[],sockaddr_in ad
     }
 
   //init de la file d'écoute
-  listen(sock_descriptor,);
+  listen(sock_descriptor,5);
     
   printf("Serveur en écoute : 2. \n");
   return sock_descriptor;
