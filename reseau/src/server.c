@@ -81,7 +81,6 @@ int main (int argc, char ** argv){
  int traitement_client (int sock){
   int i;
   bool fin=false;
-  MESSAGE message;
   char *path ;
   //  fprintf(stderr,"client connexion nbfils %d\n",nbfils); 
   path = malloc(100);
@@ -89,7 +88,7 @@ int main (int argc, char ** argv){
 
   while(!fin)
     {
-      if (( i=receive_serveur (sock,message,&fin,path))==-1)
+      if (( i=receive_serveur (sock,&fin,path))==-1)
 	{
 	  fprintf(stderr,"return -1\n"); 
 	  return -1;
