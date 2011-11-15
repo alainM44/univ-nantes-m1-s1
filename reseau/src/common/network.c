@@ -181,7 +181,7 @@ int receve_and_merge(int sock,char outfile_name[]){
   long long int diff;
   gettimeofday(&tv1, &tz);
   MESSAGE messack;
-  messack.type=5;
+  messack.type=ACK;
   if( (outfile= fopen(outfile_name,"wb"))<0 )
     {
       fprintf(stdout,"read : %s",strerror(errno));
@@ -217,7 +217,7 @@ int receve_and_merge(int sock,char outfile_name[]){
   fsize( outfile_name, &filesize);
   gettimeofday(&tv2, &tz);
   diff=(tv2.tv_sec-tv1.tv_sec)* 1000000L+  (tv2.tv_usec-tv1.tv_usec);  
-  fprintf(stderr,"New file %s, size : %lld o, in : %lld usec\n",outfile_name,filesize,diff);
+  fprintf(stderr,"New file %s\n size : %lld o\n in : %lld usec\n",outfile_name,filesize,diff);
   return 0;///§!!!!!!
 }
 
@@ -248,18 +248,19 @@ MESSAGE receive_commande (int sock_descriptor, MESSAGE message){
   return message;
 }
 /*****************************************************************************************************************************************/
-int receive_serveur (int sock_descriptor,MESSAGE message,bool*fin,char*path){
+int receive_serveur (int sock_descriptor,bool*fin,char*path){
   char cmd[100];
   char std[1000];
   char buffer[1];
   int tube[2];
   int pos=0;
+  MESSAGE message;
   MESSAGE messageclient;
   cmd[0]='\0';
   buffer[0]='\0';
   fprintf(stderr,"Waiting for client message...\n");
   messageclient=receive_commande(sock_descriptor,message);
-  fprintf(stderr,"Message received \n");
+  fprintf(stderr,"Message received type %d\n",messageclient.type);
   switch(messageclient.type)
     {
     case DOWNLOAD :
@@ -287,7 +288,7 @@ int receive_serveur (int sock_descriptor,MESSAGE message,bool*fin,char*path){
       strcpy(messageclient.tab,std);
       messageclient.tab[strlen(std)]='\0';
       send_commande(sock_descriptor,messageclient);
-      sleep(2);
+      //  sleep(2);
       break;
     case QUIT :
       *fin=true; 

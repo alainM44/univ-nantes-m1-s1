@@ -38,7 +38,7 @@ int menu(int sock,char folder_name []){
 
     case 1 :
       //prepare command to send
-      message.type=2;
+      message.type=COMMANDE;
       send_commande(sock,message) ;
       //serveurmessage.tab=malloc(500);
       if ( read(sock,(char *)&serveurmessage,sizeof(serveurmessage)) <0)
@@ -51,7 +51,7 @@ int menu(int sock,char folder_name []){
       fprintf(stderr," File name to download : ");
       gets(param);
       //prepare command to send
-      message.type=0;
+      message.type=1;
       strncpy(message.tab,param,strlen(param));
       message.tab[strlen(param)]='\0';
       send_commande(sock,message) ;
@@ -72,7 +72,7 @@ int menu(int sock,char folder_name []){
       fprintf(stderr," File name to upload : ");
       gets(param);
       //prepare command to send
-      message.type=1;
+      message.type=2;
       strncpy(message.tab,"out",3);
       strncat(message.tab,param,strlen(param));
       fprintf(stderr,"messtab#%s#\n",message.tab);
@@ -141,21 +141,15 @@ void create_main_folder (const char name[],const char*path, char fname[]){ // cl
   pids=malloc(30);
   sprintf(pids,"%d",pid);
   char mk [7]="mkdir ";
-
   char *cmd;
   cmd =malloc(100);
-
   char *final_name;
   final_name =malloc(100);
-
   fprintf(stderr,"mkdir1#%s#\n",path);
   strcpy(final_name,name);
   final_name=strncat(final_name,pids,strlen(pids));  
-
   strncpy(cmd,mk,7);
-
   cmd=strncat(cmd,path,strlen(path));
-
   cmd=strncat(cmd,"/",1);
   cmd=strncat(cmd,final_name,strlen(final_name));
   system(cmd);
@@ -164,8 +158,8 @@ void create_main_folder (const char name[],const char*path, char fname[]){ // cl
   free(pids);
 
   strncpy(fname,final_name,strlen(final_name));
-
   fname[strlen(final_name)]='\0';
+
   free(final_name);
 }
 

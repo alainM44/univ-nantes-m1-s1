@@ -5,7 +5,7 @@
 
 /* Sont définis içi toutes les structure pour définir les messages utilisés sur les différents canaux. */
 
-typedef enum {DOWNLOAD=0,UPLOAD=1,COMMANDE=2,QUIT=3,SHUTDOWN=4,ACK=5}MessageClient; 
+typedef enum {DOWNLOAD=1,UPLOAD=2,COMMANDE=3,QUIT=4,SHUTDOWN=5,ACK=6}MessageClient; 
 struct message{
   long long  int ID_message;
   MessageClient type;

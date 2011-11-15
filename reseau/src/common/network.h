@@ -30,7 +30,7 @@ MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA data);
 int send_commande (int sock_descriptor, MESSAGE message);
 MESSAGE receive_commande (int sock_descriptor, MESSAGE message);
 
-int receive_serveur (int sock_descriptor,MESSAGE message,bool*fin,char*path);
+int receive_serveur (int sock_descriptor,bool*fin,char*path);
 
 
 
