@@ -126,7 +126,7 @@ void frag_and_send(int sock, char file_to_frag[])
   message.data.MF=0;
   message.data.taille=0;
  
-  for (i=(long long int)1;i<=nb_f;i++)
+  for (i=1;i<=nb_f;i++)
     {
       if( (nblu=(long long int)fread(message.data.tab,1,(long long int)TAILLEMAXDATA,file))==-1 )
         {
@@ -161,7 +161,7 @@ void frag_and_send(int sock, char file_to_frag[])
       fprintf(stdout,"sed_data %s",strerror(errno));
       exit(EXIT_FAILURE);
     }
-  fprintf(stderr,"dernier paquet %lld envoyé doffset %lld\n",message.data.ID_data,message.data.offset);
+ /* fprintf(stderr,"dernier paquet %lld envoyé doffset %lld\n",message.data.ID_data,message.data.offset); */
   gettimeofday(&tv2, &tz);
   diff=(tv2.tv_sec-tv1.tv_sec)* 1000000L+  (tv2.tv_usec-tv1.tv_usec);  
   
@@ -296,11 +296,10 @@ int receive_serveur (int sock_descriptor,MESSAGE message,bool*fin,char*path){
     case SHUTDOWN :
       fprintf(stderr,"shut : ");
       *fin=true; 
-
       return -1;
       break;
     default  :
-      fprintf(stderr,"defaut : error");
+      //      fprintf(stderr,"defaut");
       // *fin=true; 
       break;
     }
@@ -310,10 +309,8 @@ int receive_serveur (int sock_descriptor,MESSAGE message,bool*fin,char*path){
 int fsize(const char * fname, long long int * ptr)
 {
   /* Cette fonction calcule la taille du fichier fname */
-    
   FILE * f;
   int ret = 0;
-    
   f = fopen(fname, "rb");   
   if (f != NULL)
     {
