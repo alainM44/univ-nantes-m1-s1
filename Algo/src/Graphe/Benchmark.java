@@ -1,3 +1,4 @@
+package Graphe;
 import java.util.ArrayList;
 
 public class Benchmark

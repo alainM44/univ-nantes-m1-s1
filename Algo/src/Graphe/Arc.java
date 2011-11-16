@@ -1,3 +1,4 @@
+package Graphe;
 /*
  * Utiliser pour les methodes listerArcsEntrants et listerArcsSortants
  */

@@ -1,3 +1,4 @@
+package Graphe;
 import java.util.ArrayList;
 
 public class Main
@@ -58,7 +59,7 @@ public class Main
 //		System.out.println("\n===Connexité===\n" + test.connexite());
 //		System.out.println("\n===Simple===\n" + test.simple());
 		
-		Benchmark.bench(graphe, 2000);
+		Benchmark.bench(graphe, 1000);
 
 	}
 }

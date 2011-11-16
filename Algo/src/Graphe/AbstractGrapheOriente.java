@@ -1,3 +1,4 @@
+package Graphe;
 public abstract class AbstractGrapheOriente implements GrapheOriente
 {
 
