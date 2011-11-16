@@ -7,6 +7,9 @@
 deb "\\"begin
 tabular tabular
 table table
+document document
+documentclass "\\"documentclass\{article\}
+graphicx "\\"usepackage\{graphicx\}
 caption "\\"caption
 fusion "\\"multicolumn
 trait_hor "\\"hline
@@ -34,6 +37,9 @@ space [ \t\n]*
 /*rules analyseur lexico*/
 %%
 {deb}         {printf("DEB ");return DEB;}
+{document}      {printf("DOC ");return DOC;}
+{documentclass} {printf("DC ");return DC;}
+{graphicx}      {printf("GFX ");return GFX;}
 {table}       {printf("TABLE ");return TABLE;}
 {tabular}     {printf("TABULAR ");return TABULAR;}
 {caption}     {printf("CAPTION ");return CAPTION;}

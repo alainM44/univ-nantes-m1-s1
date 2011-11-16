@@ -40,48 +40,54 @@
       know about them.  */
    enum yytokentype {
      DEB = 258,
-     TABLE = 259,
-     TABULAR = 260,
-     CAPTION = 261,
-     OPTION_T = 262,
-     FUSION = 263,
-     TRAIT_HOR = 264,
-     SEPAR_COL = 265,
-     FIN_LIGNE = 266,
-     SEPAR = 267,
-     FIN = 268,
-     ACCOL_G = 269,
-     ACCOL_D = 270,
-     DML = 271,
-     CROCH_G = 272,
-     CROCH_D = 273,
-     ENTIER = 274,
-     REEL = 275,
-     MOT = 276,
-     SPACE = 277
+     DOC = 259,
+     DC = 260,
+     GFX = 261,
+     TABLE = 262,
+     TABULAR = 263,
+     CAPTION = 264,
+     OPTION_T = 265,
+     FUSION = 266,
+     TRAIT_HOR = 267,
+     SEPAR_COL = 268,
+     FIN_LIGNE = 269,
+     SEPAR = 270,
+     FIN = 271,
+     ACCOL_G = 272,
+     ACCOL_D = 273,
+     DML = 274,
+     CROCH_G = 275,
+     CROCH_D = 276,
+     ENTIER = 277,
+     REEL = 278,
+     MOT = 279,
+     SPACE = 280
    };
 #endif
 /* Tokens.  */
 #define DEB 258
-#define TABLE 259
-#define TABULAR 260
-#define CAPTION 261
-#define OPTION_T 262
-#define FUSION 263
-#define TRAIT_HOR 264
-#define SEPAR_COL 265
-#define FIN_LIGNE 266
-#define SEPAR 267
-#define FIN 268
-#define ACCOL_G 269
-#define ACCOL_D 270
-#define DML 271
-#define CROCH_G 272
-#define CROCH_D 273
-#define ENTIER 274
-#define REEL 275
-#define MOT 276
-#define SPACE 277
+#define DOC 259
+#define DC 260
+#define GFX 261
+#define TABLE 262
+#define TABULAR 263
+#define CAPTION 264
+#define OPTION_T 265
+#define FUSION 266
+#define TRAIT_HOR 267
+#define SEPAR_COL 268
+#define FIN_LIGNE 269
+#define SEPAR 270
+#define FIN 271
+#define ACCOL_G 272
+#define ACCOL_D 273
+#define DML 274
+#define CROCH_G 275
+#define CROCH_D 276
+#define ENTIER 277
+#define REEL 278
+#define MOT 279
+#define SPACE 280
 
 
 
@@ -96,7 +102,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 100 "y.tab.h"
+#line 106 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

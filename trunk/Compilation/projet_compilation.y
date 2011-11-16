@@ -22,6 +22,9 @@ char * positionnement = "center";
 
 %union{ char* str; double reel; int entier;}
 %token DEB
+%token DOC
+%token DC
+%token GFX
 %token TABLE
 %token TABULAR
 %token CAPTION
@@ -52,18 +55,30 @@ char * positionnement = "center";
 
 %%
 
-fichier   : tab {fprintf(yyout,"</html>");}
-;
-tab       : init tableau end blancs
+fichier   : debLatex blancs init tableau end blancs endLatex blancs{fprintf(yyout,"</html>");}
 ;
 
-init      :  DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs posdeb blancs  DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
+debLatex  : DC blancs GFX blancs DEB ACCOL_G DOC ACCOL_D blancs
 ;
 
-posdeb       :  DEB ACCOL_G MOT ACCOL_D {positionnement = $3;}
+endLatex  : FIN ACCOL_G DOC ACCOL_D
+
+init      :  tabledeb  posdeb   DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
+| tabledeb  DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
+| DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
 ;
 
-end       : FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs caption FIN ACCOL_G TABLE ACCOL_D
+end       : FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs caption tableend
+;
+
+tabledeb  : DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs
+;
+
+tableend  : FIN ACCOL_G TABLE ACCOL_D
+          |
+;
+
+posdeb       :  DEB ACCOL_G MOT ACCOL_D blancs{positionnement = $3;}
 ;
 
 posend    : FIN ACCOL_G MOT ACCOL_D
@@ -73,7 +88,7 @@ caption : CAPTION ACCOL_G phrase ACCOL_D blancs {fprintf(yyout,"%s",$3);}
         |
 ;
 
-tableau   : options lignes {fprintf(yyout,"</tbody>\n</table>\n");}
+tableau   : options blancs lignes {fprintf(yyout,"</tbody>\n</table>\n");}
 ;
 
 options   :  ACCOL_G option ACCOL_D {redigeOption(nbseparateur>=nbcol/2, positionnement);}
@@ -85,13 +100,14 @@ option    : SEPAR option {nbseparateur++;}
           | MOT {nbcol =+ strlen($1);}
 ;
 
-lignes    : ligne FIN_LIGNE blancs lignes{}
-          |ligne FIN_LIGNE blancs {}
+lignes    : ligne FIN_LIGNE  blancs lignes{}
+          | ligne FIN_LIGNE blancs {}
+          | TRAIT_HOR blancs lignes;
+          | TRAIT_HOR blancs
 ;
 
 
-ligne     : TRAIT_HOR
-| colonnes {fprintf(yyout,"<tr>%s</tr>\n",$1);free($1);}
+ligne     : colonnes {fprintf(yyout,"<tr>%s</tr>\n",$1);free($1);}
 ;
 
 colonnes  :blancs colonne blancs SEPAR_COL  colonnes {$$= strcat($2, $5);}
