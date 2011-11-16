@@ -5,7 +5,7 @@ rm proj
 echo "compile lex"
 lex projet_compilation.l
 echo "compile yacc"
-yacc -d projet_compilation.y
+yacc --report=states -d projet_compilation.y
 mv lex.yy.c projet_compilation_lex.c
 mv y.tab.c projet_compilation_syn.c
 mv y.tab.h projet_compilation_syn.h
