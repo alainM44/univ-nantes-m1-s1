@@ -1,7 +1,6 @@
 #include "gestion_menu.h"
 #include "network.h"
 
-
 int menu(int sock,char folder_name []){
   bool fin;
   fin=false;
@@ -19,20 +18,17 @@ int menu(int sock,char folder_name []){
   path[strlen(path)]='/';
   strcat(path,folder_name);
   path[strlen(path)+1]='/';
-
   record=malloc(1000);
   sprintf(record,"%s","clear");
   system(record);
   fprintf(stderr,"PRESS ENTER TO BEGIN\n");
   while(!fin){
     clean_stdin();
- 
-    fprintf(stderr,"\n**************************************\n***********MENU CLIENT FTP************\n**************************************\nN°   COMMAND \n1 -> Listing folder \n2 -> Dowload file  \n3 -> Upload file \n4 -> Enter a commande \n5 -> Quit \n6 -> Eteindre le server\n\n your current folder : #%s#\nEnter a command number  : ",path);
+    fprintf(stderr,"\n**************************************\n***********MENU CLIENT FTP************\n**************************************\nN°   COMMAND \n1 -> Listing folder \n2 -> Dowload file  \n3 -> Upload file \n4 -> Enter a commande \n5 -> Quit \n6 -> Eteindre le server\n\nYour current folder : #%s#\nEnter a command number  : ",path);
     // getline(char **lineptr, size_t *n, FILE *stream);
     scanf("%d",&comande);
     fprintf(stderr,"Commande choisie : %d",comande);
- 
-    system(record);
+     system(record);
     clean_stdin();
     switch(comande) {
 
@@ -62,11 +58,7 @@ int menu(int sock,char folder_name []){
       strcat(out_name,param);
       out_name[strlen(out_name)]='\0';
       //on envoie
-
       receve_and_merge(sock,out_name);
-      
-      
-      
       break;
     case 3 :
       fprintf(stderr," File name to upload : ");

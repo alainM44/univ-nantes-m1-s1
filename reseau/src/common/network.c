@@ -13,7 +13,6 @@ MESSAGE_DATA receive_data (int sock_descriptor,MESSAGE_DATA message)
 {
   if ( read(sock_descriptor,(char *)&message,sizeof(message)) <0)
       fprintf(stderr, "Erreur read : receive_data %s.\n",strerror(errno));
-
   return message;
 }
 /*****************************************************************************************************************************************/
@@ -28,12 +27,12 @@ int  client_request_connect( int socket_descriptor, char* host, sockaddr_in adre
   adresse_locale.sin_family = AF_INET;
   adresse_locale.sin_port = htons(5000);
   printf("numero de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
-  if ((socket_descriptor =socket(AF_INET, SOCK_STREAM, 0)) < 0)
+  // socket de type TCP(SOCK_STREAM) de mode Internet  (AF_INET) se retrouve donc avec le numéro de port.
+  if ((socket_descriptor =socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     {
-      perror("impossible de creer la socket de connexion avec le serveur.");
+      perror("Impossible de creer la socket clientde connexion avec le serveur.\n");
       exit(1);
     }
-
   if((connect(socket_descriptor, (sockaddr*)(&adresse_locale), sizeof(adresse_locale))) < 0)
     {
       perror("impossible de se connecter au serveur.");
@@ -69,24 +68,21 @@ int server_answer_connect( int sock_descriptor,char nom_machine[],sockaddr_in ad
       exit(1);
     }
 
-  //init de la file d'écoute
+  //init de la file d'écoute fonction "bloquante"
   listen(sock_descriptor,3);
-    
-  printf("Serveur en écoute : 3. \n");
+  printf("Serveur listening (capacity<4) \n");
   return sock_descriptor;
 }
 /*****************************************************************************************************************************************/
 int client_deconnect( int sock_descriptor){
+  int pid;
+  pid=getpid();
   close(sock_descriptor);
-  printf("connexion avec le serveur fermee, fin du programme.\n");
+  printf("connexion avec le serveur fermee, fin du client%d .\n",pid);
   return 0;
 }
 /*****************************************************************************************************************************************/
-int serveur_deconnect(int i){
 
-  return 0;
-}
-/*****************************************************************************************************************************************/
 void frag_and_send(int sock, char file_to_frag[])
 {
   FILE* file;
@@ -106,6 +102,8 @@ void frag_and_send(int sock, char file_to_frag[])
   if (( nb_f= filesize/(long long int)TAILLEMAXDATA )<1)////!!!!!!!!!!!!!!!!
     {
       fprintf(stderr,"No frag %s taille : %lld for div of %d\n",file_to_frag,filesize,TAILLEMAXDATA);
+      message.data.MF=0;
+      send_data(sock,message);
       return;
       //      exit(EXIT_FAILURE);
     }
@@ -116,7 +114,8 @@ void frag_and_send(int sock, char file_to_frag[])
 	  nb_f,
 	  (long long int)TAILLEMAXDATA,
 	  reste);
-  if( (file=fopen(file_to_frag,"rb"))<0 )
+  file=fopen(file_to_frag,"rb");
+  if (file==NULL)
     {
       fprintf(stdout,"open : %s",strerror(errno));
       exit(EXIT_FAILURE);
@@ -182,19 +181,17 @@ int receve_and_merge(int sock,char outfile_name[]){
   gettimeofday(&tv1, &tz);
   MESSAGE messack;
   messack.type=ACK;
-  if( (outfile= fopen(outfile_name,"wb"))<0 )
+  outfile= fopen(outfile_name,"wb");
+  if (outfile==NULL)
     {
       fprintf(stdout,"read : %s",strerror(errno));
       exit(EXIT_FAILURE);
     }
   while(fin!=0)
     {
-      /* reponse.data.ID_data=0; */
-      /* reponse.data.offset=0; */
-      /* reponse.data.taille=0; */
-      //            reponse.data.MF=2; 
+
       reponse=receive_data(sock,reponse);
-      // AFFICHAGE VERBEUX
+      // AFFICHAGE VERBEUX  fait planter si trop de paquets.
       //      fprintf(stderr,"Paquet numero %ldd, offset %d de taille: %lld \n",reponse.data.ID_data,reponse.data.offset,reponse.data.taille);
       if((  nbec=(long long int)fwrite(reponse.data.tab,1,reponse.data.taille,outfile))== -1)
         {
@@ -208,7 +205,8 @@ int receve_and_merge(int sock,char outfile_name[]){
       if (reponse.data.MF==0)
 	{
 	  fin=0;
-	  fprintf(stderr,"Dernier paquet id %lld offset %lld \n",reponse.data.ID_data,reponse.data.offset);
+	  //DEBUG
+	  //	  fprintf(stderr,"Dernier paquet id %lld offset %lld \n",reponse.data.ID_data,reponse.data.offset);
 	}
 
 
@@ -217,7 +215,7 @@ int receve_and_merge(int sock,char outfile_name[]){
   fsize( outfile_name, &filesize);
   gettimeofday(&tv2, &tz);
   diff=(tv2.tv_sec-tv1.tv_sec)* 1000000L+  (tv2.tv_usec-tv1.tv_usec);  
-  fprintf(stderr,"New file %s\n size : %lld o\n in : %lld usec\n",outfile_name,filesize,diff);
+  fprintf(stderr,"New file %s\n size : %lld o\n in : %lld usec\nPress enter to continue",outfile_name,filesize,diff);
   return 0;///§!!!!!!
 }
 
@@ -272,10 +270,9 @@ int receive_serveur (int sock_descriptor,bool*fin,char*path){
     case COMMANDE :  
       //prepare command to send
       message.type=3;
-
       strcpy(cmd,"ls ");
       strcat(cmd,path);
-      fprintf(stderr,"cmd #%s#\n",cmd);
+      //   fprintf(stderr,"cmd #%s#\n",cmd);
       pipe(tube);
       dup2(tube[1],STDOUT_FILENO);
       system(cmd);

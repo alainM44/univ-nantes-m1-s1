@@ -38,7 +38,7 @@ int client_request_connect( int socket_descriptor, char* host, sockaddr_in adres
 int server_answer_connect(int sock_descriptor,char nom_machine[],sockaddr_in adresse_locale,  hostent * ptr_host);
 
 int client_deconnect( int sock_descriptor);
-int serveur_deconnect(int i);
+
 void frag_and_send(int sock,char file[]);
 int receve_and_merge(int sock,char file[]);
 //int fsize(const char * fname,  unsigned long long* ptr);
