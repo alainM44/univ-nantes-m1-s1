@@ -25,7 +25,7 @@ int  client_request_connect( int socket_descriptor, char* host, sockaddr_in adre
     }
   bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
   adresse_locale.sin_family = AF_INET;
-  adresse_locale.sin_port = htons(5000);
+  adresse_locale.sin_port = htons(5002);
   printf("numero de port pour la connexion au serveur : %d \n", ntohs(adresse_locale.sin_port));
   // socket de type TCP(SOCK_STREAM) de mode Internet  (AF_INET) se retrouve donc avec le numéro de port.
   if ((socket_descriptor =socket(AF_INET, SOCK_STREAM, 0)) < 0) 
@@ -55,7 +55,7 @@ int server_answer_connect( int sock_descriptor,char nom_machine[],sockaddr_in ad
   bcopy((char*)ptr_host->h_addr, (char*)&adresse_locale.sin_addr, ptr_host->h_length);
   adresse_locale.sin_family = ptr_host->h_addrtype; // ou AF_INET
   adresse_locale.sin_addr.s_addr = INADDR_ANY; // ou AF_INET
-  adresse_locale.sin_port=htons(5000);
+  adresse_locale.sin_port=htons(5002);
   if ((sock_descriptor =socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
       perror("impossible de creer la socket de connexion avec le serveur.");
@@ -165,7 +165,11 @@ void frag_and_send(int sock, char file_to_frag[])
   diff=(tv2.tv_sec-tv1.tv_sec)* 1000000L+  (tv2.tv_usec-tv1.tv_usec);  
   
   fprintf(stderr,"Frag's time : %lld usec\n",diff);
+
   fclose(file);
+  ///!!!!!
+  //  clean_sock(sock);
+    
   return;
 }
 /*****************************************************************************************************************************************/
@@ -201,13 +205,15 @@ int receve_and_merge(int sock,char outfile_name[]){
       //DEBUG
       //      fprintf(stderr,"contenu(taille%d)#####%s###### \n",nbec,reponse.data.tab);
       //      if (reponse.ID_message%500==0)
-      send_commande(sock,messack);
+
       if (reponse.data.MF==0)
 	{
 	  fin=0;
 	  //DEBUG
 	  //	  fprintf(stderr,"Dernier paquet id %lld offset %lld \n",reponse.data.ID_data,reponse.data.offset);
 	}
+      else
+	send_commande(sock,messack);
 
 
     }
@@ -216,6 +222,9 @@ int receve_and_merge(int sock,char outfile_name[]){
   gettimeofday(&tv2, &tz);
   diff=(tv2.tv_sec-tv1.tv_sec)* 1000000L+  (tv2.tv_usec-tv1.tv_usec);  
   fprintf(stderr,"New file %s\n size : %lld o\n in : %lld usec\nPress enter to continue",outfile_name,filesize,diff);
+      ///!!!!!
+  //    clean_sock(sock_descriptor);
+
   return 0;///§!!!!!!
 }
 
@@ -257,6 +266,7 @@ int receive_serveur (int sock_descriptor,bool*fin,char*path){
   cmd[0]='\0';
   buffer[0]='\0';
   fprintf(stderr,"Waiting for client message...\n");
+
   messageclient=receive_commande(sock_descriptor,message);
   fprintf(stderr,"Message received type %d\n",messageclient.type);
   switch(messageclient.type)
@@ -272,7 +282,7 @@ int receive_serveur (int sock_descriptor,bool*fin,char*path){
       message.type=3;
       strcpy(cmd,"ls ");
       strcat(cmd,path);
-      //   fprintf(stderr,"cmd #%s#\n",cmd);
+        fprintf(stderr,"cmd #%s#\n",cmd);
       pipe(tube);
       dup2(tube[1],STDOUT_FILENO);
       system(cmd);
@@ -281,10 +291,13 @@ int receive_serveur (int sock_descriptor,bool*fin,char*path){
       close(tube[1]);
       while(std[pos]!='\0')
 	pos++;
-      std[pos]='\0'; 
+      std[pos-1]='\0'; 
       strcpy(messageclient.tab,std);
       messageclient.tab[strlen(std)]='\0';
+           fprintf(stderr,"#####%s###### \n",messageclient.tab);
       send_commande(sock_descriptor,messageclient);
+      ///!!!!!
+      //      clean_sock(sock_descriptor);
       //  sleep(2);
       break;
     case QUIT :
@@ -324,3 +337,15 @@ int fsize(const char * fname, long long int * ptr)
   return ret;
 }
 /*****************************************************************************************************************************************/
+
+void clean_sock(int std){
+  char* c;
+  int res=0;
+    do
+    {
+      res=read(std,c,sizeof(char));    
+      fprintf(stderr,"#%s#",c);
+    }
+  while( res!=0);
+    fprintf(stderr,"fin clean");
+}

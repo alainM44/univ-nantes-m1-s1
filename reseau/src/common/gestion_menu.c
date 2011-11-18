@@ -37,9 +37,8 @@ int menu(int sock,char folder_name []){
       message.type=COMMANDE;
       send_commande(sock,message) ;
       //serveurmessage.tab=malloc(500);
-      if ( read(sock,(char *)&serveurmessage,sizeof(serveurmessage)) <0)
-	perror("read de receive \n");
-        fprintf(stderr,"reponse serveur reçu \n");
+      serveurmessage=receive_commande(sock,message);
+      fprintf(stderr,"reponse serveur reçu \n");
       printf("Server's contain \n ****%s**** \n",serveurmessage.tab);
       //      free(serveurmessage);
       break;

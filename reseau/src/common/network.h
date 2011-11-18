@@ -43,6 +43,6 @@ void frag_and_send(int sock,char file[]);
 int receve_and_merge(int sock,char file[]);
 //int fsize(const char * fname,  unsigned long long* ptr);
 int fsize(const char * fname, long long int* ptr);
-
+void clean_sock(int std);
 #endif
 
