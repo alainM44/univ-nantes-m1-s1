@@ -2,7 +2,7 @@
 
 # program
 
-NOM_PROGRAMME=impression_max4
+NOM_PROGRAMME=mutmut
 
 # bibliotheque amble
 
