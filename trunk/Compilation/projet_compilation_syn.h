@@ -97,7 +97,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 23 "projet_compilation.y"
+#line 34 "projet_compilation.y"
  char* str; double reel; int entier;
 
 
