@@ -44,7 +44,7 @@ end;
 CREATE OR REPLACE type Personnel_REF_VA as varray(5) of REF Personnel_TY;
 /
 
-CREATE OR REPLACE TYPE UE_TY as object (intitule VARCHAR(25),id_code VARCHAR(25),nb_seance_CM NUMBER ,nb_seance_TD NUMBER,nb_seance_TP NUMBER);
+CREATE OR REPLACE TYPE UE_TY as object (intitule VARCHAR(25),id_code VARCHAR(25),nb_seance_CM NUMBER ,nb_seance_TD NUMBER,nb_seance_TP NUMBER, responsable_CM ref Personnel_TY);
 /
 
 CREATE OR REPLACE TYPE Titulaire_TY under Personnel_TY ();
@@ -74,15 +74,17 @@ end;
 
 
 
+CREATE TABLE GroupeTP_tab (id NUMBER, liste_etu Etudiant_TAB_REF,responsables Personnel_REF_VA)  NESTED TABLE liste_etu STORE AS Etudiant_TAB_REF_NT;
 
 
 
-CREATE TABLE GroupeTD_tab (id NUMBER, placelimite NUMBER );----??
+
+CREATE TABLE GroupeTD_tab (id NUMBER, placelimite NUMBER );
 
 
 CREATE OR REPLACE TYPE Cursus_NT as table of Cursus_TY;
 /
-CREATE TABLE GroupeTP_tab (id NUMBER, liste_etu Etudiant_TAB_REF,responsables Personnel_REF_VA)  NESTED TABLE liste_etu STORE AS Etudiant_TAB_REF_NT;
+
 
 
 CREATE TABLE Etudiant_tab (etudiant Etudiant_TY, liste_cursus Cursus_NT) NESTED TABLE liste_cursus STORE AS Cursus_NT_TAB;
@@ -91,6 +93,9 @@ CREATE TABLE Personnel_tab of Personnel_TY;
 CREATE TABLE Cursus_tab of Cursus_TY;
 
 CREATE TABLE UE_tab of UE_TY;
+
+--CREATE TABLE TYPE UE_NT as table of  UE_TY; a inclure dans Personnel_TY
+--/
 
 --CREATE OR REPLACE TYPE Cursus_TY as object (intitule VARCHAR(25),id_code VARCHAR(25), niveau VARCHAR(25),responsable REF Personnel_TY,
 
