@@ -27,6 +27,7 @@
   void initialiseTabReel(float* tab, int size);
   void changeTab(int* tab, int deb, int end);
   void sommeColonne(char* chaine, char* position, int* appliqueSomme, float* toutesSommes, int nbFois);
+  void afficheTabDebug(int* tab, int size);
  %}
 
 //
@@ -151,7 +152,7 @@ colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );
    colonneCourant++;}
 | REEL {$$ = redigeColonneReel($1, positionnement, 0, 0);
    sumLine += $1;
-   sumColonne[colonneCourant] += $1;
+   sumColonne[colonneCourant] += $1;   
    colonneCourant++;}
 | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase ACCOL_D {$$ = redigeColonne($9, positionnement, 1, $3);
    changeTab(numberInColonne, colonneCourant, $3);
@@ -245,7 +246,7 @@ char* redigeColonneEntier(int val, char* pos, int multicolumn, int colspan)
 void initialiseTabBool(int* tab, int size)
 {
   int i;
-  for(i = 0; i++; i<size)
+  for(i = 0; i<size; i++)
     {
       tab[i] = 1;
     }
@@ -271,7 +272,7 @@ void changeTab(int* tab, int deb, int quantity)
 
 void ajouteColonne(char* chaine, char* position, float num)
  {
-   char* aCopier=malloc(50* sizeof(char));
+   char* aCopier=malloc(100* sizeof(char));
    sprintf(aCopier,  "<td style=\"text-align: %s;\">%.2f</td>",position, num);
    strcat(chaine, aCopier);
    free(aCopier);
@@ -285,7 +286,7 @@ void sommeColonne(char* chaine, char* position, int* appliqueSomme, float* toute
     char* aCopier;
     for(i=0;i<nbFois;i++)
       {
-	bool *= appliqueSomme[i];		printf("\n%d\n", appliqueSomme[i]);
+	bool *= appliqueSomme[i];	
       }
     if (bool)
       {
@@ -293,11 +294,11 @@ void sommeColonne(char* chaine, char* position, int* appliqueSomme, float* toute
 	for (i=0;i<nbFois;i++)
 	  {
 	    if (appliqueSomme[i])
-	      {
+	      {	
 		aCopier=malloc(50* sizeof(char));
+		sprintf(aCopier,"");
 		ajouteColonne(aCopier, position, toutesSommes[i]);
 		strcat(chaine, aCopier);
-		printf("\n%s\n", aCopier);
 		free(aCopier);
 	      }
 	    else
