@@ -3,10 +3,10 @@ package Graphe;
 public class Route extends Arc
 {
 	private String nom;
-	private int longueur;
+	private double longueur;
 	private int qualite;
 
-	public Route(int n1, int n2, int id, String nom, int longueur,
+	public Route(int n1, int n2, int id, String nom, double longueur,
 			int qualite)
 	{
 		super(n1, n2, id);
@@ -25,7 +25,7 @@ public class Route extends Arc
 		this.nom = nom;
 	}
 
-	public int getLongueur()
+	public double getLongueur()
 	{
 		return longueur;
 	}
