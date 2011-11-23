@@ -11,7 +11,7 @@ public class ListGraph extends AbstractGrapheOriente
 	// ArrayList pour le moment
 	HashMap<Integer, LinkedList<Encapsulateur<Integer>>> graphe;
 
-	ListGraph()
+	public ListGraph()
 	{
 		super();
 		graphe = new HashMap<Integer, LinkedList<Encapsulateur<Integer>>>();
