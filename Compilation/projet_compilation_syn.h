@@ -55,7 +55,7 @@
      FIN = 271,
      ACCOL_G = 272,
      ACCOL_D = 273,
-     DML = 274,
+     ANTISLASH = 274,
      CROCH_G = 275,
      CROCH_D = 276,
      ENTIER = 277,
@@ -81,7 +81,7 @@
 #define FIN 271
 #define ACCOL_G 272
 #define ACCOL_D 273
-#define DML 274
+#define ANTISLASH 274
 #define CROCH_G 275
 #define CROCH_D 276
 #define ENTIER 277

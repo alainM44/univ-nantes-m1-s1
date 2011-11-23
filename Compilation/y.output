@@ -72,8 +72,8 @@ Grammaire
    35       | mots
 
    36 mots: MOT
-   37     | ACCOL_G DML MOT SPACE phrase ACCOL_D
-   38     | DML MOT ACCOL_G phrase ACCOL_D
+   37     | ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D
+   38     | ANTISLASH MOT ACCOL_G phrase ACCOL_D
 
    39 blancs: SPACE blancs
    40       | /* vide */
@@ -99,7 +99,7 @@ SEPAR (270) 17 19
 FIN (271) 3 7 9 12
 ACCOL_G (272) 2 3 4 5 6 7 8 9 11 12 13 16 31 32 33 37 38
 ACCOL_D (273) 2 3 4 5 6 7 8 9 11 12 13 16 31 32 33 37 38
-DML (274) 37 38
+ANTISLASH (274) 37 38
 CROCH_G (275) 8
 CROCH_D (276) 8
 ENTIER (277) 29 31 32 33
@@ -539,12 +539,12 @@ blancs (46)
    26 colonnes: blancs . colonne blancs SEPAR_COL colonnes
    27         | blancs . colonne blancs
 
-    FUSION   décalage et aller à l'état 54
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    ENTIER   décalage et aller à l'état 57
-    REEL     décalage et aller à l'état 58
-    MOT      décalage et aller à l'état 59
+    FUSION     décalage et aller à l'état 54
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    ENTIER     décalage et aller à l'état 57
+    REEL       décalage et aller à l'état 58
+    MOT        décalage et aller à l'état 59
 
     colonne  aller à l'état 60
     phrase   aller à l'état 61
@@ -652,14 +652,14 @@ blancs (46)
 
 état 55
 
-   37 mots: ACCOL_G . DML MOT SPACE phrase ACCOL_D
+   37 mots: ACCOL_G . ANTISLASH MOT SPACE phrase ACCOL_D
 
-    DML  décalage et aller à l'état 74
+    ANTISLASH  décalage et aller à l'état 74
 
 
 état 56
 
-   38 mots: DML . MOT ACCOL_G phrase ACCOL_D
+   38 mots: ANTISLASH . MOT ACCOL_G phrase ACCOL_D
 
     MOT  décalage et aller à l'état 75
 
@@ -823,14 +823,14 @@ blancs (46)
 
 état 74
 
-   37 mots: ACCOL_G DML . MOT SPACE phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH . MOT SPACE phrase ACCOL_D
 
     MOT  décalage et aller à l'état 86
 
 
 état 75
 
-   38 mots: DML MOT . ACCOL_G phrase ACCOL_D
+   38 mots: ANTISLASH MOT . ACCOL_G phrase ACCOL_D
 
     ACCOL_G  décalage et aller à l'état 87
 
@@ -849,9 +849,9 @@ blancs (46)
 
    34 phrase: phrase blancs . mots
 
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    MOT      décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    MOT        décalage et aller à l'état 59
 
     mots  aller à l'état 89
 
@@ -922,18 +922,18 @@ blancs (46)
 
 état 86
 
-   37 mots: ACCOL_G DML MOT . SPACE phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT . SPACE phrase ACCOL_D
 
     SPACE  décalage et aller à l'état 95
 
 
 état 87
 
-   38 mots: DML MOT ACCOL_G . phrase ACCOL_D
+   38 mots: ANTISLASH MOT ACCOL_G . phrase ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    MOT      décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    MOT        décalage et aller à l'état 59
 
     phrase  aller à l'état 96
     mots    aller à l'état 62
@@ -1002,11 +1002,11 @@ blancs (46)
 
 état 95
 
-   37 mots: ACCOL_G DML MOT SPACE . phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT SPACE . phrase ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    MOT      décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    MOT        décalage et aller à l'état 59
 
     phrase  aller à l'état 101
     mots    aller à l'état 62
@@ -1015,7 +1015,7 @@ blancs (46)
 état 96
 
    34 phrase: phrase . blancs mots
-   38 mots: DML MOT ACCOL_G phrase . ACCOL_D
+   38 mots: ANTISLASH MOT ACCOL_G phrase . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 102
     SPACE    décalage et aller à l'état 4
@@ -1065,7 +1065,7 @@ blancs (46)
 état 101
 
    34 phrase: phrase . blancs mots
-   37 mots: ACCOL_G DML MOT SPACE phrase . ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 107
     SPACE    décalage et aller à l'état 4
@@ -1077,7 +1077,7 @@ blancs (46)
 
 état 102
 
-   38 mots: DML MOT ACCOL_G phrase ACCOL_D .
+   38 mots: ANTISLASH MOT ACCOL_G phrase ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 38 (mots)
 
@@ -1119,7 +1119,7 @@ blancs (46)
 
 état 107
 
-   37 mots: ACCOL_G DML MOT SPACE phrase ACCOL_D .
+   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 37 (mots)
 
@@ -1135,9 +1135,9 @@ blancs (46)
 
    13 caption: CAPTION ACCOL_G . phrase ACCOL_D blancs
 
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    MOT      décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    MOT        décalage et aller à l'état 59
 
     phrase  aller à l'état 113
     mots    aller à l'état 62
@@ -1192,11 +1192,11 @@ blancs (46)
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G . ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G . REEL ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 55
-    DML      décalage et aller à l'état 56
-    ENTIER   décalage et aller à l'état 118
-    REEL     décalage et aller à l'état 119
-    MOT      décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 55
+    ANTISLASH  décalage et aller à l'état 56
+    ENTIER     décalage et aller à l'état 118
+    REEL       décalage et aller à l'état 119
+    MOT        décalage et aller à l'état 59
 
     phrase  aller à l'état 120
     mots    aller à l'état 62

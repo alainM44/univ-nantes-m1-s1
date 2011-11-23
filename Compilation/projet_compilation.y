@@ -49,7 +49,7 @@
 %token FIN
 %token ACCOL_G
 %token ACCOL_D
-%token DML
+%token ANTISLASH
 %token CROCH_G
 %token CROCH_D
 %token<entier> ENTIER
@@ -74,7 +74,8 @@ debLatex  : DC blancs GFX blancs DEB ACCOL_G DOC ACCOL_D blancs
 ;
 
 endLatex  : FIN ACCOL_G DOC ACCOL_D
-
+;
+  /*differents types de declarations de tableau*/
 init      :  tabledeb  posdeb   DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
 | tabledeb  DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
 | DEB ACCOL_G TABULAR ACCOL_D { fprintf(yyout, "<table ");} 
@@ -100,12 +101,22 @@ caption : CAPTION ACCOL_G phrase ACCOL_D blancs {fprintf(yyout,"%s",$3);}
 |
 ;
 
+  /*lorsque toutes les lignes du tableau ont été lues,*/
+  /*on alloue une chaine de caractères qui va contenir la ligne HTML des totaux des colonnes,*/
+  /*et on lance la fonction sommeColonne qui va rediger cette ligne dans la chaine de caractères*/
+  /*Une fois la chaine complétée, on la rédige dans le fichier*/
 tableau   : options blancs lignes {char* ligneDesTotaux = malloc(sizeof(char)*1000);
 sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
  fprintf(yyout,"%s</tbody>\n</table>\n",ligneDesTotaux);
  free(ligneDesTotaux);}
 ;
 
+  /*Lorsque les options ont été lues,*/
+  /*on alloue deux tableau de taille égale au nb de colonnes dans le tableau*/
+  /*Le tableau numberInColonne contient des booléens qui indique pour chaque colonnes*:
+  /*si elle ne contient que des valeurs numériques*/
+  /*Le tableau sumColonne stocke la somme de chacune des colonnes*/
+  /*Enfin on lance la fonction redigeOption qui prends une valeur booléenne qui indique si le tableau aura des bordures*/
 options   :  ACCOL_G option ACCOL_D {numberInColonne = malloc(nbcol * sizeof(int));
    sumColonne = malloc(nbcol*sizeof(float));
    initialiseTabBool(numberInColonne, nbcol);
@@ -173,8 +184,8 @@ phrase : phrase blancs  mots {$$= strcat(strcat($1, $2),$3);}
 | mots        {$$ = $1;}
 ;
 mots      : MOT     {$$ = $1;}
-| ACCOL_G DML MOT SPACE phrase  ACCOL_D {$$= $5;}
-|DML MOT ACCOL_G phrase ACCOL_D {$$ = $4;}
+| ACCOL_G ANTISLASH MOT SPACE phrase  ACCOL_D {$$= $5;}
+|ANTISLASH MOT ACCOL_G phrase ACCOL_D {$$ = $4;}
 ;
 
 blancs    : SPACE blancs {$$ = strcat($1, $2);}
