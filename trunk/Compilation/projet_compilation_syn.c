@@ -144,7 +144,7 @@
      FIN = 271,
      ACCOL_G = 272,
      ACCOL_D = 273,
-     DML = 274,
+     ANTISLASH = 274,
      CROCH_G = 275,
      CROCH_D = 276,
      ENTIER = 277,
@@ -170,7 +170,7 @@
 #define FIN 271
 #define ACCOL_G 272
 #define ACCOL_D 273
-#define DML 274
+#define ANTISLASH 274
 #define CROCH_G 275
 #define CROCH_D 276
 #define ENTIER 277
@@ -510,11 +510,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    70,    70,    73,    76,    78,    79,    80,    83,    86,
-      89,    90,    93,    96,    99,   100,   103,   109,   116,   117,
-     118,   119,   122,   123,   124,   125,   129,   141,   142,   145,
-     149,   153,   157,   161,   166,   172,   173,   175,   176,   177,
-     180,   181
+       0,    70,    70,    73,    76,    79,    80,    81,    84,    87,
+      90,    91,    94,    97,   100,   101,   104,   110,   117,   118,
+     119,   120,   123,   124,   125,   126,   130,   142,   143,   146,
+     150,   154,   158,   162,   167,   173,   174,   176,   177,   178,
+     181,   182
 };
 #endif
 
@@ -525,11 +525,11 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "DEB", "DOC", "DC", "GFX", "TABLE",
   "TABULAR", "CAPTION", "OPTION_T", "FUSION", "TRAIT_HOR", "SEPAR_COL",
-  "FIN_LIGNE", "SEPAR", "FIN", "ACCOL_G", "ACCOL_D", "DML", "CROCH_G",
-  "CROCH_D", "ENTIER", "REEL", "MOT", "SPACE", "$accept", "fichier",
-  "debLatex", "endLatex", "init", "end", "tabledeb", "tableend", "posdeb",
-  "posend", "caption", "tableau", "options", "option", "lignes", "ligne",
-  "colonnes", "colonne", "phrase", "mots", "blancs", 0
+  "FIN_LIGNE", "SEPAR", "FIN", "ACCOL_G", "ACCOL_D", "ANTISLASH",
+  "CROCH_G", "CROCH_D", "ENTIER", "REEL", "MOT", "SPACE", "$accept",
+  "fichier", "debLatex", "endLatex", "init", "end", "tabledeb", "tableend",
+  "posdeb", "posend", "caption", "tableau", "options", "option", "lignes",
+  "ligne", "colonnes", "colonne", "phrase", "mots", "blancs", 0
 };
 #endif
 
@@ -1496,42 +1496,42 @@ yyreduce:
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 78 "projet_compilation.y"
+#line 79 "projet_compilation.y"
     { fprintf(yyout, "<table ");}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 79 "projet_compilation.y"
+#line 80 "projet_compilation.y"
     { fprintf(yyout, "<table ");}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 80 "projet_compilation.y"
+#line 81 "projet_compilation.y"
     { fprintf(yyout, "<table ");}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 93 "projet_compilation.y"
+#line 94 "projet_compilation.y"
     {positionnement = (yyvsp[(3) - (5)].str);}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 99 "projet_compilation.y"
+#line 100 "projet_compilation.y"
     {fprintf(yyout,"%s",(yyvsp[(3) - (5)].str));}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 103 "projet_compilation.y"
+#line 104 "projet_compilation.y"
     {char* ligneDesTotaux = malloc(sizeof(char)*1000);
 sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
  fprintf(yyout,"%s</tbody>\n</table>\n",ligneDesTotaux);
@@ -1541,7 +1541,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 109 "projet_compilation.y"
+#line 110 "projet_compilation.y"
     {numberInColonne = malloc(nbcol * sizeof(int));
    sumColonne = malloc(nbcol*sizeof(float));
    initialiseTabBool(numberInColonne, nbcol);
@@ -1552,49 +1552,49 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 116 "projet_compilation.y"
+#line 117 "projet_compilation.y"
     {nbseparateur++;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 117 "projet_compilation.y"
+#line 118 "projet_compilation.y"
     {nbcol =+ strlen((yyvsp[(1) - (2)].str));}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 118 "projet_compilation.y"
+#line 119 "projet_compilation.y"
     {nbseparateur++;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 119 "projet_compilation.y"
+#line 120 "projet_compilation.y"
     {nbcol =+ strlen((yyvsp[(1) - (1)].str));}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 122 "projet_compilation.y"
+#line 123 "projet_compilation.y"
     {}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 123 "projet_compilation.y"
+#line 124 "projet_compilation.y"
     {}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 129 "projet_compilation.y"
+#line 130 "projet_compilation.y"
     {
   if (numberInLine)
     {
@@ -1610,21 +1610,21 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 141 "projet_compilation.y"
+#line 142 "projet_compilation.y"
     {(yyval.str)= strcat((yyvsp[(2) - (5)].str), (yyvsp[(5) - (5)].str));}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 142 "projet_compilation.y"
+#line 143 "projet_compilation.y"
     {(yyval.str) = (yyvsp[(2) - (3)].str);}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 145 "projet_compilation.y"
+#line 146 "projet_compilation.y"
     {(yyval.str) = redigeColonne((yyvsp[(1) - (1)].str), positionnement, 0,0 );
    numberInColonne[colonneCourant] = 0;
    numberInLine = 0;
@@ -1634,7 +1634,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 149 "projet_compilation.y"
+#line 150 "projet_compilation.y"
     {(yyval.str) = redigeColonneEntier((yyvsp[(1) - (1)].entier), positionnement, 0, 0);
    sumLine += (yyvsp[(1) - (1)].entier);
    sumColonne[colonneCourant] += (yyvsp[(1) - (1)].entier);
@@ -1644,7 +1644,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 153 "projet_compilation.y"
+#line 154 "projet_compilation.y"
     {(yyval.str) = redigeColonneReel((yyvsp[(1) - (1)].reel), positionnement, 0, 0);
    sumLine += (yyvsp[(1) - (1)].reel);
    sumColonne[colonneCourant] += (yyvsp[(1) - (1)].reel);   
@@ -1654,7 +1654,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 157 "projet_compilation.y"
+#line 158 "projet_compilation.y"
     {(yyval.str) = redigeColonne((yyvsp[(9) - (10)].str), positionnement, 1, (yyvsp[(3) - (10)].entier));
    changeTab(numberInColonne, colonneCourant, (yyvsp[(3) - (10)].entier));
    colonneCourant += (yyvsp[(3) - (10)].entier);
@@ -1664,7 +1664,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 161 "projet_compilation.y"
+#line 162 "projet_compilation.y"
     {(yyval.str) = redigeColonneEntier((yyvsp[(9) - (10)].entier), positionnement, 1, (yyvsp[(3) - (10)].entier));
    changeTab(numberInColonne, colonneCourant, (yyvsp[(3) - (10)].entier));
    colonneCourant += (yyvsp[(3) - (10)].entier);
@@ -1675,7 +1675,7 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 166 "projet_compilation.y"
+#line 167 "projet_compilation.y"
     {(yyval.str) = redigeColonneReel((yyvsp[(9) - (10)].reel), positionnement, 1, (yyvsp[(3) - (10)].entier));
    changeTab(numberInColonne, colonneCourant, (yyvsp[(3) - (10)].entier));
    colonneCourant += (yyvsp[(3) - (10)].entier);
@@ -1686,49 +1686,49 @@ sommeColonne(ligneDesTotaux,positionnement, numberInColonne, sumColonne, nbcol);
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 172 "projet_compilation.y"
+#line 173 "projet_compilation.y"
     {(yyval.str)= strcat(strcat((yyvsp[(1) - (3)].str), (yyvsp[(2) - (3)].str)),(yyvsp[(3) - (3)].str));}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 173 "projet_compilation.y"
+#line 174 "projet_compilation.y"
     {(yyval.str) = (yyvsp[(1) - (1)].str);}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 175 "projet_compilation.y"
+#line 176 "projet_compilation.y"
     {(yyval.str) = (yyvsp[(1) - (1)].str);}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 176 "projet_compilation.y"
+#line 177 "projet_compilation.y"
     {(yyval.str)= (yyvsp[(5) - (6)].str);}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 177 "projet_compilation.y"
+#line 178 "projet_compilation.y"
     {(yyval.str) = (yyvsp[(4) - (5)].str);}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 180 "projet_compilation.y"
+#line 181 "projet_compilation.y"
     {(yyval.str) = strcat((yyvsp[(1) - (2)].str), (yyvsp[(2) - (2)].str));}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 181 "projet_compilation.y"
+#line 182 "projet_compilation.y"
     {(yyval.str) ="";}
     break;
 
@@ -1947,7 +1947,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 184 "projet_compilation.y"
+#line 185 "projet_compilation.y"
 
 void yyerror(char *s)
 {
