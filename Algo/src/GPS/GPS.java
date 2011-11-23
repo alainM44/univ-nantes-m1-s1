@@ -10,7 +10,11 @@ public class GPS {
 
 	AbstractGrapheOriente graph;
 	HashMap<Integer, Ville> villes;
+	HashMap<Integer, Route> routes;
 
+
+	
+	
 	//QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
 	public double get_agregat(Route route, float dmax,float imax,double A){
 		double result;
@@ -29,6 +33,8 @@ public class GPS {
 
 	}
 
+	
+	
 	public void put_itineraire(ArrayList<Route> PCC){
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
