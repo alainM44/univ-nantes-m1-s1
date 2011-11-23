@@ -2,8 +2,13 @@ package Graphe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
+
+import javax.naming.spi.DirStateFactory.Result;
+
+import GPS.GPS;
 
 /**
  * La classe va appliquer les différents algorithmes demandés peut-être aussi
@@ -92,14 +97,14 @@ public class PCC
 	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
 	 *         départ.
 	 */
-	public void /*??*/Dijkstra(int n, boolean option, HashMap<Integer, Integer> horloge, ArrayList<Integer> tab_routes)
+	public  ArrayList<Integer>/*??*/Dijkstra(int n, boolean option, HashMap<Integer, Integer> horloge, ArrayList<Integer> tab_routes)
 	{
-		int temps = 0;
+	//	int temps = 0;
 		int noeudCourant;
+		ArrayList<Integer> PCC= new ArrayList<Integer>();
 		ArrayList<Integer> listeNoeud = monGraphe.listeNoeuds();
-
+	Set<Integer> PCCkeys;
 		// 0 est la couleur blanche, 1 la couleur grise, 2 la couleur noire
-		HashMap<Integer, Integer> couleur = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 		PriorityQueue<Integer> file =  new PriorityQueue<Integer>();
 
@@ -137,8 +142,14 @@ public class PCC
 				}
 			}
 		}
-
-		//return pi;
+		PCCkeys = pi.keySet();
+		
+		// On remplit le resultat
+		for (Integer i : PCCkeys)
+		{
+		PCC.add(pi.get(i));	
+		}
+		return PCC;
 	}
 	/**
 	 * @param route
@@ -155,12 +166,5 @@ public class PCC
 
 	 */
 
-	//QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
-	public double get_agregat(Route route, int dmax,int imax,double A){
-		double result;
-		//wA (u → v) = A ∗ d(u → v)/dmax − (1 − A) ∗ (i(u → v) + i(v))/(2 ∗ imax )
-result=A*route.getLongueur()/dmax-(1-A* route.getN2() (2*imax);
-		return result;
-	}
-	
+
 }
