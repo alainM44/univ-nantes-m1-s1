@@ -1,11 +1,13 @@
 package GPS;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Set;
 
 import Graphe.AbstractGrapheOriente;
+import Graphe.ListGraph;
 import Graphe.Route;
 import Graphe.Ville;
 
@@ -15,7 +17,14 @@ public class GPS {
 	HashMap<Integer, Ville> villes;
 	HashMap<Integer, Route> routes;
 
-
+public GPS (File fichier)
+{
+	graph = new ListGraph();
+	villes = new HashMap<Integer, Ville>();
+	routes = new HashMap<Integer, Route>();
+	Parseur parseur = new Parseur(fichier);
+	parseur.parse(graph, villes, routes);
+}
 
 
 	//QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
@@ -38,7 +47,7 @@ public class GPS {
 		temp=Dijkstra(routes_ponderation);
 		for(int i=0;i<temp.size();i++)
 		{
-			result.add(routes.get(temp));
+			result.add(routes.get(i));
 		}
 		
 		return result;
@@ -49,7 +58,11 @@ public class GPS {
 //		
 //		return result;
 //	}
-
+	
+	
+//BAD NEWS : DIJKSTRA A REMPLACER PAR BELLMAN FORD 
+	//PROBLEME AU NIVEAU DES FILES DE PRIORITES
+	//DE PLUS LA PONDERATION DE LA FONCTION PEUT RENVOYER DES VALEURS NEGATIVES, IL FAUT DONC UTILISER BELLMAN-FORD
 	public  ArrayList<Integer>/*??*/Dijkstra(ArrayList<Double> tab_routes)
 	{
 		int noeudCourant;
@@ -92,7 +105,7 @@ public class GPS {
 			}
 		}
 		PCCkeys = pi.keySet();
-
+		
 		// On remplit le resultat
 		for (Integer i : PCCkeys)
 		{

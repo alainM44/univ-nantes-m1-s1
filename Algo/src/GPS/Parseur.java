@@ -96,5 +96,6 @@ public class Parseur
 			else
 				System.out.println("erreur " + valeur);
 		}
+		System.out.println(graph);
 	}
 }

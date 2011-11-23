@@ -45,4 +45,10 @@ public class Route extends Arc
 		this.qualite = qualite;
 	}
 
+	public String toString()
+	{
+		return "Route : " + nom + " longueur : " + longueur + " qualité : "
+				+ qualite + " " + super.toString();
+	}
+
 }
