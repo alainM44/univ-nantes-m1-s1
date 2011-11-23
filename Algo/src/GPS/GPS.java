@@ -2,6 +2,9 @@ package GPS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Set;
+
 import Graphe.AbstractGrapheOriente;
 import Graphe.Route;
 import Graphe.Ville;
@@ -13,8 +16,8 @@ public class GPS {
 	HashMap<Integer, Route> routes;
 
 
-	
-	
+
+
 	//QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
 	public double get_agregat(Route route, float dmax,float imax,double A){
 		double result;
@@ -24,22 +27,81 @@ public class GPS {
 
 	}
 
-	public void agregation(){
 
-
+	public ArrayList<Route> agregation(float dmax,float imax,double A){
+		ArrayList<Route> result= new ArrayList<Route>();
+		ArrayList<Double>routes_ponderation =new ArrayList<Double>();
+		for(int i=0;i<graph.NombreArcs();i++){
+			routes_ponderation.add(get_agregat(routes.get(i), dmax, imax, A));
+		}
+	result=	Dijkstra(routes_ponderation);
+		
+		return result;
 	}
 
-	public void detour_borne(){
-
+	public  ArrayList<Route> detour_borne(){
+		ArrayList<Route> result;
+		
+		return result;
 	}
 
-	
-	
+	public  ArrayList<Integer>/*??*/Dijkstra(ArrayList<Double> tab_routes)
+	{
+
+		Double noeudCourant;
+		ArrayList<Integer> PCC= new ArrayList<Integer>();
+		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
+		Set<Integer> PCCkeys;
+		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
+		PriorityQueue<Double> file =  new PriorityQueue<Double>();
+		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
+
+
+		for (Integer noeud : listeNoeud)
+		{
+			d.put(noeud,-1); //-1 ou l'infini ?
+			pi.put(noeud, 0);
+		}		
+
+		//on remplie la file
+		for (int i=0;i<tab_routes.size();i++)
+		{
+			file.add(tab_routes.get(i));
+		}		
+		//INIT
+		d.put(1,0.0);
+		pi.put(1,1);
+
+
+		while (!file.isEmpty())
+		{
+			noeudCourant = file.poll();
+			for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
+				for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
+			{
+				if (d.get(noeudCourant)<tab_routes.get(voisin)+d.get(noeudCourant))
+				{
+					d.put(noeudCourant, tab_routes.get(voisin)+d.get(noeudCourant));
+					pi.put(voisin,noeudCourant);
+
+				}
+			}
+		}
+		PCCkeys = pi.keySet();
+
+		// On remplit le resultat
+		for (Integer i : PCCkeys)
+		{
+			PCC.add(pi.get(i));	
+		}
+		return PCC;
+	}
+
 	public void put_itineraire(ArrayList<Route> PCC){
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
 		String route = new String("");
-		String interer = new String("");
+		String integer = new String("");
 		//		l’itinéraire sera
 		//		affiché en donnant la séquence des routes empruntées et des lieux traversés ; sa longueur et son
 		//		intérêt touristique seront indiqués, ainsi que le temps mis pour le calculer.
