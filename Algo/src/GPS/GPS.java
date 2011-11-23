@@ -47,26 +47,26 @@ public class GPS {
 
 	public  ArrayList<Integer>/*??*/Dijkstra(ArrayList<Double> tab_routes)
 	{
-
-		Double noeudCourant;
+		int noeudCourant;
 		ArrayList<Integer> PCC= new ArrayList<Integer>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
 		Set<Integer> PCCkeys;
+		Set<Integer> routeskeyx;
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-		PriorityQueue<Double> file =  new PriorityQueue<Double>();
+		PriorityQueue<Integer> file =  new PriorityQueue<Integer>();
 		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
 
 
 		for (Integer noeud : listeNoeud)
 		{
-			d.put(noeud,-1); //-1 ou l'infini ?
+			d.put(noeud,-1.0); //-1 ou l'infini ?
 			pi.put(noeud, 0);
 		}		
-
+		routeskeyx = pi.keySet();
 		//on remplie la file
-		for (int i=0;i<tab_routes.size();i++)
+		for (Integer route : routeskeyx)
 		{
-			file.add(tab_routes.get(i));
+			file.add(route);
 		}		
 		//INIT
 		d.put(1,0.0);
@@ -77,7 +77,6 @@ public class GPS {
 		{
 			noeudCourant = file.poll();
 			for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
-				for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
 			{
 				if (d.get(noeudCourant)<tab_routes.get(voisin)+d.get(noeudCourant))
 				{
