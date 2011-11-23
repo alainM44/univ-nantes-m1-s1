@@ -30,20 +30,25 @@ public class GPS {
 
 	public ArrayList<Route> agregation(float dmax,float imax,double A){
 		ArrayList<Route> result= new ArrayList<Route>();
+		ArrayList<Integer> temp= new ArrayList<Integer>();
 		ArrayList<Double>routes_ponderation =new ArrayList<Double>();
 		for(int i=0;i<graph.NombreArcs();i++){
 			routes_ponderation.add(get_agregat(routes.get(i), dmax, imax, A));
 		}
-	result=	Dijkstra(routes_ponderation);
+		temp=Dijkstra(routes_ponderation);
+		for(int i=0;i<temp.size();i++)
+		{
+			result.add(routes.get(temp));
+		}
 		
 		return result;
 	}
 
-	public  ArrayList<Route> detour_borne(){
-		ArrayList<Route> result;
-		
-		return result;
-	}
+//	public  ArrayList<Route> detour_borne(){
+//		ArrayList<Route> result;
+//		
+//		return result;
+//	}
 
 	public  ArrayList<Integer>/*??*/Dijkstra(ArrayList<Double> tab_routes)
 	{
