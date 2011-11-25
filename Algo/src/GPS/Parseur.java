@@ -29,7 +29,7 @@ public class Parseur
 	 *            une HashMap contenant les routes indicées par un id
 	 */
 	public void parse(GrapheOriente graph, HashMap<Integer, Ville> villes,
-			HashMap<Integer, Route> routes)
+			HashMap<Integer, Route> routes, Double dmax,Integer imax)
 	{
 		int nbVille = 0;
 		int nbRoute = 0;
@@ -65,6 +65,8 @@ public class Parseur
 				decoupe = decoupe[1].split("\\(");
 				decoupe = decoupe[1].split("\\)");
 				qualiteTemp = decoupe[0].length();
+				if (qualiteTemp >imax)
+					imax = qualiteTemp;
 				villeTemp = new Ville(nomTemp, qualiteTemp);
 				villes.put(nbVille, villeTemp);
 				graph.ajouterN(nbVille);
@@ -82,9 +84,13 @@ public class Parseur
 				nomTemp = decoupe[0];
 				decoupe = decoupe[1].split(";");
 				longueurTemp = Double.parseDouble(decoupe[0]);
+				if (longueurTemp >dmax)
+					dmax = longueurTemp;
 				decoupe = valeur.split(";");
 				decoupe = decoupe[1].split("\\)");
-				qualiteTemp = decoupe[0].length();
+				qualiteTemp = decoupe[0].length();		
+				if (qualiteTemp >imax)
+					imax = qualiteTemp;
 				graph.ajouterA(n1Temp, n2Temp);
 				routeTemp = new Route(n1Temp, n2Temp, nbRoute, nomTemp,
 						longueurTemp, qualiteTemp);
