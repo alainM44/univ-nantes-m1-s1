@@ -3,9 +3,11 @@ package GPS;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Set;
 import Graphe.AbstractGrapheOriente;
+import Graphe.Arc;
 import Graphe.ListGraph;
 import Graphe.Route;
 import Graphe.Ville;
@@ -102,6 +104,7 @@ public class GPS
 				}
 			}
 		}
+
 		
 		//VERIFICATION DE CIRCUIT ABSORBANT
 //	for(int routecourante=0; routecourante<graph.NombreArcs();routecourante++)
@@ -229,11 +232,37 @@ public class GPS
 		return result;
 	}
 
-	public ArrayList<Route> detourBorne (double K)
+	public ArrayList<Route> detourBorne(double K, int depart, int arrivee)
 	{
+		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
+		ArrayList<Integer> PCC=null;
+		double bornePCC = 0;
+
+		for (int i = 0; i < routes.size(); i++)
+		{
+			routes_ponderation.add(routes.get(i).getLongueur());
+		}
+
+		//PCC = BellmanFord(routes_ponderation);
+
+		for (Integer route : PCC)
+		{
+			bornePCC += routes.get(route).getLongueur();
+		}
+		bornePCC *= K;
+
+		return null;
+
+	}
+
+	public ArrayList<Route> detourBorneIter(ArrayList<LinkedList<Integer>> chemins,
+			HashMap<Integer, Integer> tabCouleurs, double bornePCC, int depart,
+			int arrivee)
+	{
+		ArrayList<Arc> noeudsSuivants;
+		tabCouleurs.put(depart, 1);
+		noeudsSuivants = graph.listerArcsSortants(depart);
 		
 		return null;
-		
 	}
-	
 }
