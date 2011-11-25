@@ -2,6 +2,7 @@ package GPS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -19,7 +20,9 @@ public class Parseur
 	}
 
 	/**
-	 * Parse le fichier fourni representant le gps et retourne
+	 * Parse le fichier fourni representant le gps et utilise, de façon
+	 * procédurale, les arguments fournis et servent ainsi à stocker les
+	 * résultats
 	 * 
 	 * @param graph
 	 *            le graphe correspondant au fichier
@@ -27,9 +30,13 @@ public class Parseur
 	 *            une HashMap contenant les villes indicées par un id
 	 * @param routes
 	 *            une HashMap contenant les routes indicées par un id
+	 * @param dmax
+	 *            La plus grande distance sur un arc
+	 * @param imax
+	 *            La plus grande valeur de qualité
 	 */
 	public void parse(GrapheOriente graph, HashMap<Integer, Ville> villes,
-			HashMap<Integer, Route> routes, Double dmax,Integer imax)
+			HashMap<Integer, Route> routes, ArrayList<Object> max)
 	{
 		int nbVille = 0;
 		int nbRoute = 0;
@@ -40,6 +47,8 @@ public class Parseur
 		double longueurTemp;
 		Ville villeTemp;
 		Route routeTemp;
+		max.add(0.0);//max[0] sera la valeur dmax
+		max.add(0);//max[1] sera la valeur imax
 
 		HashMap<String, Integer> annuaireInverse = new HashMap<String, Integer>();
 		String[] decoupe;
@@ -65,8 +74,8 @@ public class Parseur
 				decoupe = decoupe[1].split("\\(");
 				decoupe = decoupe[1].split("\\)");
 				qualiteTemp = decoupe[0].length();
-				if (qualiteTemp >imax)
-					imax = qualiteTemp;
+				if (qualiteTemp > (Integer)max.get(1))
+					max.set(1, qualiteTemp);
 				villeTemp = new Ville(nomTemp, qualiteTemp);
 				villes.put(nbVille, villeTemp);
 				graph.ajouterN(nbVille);
@@ -84,13 +93,13 @@ public class Parseur
 				nomTemp = decoupe[0];
 				decoupe = decoupe[1].split(";");
 				longueurTemp = Double.parseDouble(decoupe[0]);
-				if (longueurTemp >dmax)
-					dmax = longueurTemp;
+				if (longueurTemp > (Double)max.get(0))
+					max.set(0, longueurTemp);
 				decoupe = valeur.split(";");
 				decoupe = decoupe[1].split("\\)");
-				qualiteTemp = decoupe[0].length();		
-				if (qualiteTemp >imax)
-					imax = qualiteTemp;
+				qualiteTemp = decoupe[0].length();
+				if (qualiteTemp > (Integer)max.get(1))
+					max.set(1, qualiteTemp);
 				graph.ajouterA(n1Temp, n2Temp);
 				routeTemp = new Route(n1Temp, n2Temp, nbRoute, nomTemp,
 						longueurTemp, qualiteTemp);
@@ -102,6 +111,7 @@ public class Parseur
 			else
 				System.out.println("erreur " + valeur);
 		}
+
 		System.out.println(graph);
 	}
 }

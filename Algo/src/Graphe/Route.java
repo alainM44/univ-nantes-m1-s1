@@ -30,7 +30,7 @@ public class Route extends Arc
 		return longueur;
 	}
 
-	public void setLongueur(int longueur)
+	public void setLongueur(double longueur)
 	{
 		this.longueur = longueur;
 	}

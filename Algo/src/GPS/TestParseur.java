@@ -1,7 +1,6 @@
 package GPS;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,19 +14,14 @@ public class TestParseur
 
 	/**
 	 * @param args
-	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args)
 	{
-		File fich = new File("/comptes/E11A932Q/workspace/Algo/test/out.dot");
+		File fich = new File("/comptes/E074862X/Desktop/Generateur/g1.dot");
 		GPS monGPS = new GPS(fich);
-	//	ArrayList<Route> aAffiche = monGPS.agregation(100);
-		ArrayList<Route> PCC= monGPS.BellmanFord(monGPS.agregation(0.7));
-		for(int i =0;i<PCC.size();i++)
-			System.out.println(PCC.get(i));
-	//	monGPS.put_itineraire(PCC);
-		
-	//	System.out.println(aAffiche);
+		System.out.println(monGPS.imax);
+		ArrayList<Double> aAffiche = monGPS.agregation(0.7);
+		System.out.println(aAffiche);
 	}
 
 }
