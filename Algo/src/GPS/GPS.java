@@ -36,29 +36,24 @@ public class GPS
 		double result;
 		// wA (u → v) = A ∗ d(u → v)/dmax − (1 − A) ∗ (i(u → v) + i(v))/(2 ∗
 		// imax )
-		result = A * route.getLongueur() / dmax - (1 - A)
-				* (route.getQualite() + villes.get(route.getN2()).getQualite())
-				/ (2 * imax);
+		result = A * route.getLongueur() / dmax - (1 - A)* (route.getQualite() + villes.get(route.getN2()).getQualite())/ (2 * imax);
+		System.out.println(result);
+
 		return result;
 
 	}
 
-	public ArrayList<Route> agregation(double A)
+	public ArrayList<Double> agregation(double A)
 	{
-		ArrayList<Route> result = new ArrayList<Route>();
-		ArrayList<Integer> temp = new ArrayList<Integer>();
+		//ArrayList<Route> result = new ArrayList<Route>();
+		
 		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
 		for (int i = 0; i < graph.NombreArcs(); i++)
 		{
 			routes_ponderation.add(get_agregat(routes.get(i), A));
 		}
-		temp = Dijkstra(routes_ponderation);
-		for (int i = 0; i < temp.size(); i++)
-		{
-			result.add(routes.get(i));
-		}
-
-		return result;
+		System.out.println(routes_ponderation);
+		return routes_ponderation;
 	}
 
 	// public ArrayList<Route> detour_borne(){
@@ -70,24 +65,23 @@ public class GPS
 
 
 
-	public  ArrayList<Integer>/*??*/BellmanFord(ArrayList<Double> tab_routes)
+	public  ArrayList<Route>/*??*/BellmanFord(ArrayList<Double> tab_routes)
 	{
-
-		ArrayList<Integer> PCC= new ArrayList<Integer>();
+		ArrayList<Route> PCC= new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
 		Set<Integer> PCCkeys;
-		Set<Integer> routeskeyx;
+		
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-
 		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
+		HashMap<Integer, Double> r = new HashMap<Integer, Double>();
 
 
 		for (Integer noeud : listeNoeud)
 		{
-			d.put(noeud,-1.0); //-1 ou l'infini ?
+			d.put(noeud,Double.MAX_VALUE); //-1 ou l'infini ?
 			pi.put(noeud, 0);
 		}		
-		routeskeyx = pi.keySet();
+	
 
 		//INIT
 		d.put(1,0.0);
@@ -96,34 +90,37 @@ public class GPS
 
 		for(int villecourante=0; villecourante<graph.NombreNoeuds()-1;villecourante++)
 		{
-			for (Integer voisin : graph.listerSuccesseurs(villecourante)) // 
+			for(int routecourante=0; routecourante<graph.NombreArcs();routecourante++)
 			{
-				if (d.get(villecourante)<tab_routes.get(voisin)+d.get(villecourante))
+				if (d.get(villecourante)<tab_routes.get(routecourante)+d.get(villecourante))
 				{
-					d.put(villecourante, tab_routes.get(voisin)+d.get(villecourante));
-					pi.put(voisin,villecourante);
+					d.put(villecourante, tab_routes.get(routecourante)+d.get(villecourante));
+					pi.put(routecourante,villecourante);
+					r.put(routecourante,tab_routes.get(routecourante));
+					System.out.println(tab_routes.get(routecourante));
 
 				}
 			}
 		}
 		
 		//VERIFICATION DE CIRCUIT ABSORBANT
-	for(int routecourante=0; routecourante<graph.NombreArcs();routecourante++)
-	{
-		//hum hum
-		if( (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())+tab_routes.get(routecourante))))
-			return PCC;	
-	
-	}
+//	for(int routecourante=0; routecourante<graph.NombreArcs();routecourante++)
+//	{
+//		//hum hum
+//		if( (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())+tab_routes.get(routecourante))))
+//			return PCC;	
+//	
+//	}
 
-		PCCkeys = pi.keySet();
+		PCCkeys = r.keySet();
 
 		// On remplit le resultat
 		for (Integer i : PCCkeys)
 		{
-			PCC.add(pi.get(i));	
+			PCC.add(routes.get(r.get(i)));	
 		}
 		return PCC;
+		
 	}
 
 
@@ -132,56 +129,56 @@ public class GPS
 	// PROBLEME AU NIVEAU DES FILES DE PRIORITES
 	// DE PLUS LA PONDERATION DE LA FONCTION PEUT RENVOYER DES VALEURS
 	// NEGATIVES, IL FAUT DONC UTILISER BELLMAN-FORD
-	public ArrayList<Integer>/* ?? */Dijkstra(ArrayList<Double> tab_routes)
-	{
-		int noeudCourant;
-		ArrayList<Integer> PCC = new ArrayList<Integer>();
-		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
-		Set<Integer> PCCkeys;
-		Set<Integer> routeskeyx;
-		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-		PriorityQueue<Integer> file = new PriorityQueue<Integer>();
-		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
-
-		for (Integer noeud : listeNoeud)
-		{
-			d.put(noeud, -1.0); // -1 ou l'infini ?
-			pi.put(noeud, 0);
-		}
-		routeskeyx = pi.keySet();
-		// on remplie la file
-		for (Integer route : routeskeyx)
-		{
-			file.add(route);
-		}
-		// INIT
-		d.put(1, 0.0);
-		pi.put(1, 1);
-
-		while (!file.isEmpty())
-		{
-			noeudCourant = file.poll();
-			for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
-			{
-				if (d.get(noeudCourant) < tab_routes.get(voisin)
-						+ d.get(noeudCourant))
-				{
-					d.put(noeudCourant, tab_routes.get(voisin)
-							+ d.get(noeudCourant));
-					pi.put(voisin, noeudCourant);
-
-				}
-			}
-		}
-		PCCkeys = pi.keySet();
-
-		// On remplit le resultat
-		for (Integer i : PCCkeys)
-		{
-			PCC.add(pi.get(i));
-		}
-		return PCC;
-	}
+//	public ArrayList<Integer>/* ?? */Dijkstra(ArrayList<Double> tab_routes)
+//	{
+//		int noeudCourant;
+//		ArrayList<Integer> PCC = new ArrayList<Integer>();
+//		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
+//		Set<Integer> PCCkeys;
+//		Set<Integer> routeskeyx;
+//		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
+//		PriorityQueue<Integer> file = new PriorityQueue<Integer>();
+//		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
+//
+//		for (Integer noeud : listeNoeud)
+//		{
+//			d.put(noeud, -1.0); // -1 ou l'infini ?
+//			pi.put(noeud, 0);
+//		}
+//		routeskeyx = pi.keySet();
+//		// on remplie la file
+//		for (Integer route : routeskeyx)
+//		{
+//			file.add(route);
+//		}
+//		// INIT
+//		d.put(1, 0.0);
+//		pi.put(1, 1);
+//
+//		while (!file.isEmpty())
+//		{
+//			noeudCourant = file.poll();
+//			for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) // 
+//			{
+//				if (d.get(noeudCourant) < tab_routes.get(voisin)
+//						+ d.get(noeudCourant))
+//				{
+//					d.put(noeudCourant, tab_routes.get(voisin)
+//							+ d.get(noeudCourant));
+//					pi.put(voisin, noeudCourant);
+//
+//				}
+//			}
+//		}
+//		PCCkeys = pi.keySet();
+//
+//		// On remplit le resultat
+//		for (Integer i : PCCkeys)
+//		{
+//			PCC.add(pi.get(i));
+//		}
+//		return PCC;
+//	}
 
 	public void put_itineraire(ArrayList<Route> PCC)
 	{
