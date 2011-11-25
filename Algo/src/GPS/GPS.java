@@ -1,7 +1,6 @@
 package GPS;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -32,7 +31,7 @@ public class GPS
 	}
 
 	// QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
-	public double get_agregat(Route route, float dmax, float imax, double A)
+	public double get_agregat(Route route, double A)
 	{
 		double result;
 		// wA (u → v) = A ∗ d(u → v)/dmax − (1 − A) ∗ (i(u → v) + i(v))/(2 ∗
@@ -44,14 +43,14 @@ public class GPS
 
 	}
 
-	public ArrayList<Route> agregation(float dmax, float imax, double A)
+	public ArrayList<Route> agregation(double A)
 	{
 		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Integer> temp = new ArrayList<Integer>();
 		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
 		for (int i = 0; i < graph.NombreArcs(); i++)
 		{
-			routes_ponderation.add(get_agregat(routes.get(i), dmax, imax, A));
+			routes_ponderation.add(get_agregat(routes.get(i), A));
 		}
 		temp = Dijkstra(routes_ponderation);
 		for (int i = 0; i < temp.size(); i++)
