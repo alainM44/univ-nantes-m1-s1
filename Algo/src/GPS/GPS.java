@@ -1,11 +1,11 @@
 package GPS;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Set;
-
 import Graphe.AbstractGrapheOriente;
 import Graphe.ListGraph;
 import Graphe.Route;
@@ -17,14 +17,15 @@ public class GPS {
 	HashMap<Integer, Ville> villes;
 	HashMap<Integer, Route> routes;
 
-public GPS (File fichier)
-{
-	graph = new ListGraph();
-	villes = new HashMap<Integer, Ville>();
-	routes = new HashMap<Integer, Route>();
-	Parseur parseur = new Parseur(fichier);
-	parseur.parse(graph, villes, routes);
-}
+	public GPS (File fichier)
+	{
+		graph = new ListGraph();
+		villes = new HashMap<Integer, Ville>();
+		routes = new HashMap<Integer, Route>();
+		
+		Parseur parseur = new Parseur(fichier);
+		parseur.parse(graph, villes, routes);
+	}
 
 
 	//QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
@@ -49,18 +50,78 @@ public GPS (File fichier)
 		{
 			result.add(routes.get(i));
 		}
-		
+
 		return result;
 	}
 
-//	public  ArrayList<Route> detour_borne(){
-//		ArrayList<Route> result;
-//		
-//		return result;
-//	}
+	//	public  ArrayList<Route> detour_borne(){
+	//		ArrayList<Route> result;
+	//		
+	//		return result;
+	//	}
+
+
+
+
+	public  ArrayList<Integer>/*??*/BellmanFord(ArrayList<Double> tab_routes)
+	{
+
+		ArrayList<Integer> PCC= new ArrayList<Integer>();
+		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
+		Set<Integer> PCCkeys;
+		Set<Integer> routeskeyx;
+		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
+
+		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
+
+
+		for (Integer noeud : listeNoeud)
+		{
+			d.put(noeud,-1.0); //-1 ou l'infini ?
+			pi.put(noeud, 0);
+		}		
+		routeskeyx = pi.keySet();
+
+		//INIT
+		d.put(1,0.0);
+		pi.put(1,1);
+
+
+		for(int villecourante=0; villecourante<graph.NombreNoeuds()-1;villecourante++)
+		{
+			for (Integer voisin : graph.listerSuccesseurs(villecourante)) // 
+			{
+				if (d.get(villecourante)<tab_routes.get(voisin)+d.get(villecourante))
+				{
+					d.put(villecourante, tab_routes.get(voisin)+d.get(villecourante));
+					pi.put(voisin,villecourante);
+
+				}
+			}
+		}
+		
+		//VERIFICATION DE CIRCUIT ABSORBANT
+	for(int routecourante=0; routecourante<graph.NombreArcs();routecourante++)
+	{
+		//hum hum
+		if( (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())+tab_routes.get(routecourante))))
+			return PCC;	
 	
-	
-//BAD NEWS : DIJKSTRA A REMPLACER PAR BELLMAN FORD 
+	}
+
+		PCCkeys = pi.keySet();
+
+		// On remplit le resultat
+		for (Integer i : PCCkeys)
+		{
+			PCC.add(pi.get(i));	
+		}
+		return PCC;
+	}
+
+
+
+	//BAD NEWS : DIJKSTRA A REMPLACER PAR BELLMAN FORD 
 	//PROBLEME AU NIVEAU DES FILES DE PRIORITES
 	//DE PLUS LA PONDERATION DE LA FONCTION PEUT RENVOYER DES VALEURS NEGATIVES, IL FAUT DONC UTILISER BELLMAN-FORD
 	public  ArrayList<Integer>/*??*/Dijkstra(ArrayList<Double> tab_routes)
@@ -105,7 +166,7 @@ public GPS (File fichier)
 			}
 		}
 		PCCkeys = pi.keySet();
-		
+
 		// On remplit le resultat
 		for (Integer i : PCCkeys)
 		{
@@ -118,7 +179,7 @@ public GPS (File fichier)
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
 		String route = new String("");
-		String integer = new String("");
+		//		String integer = new String("");
 		//		l’itinéraire sera
 		//		affiché en donnant la séquence des routes empruntées et des lieux traversés ; sa longueur et son
 		//		intérêt touristique seront indiqués, ainsi que le temps mis pour le calculer.
