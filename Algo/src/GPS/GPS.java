@@ -8,6 +8,7 @@ import java.util.Set;
 import Graphe.AbstractGrapheOriente;
 import Graphe.Arc;
 import Graphe.ListGraph;
+import Graphe.MatGraph;
 import Graphe.Route;
 import Graphe.Ville;
 
@@ -23,7 +24,9 @@ public class GPS
 	public GPS(File fichier)
 	{
 		ArrayList<Object> max = new ArrayList<Object>();
-		graph = new ListGraph();
+		//graph = new ListGraph();
+		graph = new MatGraph();
+
 		villes = new HashMap<Integer, Ville>();
 		routes = new HashMap<Integer, Route>();
 		Parseur parseur = new Parseur(fichier);
@@ -31,7 +34,6 @@ public class GPS
 		imax = (Integer) max.get(1);
 		dmax = (Double) max.get(0);
 	}
-
 	// QUELLE SOLUTION LORSQUE QUE LON A UN RESULTAT NEGATIF?
 	public double get_agregat(Route route, double A)
 	{
@@ -39,14 +41,13 @@ public class GPS
 		// wA (u → v) = A ∗ d(u → v)/dmax − (1 − A) ∗ (i(u → v) + i(v))/(2 ∗
 		// imax )
 		result = A * route.getLongueur() / dmax - (1 - A)
-				* (route.getQualite() + villes.get(route.getN2()).getQualite())
-				/ (2 * imax);
-		System.out.println(result);
+		* (route.getQualite() + villes.get(route.getN2()).getQualite())
+		/ (2 * imax);
+		//		System.out.println(result);
 
 		return result;
 
 	}
-
 	public ArrayList<Double> agregation(double A)
 	{
 		// ArrayList<Route> result = new ArrayList<Route>();
@@ -56,75 +57,315 @@ public class GPS
 		{
 			routes_ponderation.add(get_agregat(routes.get(i), A));
 		}
-		System.out.println(routes_ponderation);
+		//		System.out.println(routes_ponderation);
 		return routes_ponderation;
 	}
-
-	// public ArrayList<Route> detour_borne(){
-	// ArrayList<Route> result;
-	//		
-	// return result;
-	// }
-
 	public ArrayList<Route>/* ?? */BellmanFord(ArrayList<Double> tab_routes)
 	{
 		ArrayList<Route> PCC = new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
 		Set<Integer> PCCkeys;
-
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
-		HashMap<Integer, Double> r = new HashMap<Integer, Double>();
+		//Pour stocker la route du PCC permettant d'acceder au noeud référencé par sa la clef de cette route
+		HashMap<Integer, Integer> r = new HashMap<Integer, Integer>();
 
 		for (Integer noeud : listeNoeud)
 		{
 			d.put(noeud, Double.MAX_VALUE); // -1 ou l'infini ?
-			pi.put(noeud, 0);
+			pi.put(noeud, -1);
 		}
-
 		// INIT
-		d.put(1, 0.0);
-		pi.put(1, 1);
-
+		d.put(0, 0.0);
+		pi.put(0, 0);
+		puthd(d);
+		puthi(pi);
 		for (int villecourante = 0; villecourante < graph.NombreNoeuds() - 1; villecourante++)
 		{
 			for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++)
 			{
-				if (d.get(villecourante) < tab_routes.get(routecourante)
-						+ d.get(villecourante))
+				//si d[v]>d[u]+w(u v)
+				if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())
+						+ tab_routes.get(routecourante)) &&  (d.get(routes.get(routecourante).getN2()) != null))
 				{
-					d.put(villecourante, tab_routes.get(routecourante)
-							+ d.get(villecourante));
-					pi.put(routecourante, villecourante);
-					r.put(routecourante, tab_routes.get(routecourante));
-					System.out.println(tab_routes.get(routecourante));
+					//d[v]<- d[u]+w(u v)
+					d.put(routes.get(routecourante).getN2(), tab_routes.get(routecourante)
+							+(d.get(routes.get(routecourante).getN1())));
+					//π[v]<- u
+					pi.put(routes.get(routecourante).getN2(),routes.get(routecourante).getN1());
+					//route reliant π[v]<-u 
+					r.put(routes.get(routecourante).getN2(), routecourante);
+					//System.out.println("MAJ");
 
 				}
 			}
 		}
-
 		// VERIFICATION DE CIRCUIT ABSORBANT
-		// for(int routecourante=0;
-		// routecourante<graph.NombreArcs();routecourante++)
-		// {
-		// //hum hum
-		// if( (d.get(routes.get(routecourante).getN2()) >
-		// (d.get(routes.get(routecourante).getN1())+tab_routes.get(routecourante))))
-		// return PCC;
-		//	
-		// }
+		for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++)
+		{
+			//si d[v]>d[u]+w(u v)
+			if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())
+					+ tab_routes.get(routecourante)))
+			{
+				//CIRCUIT ABSORBANT
+				return PCC; //VIDE
 
+			}
+		}
+		// }
+		puthd(d);
+		puthi(pi);
+		PCCkeys = pi.keySet();
 		PCCkeys = r.keySet();
 
 		// On remplit le resultat
 		for (Integer i : PCCkeys)
 		{
 			PCC.add(routes.get(r.get(i)));
+			//		System.out.println(routes.get(r.get(i)));
+
 		}
 		return PCC;
 
 	}
 
+	public ArrayList<Route>/* ?? */BellmanFord(ArrayList<Double> tab_routes,
+			int ville_dep, int ville_a)
+			{
+		ArrayList<Route> PCC = new ArrayList<Route>();
+		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
+		Set<Integer> PCCkeys;
+		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
+		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
+		//Pour stocker la route du PCC permettant d'acceder au noeud référencé par sa la clef de cette route
+		HashMap<Integer, Integer> r = new HashMap<Integer, Integer>();
+
+		for (Integer noeud : listeNoeud)
+		{
+			d.put(noeud, Double.MAX_VALUE); // -1 ou l'infini ?
+			pi.put(noeud, -1);
+		}
+		// INIT
+		d.put(ville_dep, 0.0);
+		pi.put(ville_dep, ville_dep);
+		puthd(d);
+		puthi(pi);
+		for (int villecourante = 0; villecourante < graph.NombreNoeuds() - 1; villecourante++)
+		{
+			for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++)
+			{
+				//si d[v]>d[u]+w(u v)
+				if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())
+						+ tab_routes.get(routecourante)))
+				{
+					//d[v]<- d[u]+w(u v)
+					d.put(routes.get(routecourante).getN2(), tab_routes.get(routecourante)
+							+(d.get(routes.get(routecourante).getN1())));
+					//π[v]<- u
+					pi.put(routes.get(routecourante).getN2(),routes.get(routecourante).getN1());
+					//route reliant π[v]<-u 
+					r.put(routes.get(routecourante).getN2(), routecourante);
+					//System.out.println("MAJ");
+
+				}
+			}
+		}
+		// VERIFICATION DE CIRCUIT ABSORBANT
+		for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++)
+		{
+			//si d[v]>d[u]+w(u v)
+			if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(routecourante).getN1())
+					+ tab_routes.get(routecourante)) &&  (d.get(routes.get(routecourante).getN2()) != null))
+			{
+				//CIRCUIT ABSORBANT
+				return PCC; //VIDE
+
+			}
+		}
+		// }
+		puthd(d);
+		puthi(pi);
+		PCCkeys = pi.keySet();
+
+		PCCkeys = r.keySet();
+
+		// On remplit le resultat
+		if (ville_a<ville_dep)
+		{
+			for (Integer i : PCCkeys)
+			{
+				if (i.compareTo(ville_a)<=0)
+					{PCC.add(routes.get(r.get(i)));//		System.out.println(routes.get(r.get(i)));
+				System.out.println("t1");}
+			}
+		}
+		else
+		{
+			for (Integer i : PCCkeys)
+			{
+				if (i.compareTo(ville_dep)>0 && i.compareTo(ville_a)<=0)
+					{PCC.add(routes.get(r.get(i)));
+						System.out.println("t2");}
+
+			}
+		}
+
+		return PCC;
+
+			}
+
+
+	public void put_itineraire(ArrayList<Route> PCC)
+	{
+		String itineraire = new String("Ville Départ : ");
+		String ville = new String("");
+		String route = new String("");
+		String integer = new String("");
+		// l’itinéraire sera
+		// affiché en donnant la séquence des routes empruntées et des lieux
+		// traversés ; sa longueur et son
+		// intérêt touristique seront indiqués, ainsi que le temps mis pour le
+		// calculer.
+		itineraire += "Ville départ :";
+		ville += getville(villes.get(PCC.get(1)));
+		route += getroute(PCC.get(1));
+		itineraire += ville;
+		itineraire += '\n';
+		itineraire += route;
+		itineraire += '\n';
+		for (int i = 2; i < PCC.size() - 1; i++)
+		{
+			ville += getville(villes.get(PCC.get(i)));
+			route += getroute(PCC.get(i));
+			itineraire += '\n';
+		}
+		itineraire += "Ville départ :";
+		ville += getville(villes.get(PCC.get(PCC.size())));
+		route += getroute(PCC.get(PCC.size()));
+
+		System.out.println(itineraire);
+	}
+	public String getville(Ville ville)
+	{
+		String result = new String("");
+		result += ville.getNom();
+		result += " ";
+		result += ville.getQualite();
+		return result;
+	}
+	public String getroute(Route route)
+	{
+		String result = new String("");
+		result += route.getNom();
+		result += " ";
+		result += route.getQualite();
+		return result;
+	}
+	public LinkedList<Route> detourBorne(double K, int depart, int arrivee)
+	{
+		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
+		ArrayList<Route> PCC = null;
+		double bornePCC = 0;
+
+		for (int i = 0; i < routes.size(); i++)
+		{
+			routes_ponderation.add(routes.get(i).getLongueur());
+		}
+
+		PCC = BellmanFord(routes_ponderation);
+
+		for (Route route : PCC)
+		{
+			bornePCC += route.getLongueur();
+		}
+		bornePCC *= K;
+
+		return detourBorneIter(bornePCC, depart, arrivee);
+
+	}
+	public LinkedList<Route> detourBorneIter(double bornePCC, int depart,
+			int arrivee)
+			{
+		LinkedList<Route> cheminCourant = new LinkedList<Route>();
+		LinkedList<Route> meilleurChemin = new LinkedList<Route>();
+		HashMap<Integer, Integer> tabCouleurs = new HashMap<Integer, Integer>();
+		return detourBorneIter(cheminCourant, meilleurChemin, tabCouleurs,
+				bornePCC, depart, arrivee, 0, 0, 0);
+			}
+	@SuppressWarnings("unchecked")
+	public LinkedList<Route> detourBorneIter(LinkedList<Route> cheminCourant,
+			LinkedList<Route> meilleurChemin,
+			HashMap<Integer, Integer> tabCouleurs, double bornePCC, int depart,
+			int arrivee, double somme, int qualiteCumule, int qualiteMax)
+			{
+		if (depart == arrivee && qualiteMax < qualiteCumule)
+		{
+			meilleurChemin = (LinkedList<Route>) cheminCourant.clone();
+		}
+		else
+		{
+			ArrayList<Arc> routesSuivantes;
+			int id;
+			int ville;
+			double longueur;
+			int qualite;
+			tabCouleurs.put(depart, 1);
+			routesSuivantes = graph.listerArcsSortants(depart);
+			for (Arc routeSuivante : routesSuivantes)
+			{
+				ville = routeSuivante.getN1();
+				id = routeSuivante.getId();
+				longueur = routes.get(id).getLongueur();
+				qualite = routes.get(id).getQualite()
+				+ villes.get(ville).getQualite();
+				if ((tabCouleurs.get(ville) == 0 || tabCouleurs.get(ville) == null)
+						&& somme + longueur < bornePCC)
+				{
+					cheminCourant.add(routes.get(id));
+					detourBorneIter(cheminCourant, meilleurChemin, tabCouleurs,
+							bornePCC, ville, arrivee, somme + longueur,
+							qualiteCumule + qualite, qualiteMax);
+					cheminCourant.removeLast();// File
+				}
+			}
+
+		}
+
+		return meilleurChemin;
+			}
+	//	AFFICHAGE DE HASHMAP PR DEBUG
+	public void puthd (HashMap<Integer, Double>h)
+	{
+		Set<Integer> PCCkeys = h.keySet();
+		System.out.print("[");
+		for (Integer i : PCCkeys)
+		{
+
+			System.out.print(h.get(i));
+		}
+		System.out.println("]");
+	}
+	public void puthi (HashMap<Integer, Integer>h)
+	{
+		Set<Integer> PCCkeys = h.keySet();
+		System.out.print("[");
+		for (Integer i : PCCkeys)
+		{
+
+			System.out.print(h.get(i));
+
+
+		}
+		System.out.println("]");
+	}
+	public void puthr (HashMap<Integer, Route>h)
+	{
+		Set<Integer> PCCkeys = h.keySet();
+		System.out.print("[");
+		for (Integer i : PCCkeys)
+		{System.out.print(h.get(i));}
+		System.out.println("]");
+	}
 	// BAD NEWS : DIJKSTRA A REMPLACER PAR BELLMAN FORD
 	// PROBLEME AU NIVEAU DES FILES DE PRIORITES
 	// DE PLUS LA PONDERATION DE LA FONCTION PEUT RENVOYER DES VALEURS
@@ -180,127 +421,4 @@ public class GPS
 	// return PCC;
 	// }
 
-	public void put_itineraire(ArrayList<Route> PCC)
-	{
-		String itineraire = new String("Ville Départ : ");
-		String ville = new String("");
-		String route = new String("");
-		String integer = new String("");
-		// l’itinéraire sera
-		// affiché en donnant la séquence des routes empruntées et des lieux
-		// traversés ; sa longueur et son
-		// intérêt touristique seront indiqués, ainsi que le temps mis pour le
-		// calculer.
-		itineraire += "Ville départ :";
-		ville += getville(villes.get(PCC.get(1)));
-		route += getroute(PCC.get(1));
-		itineraire += ville;
-		itineraire += '\n';
-		itineraire += route;
-		itineraire += '\n';
-		for (int i = 2; i < PCC.size() - 1; i++)
-		{
-			ville += getville(villes.get(PCC.get(i)));
-			route += getroute(PCC.get(i));
-			itineraire += '\n';
-		}
-		itineraire += "Ville départ :";
-		ville += getville(villes.get(PCC.get(PCC.size())));
-		route += getroute(PCC.get(PCC.size()));
-
-		System.out.println(itineraire);
-	}
-
-	public String getville(Ville ville)
-	{
-		String result = new String("");
-		result += ville.getNom();
-		result += " ";
-		result += ville.getQualite();
-		return result;
-	}
-
-	public String getroute(Route route)
-	{
-		String result = new String("");
-		result += route.getNom();
-		result += " ";
-		result += route.getQualite();
-		return result;
-	}
-
-	public LinkedList<Route> detourBorne(double K, int depart, int arrivee)
-	{
-		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
-		ArrayList<Route> PCC = null;
-		double bornePCC = 0;
-
-		for (int i = 0; i < routes.size(); i++)
-		{
-			routes_ponderation.add(routes.get(i).getLongueur());
-		}
-
-		PCC = BellmanFord(routes_ponderation);
-
-		for (Route route : PCC)
-		{
-			bornePCC += route.getLongueur();
-		}
-		bornePCC *= K;
-
-		return detourBorneIter(bornePCC, depart, arrivee);
-
-	}
-
-	public LinkedList<Route> detourBorneIter(double bornePCC, int depart,
-			int arrivee)
-	{
-		LinkedList<Route> cheminCourant = new LinkedList<Route>();
-		LinkedList<Route> meilleurChemin = new LinkedList<Route>();
-		HashMap<Integer, Integer> tabCouleurs = new HashMap<Integer, Integer>();
-		return detourBorneIter(cheminCourant, meilleurChemin, tabCouleurs,
-				bornePCC, depart, arrivee, 0, 0, 0);
-	}
-
-	@SuppressWarnings("unchecked")
-	public LinkedList<Route> detourBorneIter(LinkedList<Route> cheminCourant,
-			LinkedList<Route> meilleurChemin,
-			HashMap<Integer, Integer> tabCouleurs, double bornePCC, int depart,
-			int arrivee, double somme, int qualiteCumule, int qualiteMax)
-	{
-		if (depart == arrivee && qualiteMax < qualiteCumule)
-		{
-			meilleurChemin = (LinkedList<Route>) cheminCourant.clone();
-		}
-		else
-		{
-			ArrayList<Arc> routesSuivantes;
-			int id;
-			int ville;
-			double longueur;
-			int qualite;
-			tabCouleurs.put(depart, 1);
-			routesSuivantes = graph.listerArcsSortants(depart);
-			for (Arc routeSuivante : routesSuivantes)
-			{
-				ville = routeSuivante.getN1();
-				id = routeSuivante.getId();
-				longueur = routes.get(id).getLongueur();
-				qualite = routes.get(id).getQualite()
-						+ villes.get(ville).getQualite();
-				if ((tabCouleurs.get(ville) == 0 || tabCouleurs.get(ville) == null)
-						&& somme + longueur < bornePCC)
-				{
-					cheminCourant.add(routes.get(id));
-					detourBorneIter(cheminCourant, meilleurChemin, tabCouleurs,
-							bornePCC, ville, arrivee, somme + longueur,
-							qualiteCumule + qualite, qualiteMax);
-					cheminCourant.removeLast();// File
-				}
-			}
-
-		}
-
-		return meilleurChemin;
-	}
 }
