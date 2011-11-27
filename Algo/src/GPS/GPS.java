@@ -195,8 +195,8 @@ public class GPS
 			for (Integer i : PCCkeys)
 			{
 				if (i.compareTo(ville_a)<=0)
-					{PCC.add(routes.get(r.get(i)));//		System.out.println(routes.get(r.get(i)));
-				System.out.println("t1");}
+					PCC.add(routes.get(r.get(i)));//		System.out.println(routes.get(r.get(i)));
+
 			}
 		}
 		else
@@ -204,8 +204,8 @@ public class GPS
 			for (Integer i : PCCkeys)
 			{
 				if (i.compareTo(ville_dep)>0 && i.compareTo(ville_a)<=0)
-					{PCC.add(routes.get(r.get(i)));
-						System.out.println("t2");}
+					PCC.add(routes.get(r.get(i)));
+
 
 			}
 		}
@@ -214,51 +214,87 @@ public class GPS
 
 			}
 
-
+	// VERIFIER LA MOY DES ETOILES
 	public void put_itineraire(ArrayList<Route> PCC)
 	{
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
 		String route = new String("");
-		String integer = new String("");
+		int etoiles=0;
+		double longueur=0;
+		double l;
+		int cpt=0;
+//		System.out.println(PCC);
 		// l’itinéraire sera
 		// affiché en donnant la séquence des routes empruntées et des lieux
 		// traversés ; sa longueur et son
 		// intérêt touristique seront indiqués, ainsi que le temps mis pour le
 		// calculer.
-		itineraire += "Ville départ :";
-		ville += getville(villes.get(PCC.get(1)));
-		route += getroute(PCC.get(1));
+		ville = getville(villes.get(PCC.get(0).getN1()));
 		itineraire += ville;
 		itineraire += '\n';
-		itineraire += route;
-		itineraire += '\n';
-		for (int i = 2; i < PCC.size() - 1; i++)
+		route += getroute(PCC.get(0));
+		l=PCC.get(0).getLongueur();
+		longueur+=l;
+		ville = getville(villes.get(PCC.get(0).getN2()));
+		itineraire += "route "+route+"vers :"+ville +" longeueur : "+l+"\n";
+		etoiles+=villes.get(PCC.get(0).getN1()).getQualite()+PCC.get(0).getQualite()+villes.get(PCC.get(0).getN2()).getQualite();
+		cpt+=3;
+		for (int i = 1; i <= PCC.size() -1; i++)
 		{
-			ville += getville(villes.get(PCC.get(i)));
-			route += getroute(PCC.get(i));
-			itineraire += '\n';
+			l=PCC.get(i).getLongueur();
+			longueur+=l;
+			route = getroute(PCC.get(i));
+			ville = getville(villes.get(PCC.get(i).getN2()));
+			etoiles+=PCC.get(i).getQualite()+villes.get(PCC.get(i).getN2()).getQualite();
+			cpt+=2;
+			itineraire += "route "+route+"vers :"+ville +" longeueur : "+l+"\n";
 		}
-		itineraire += "Ville départ :";
-		ville += getville(villes.get(PCC.get(PCC.size())));
-		route += getroute(PCC.get(PCC.size()));
 
-		System.out.println(itineraire);
+		//etoiles+=PCC.get(PCC.size()-1).getQualite();
+		itineraire += "Ville arrivée :";
+		ville = getville(villes.get(PCC.get(PCC.size() -1).getN2()));
+		itineraire += ville;
+		//		System.out.println(etoiles);
+		//		System.out.println(cpt);
+			System.out.println(itineraire);
+		System.out.println("Longueur de l'itinéraire : "+longueur);
+		System.out.print("Intérêt touristique: ");
+		for(int i =1;i<=(etoiles/cpt);i++)
+			System.out.print("*");
+
 	}
+
 	public String getville(Ville ville)
 	{
 		String result = new String("");
 		result += ville.getNom();
 		result += " ";
-		result += ville.getQualite();
+		result += getetoiles(ville);
+
 		return result;
+
 	}
 	public String getroute(Route route)
 	{
 		String result = new String("");
 		result += route.getNom();
 		result += " ";
-		result += route.getQualite();
+		result += getetoiles(route);
+		return result;
+	}
+	public String getetoiles(Ville ville)
+	{
+		String result = new String("");
+		for(int i=1;i<=ville.getQualite();i++)
+			result += "*";
+		return result;
+	}
+	public String getetoiles(Route route)
+	{
+		String result = new String("");
+		for(int i=1;i<=route.getQualite();i++)
+			result += "*";
 		return result;
 	}
 	public LinkedList<Route> detourBorne(double K, int depart, int arrivee)

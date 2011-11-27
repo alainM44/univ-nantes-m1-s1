@@ -17,11 +17,13 @@ public class TestParseur
 	 */
 	public static void main(String[] args)
 	{
-		File fich = new File("/comptes/E074862X/Desktop/Generateur/g1.dot");
+		File fich = new File("/home/alain/workspace/Algo/test/g1.dot");
 		GPS monGPS = new GPS(fich);
 		System.out.println(monGPS.imax);
 		ArrayList<Double> aAffiche = monGPS.agregation(0.7);
-		System.out.println(aAffiche);
+	//	monGPS.BellmanFord(aAffiche,2,0);
+	//	System.out.println(aAffiche);
+		monGPS.put_itineraire(	monGPS.BellmanFord(aAffiche,2,0));
 	}
 
 }
