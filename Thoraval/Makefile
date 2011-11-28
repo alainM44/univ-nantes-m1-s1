@@ -2,7 +2,7 @@
 
 # program
 
-NOM_PROGRAMME=mutmut
+NOM_PROGRAMME=misra
 
 # bibliotheque amble
 
