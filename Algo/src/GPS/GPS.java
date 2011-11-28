@@ -26,7 +26,6 @@ public class GPS
 		ArrayList<Object> max = new ArrayList<Object>();
 		//graph = new ListGraph();
 		graph = new MatGraph();
-
 		villes = new HashMap<Integer, Ville>();
 		routes = new HashMap<Integer, Route>();
 		Parseur parseur = new Parseur(fichier);
@@ -62,6 +61,7 @@ public class GPS
 	}
 	public ArrayList<Route>/* ?? */BellmanFord(ArrayList<Double> tab_routes)
 	{
+		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Route> PCC = new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
 		Set<Integer> PCCkeys;
@@ -69,7 +69,6 @@ public class GPS
 		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
 		//Pour stocker la route du PCC permettant d'acceder au noeud référencé par sa la clef de cette route
 		HashMap<Integer, Integer> r = new HashMap<Integer, Integer>();
-
 		for (Integer noeud : listeNoeud)
 		{
 			d.put(noeud, Double.MAX_VALUE); // -1 ou l'infini ?
@@ -96,7 +95,6 @@ public class GPS
 					//route reliant π[v]<-u 
 					r.put(routes.get(routecourante).getN2(), routecourante);
 					//System.out.println("MAJ");
-
 				}
 			}
 		}
@@ -117,21 +115,28 @@ public class GPS
 		puthi(pi);
 		PCCkeys = pi.keySet();
 		PCCkeys = r.keySet();
-
-		// On remplit le resultat
-		for (Integer i : PCCkeys)
+		Integer ville=graph.NombreNoeuds()-1;
+		while(ville!=0)
 		{
-			PCC.add(routes.get(r.get(i)));
-			//		System.out.println(routes.get(r.get(i)));
-
+			Route tmp;
+			tmp =routes.get(r.get(ville));
+			PCC.add(tmp);
+			ville=tmp.getN1();
 		}
-		return PCC;
+		//		On inverse le resultat
+		for (int i=PCC.size()-1;i>=0;i--)
+			result.add(PCC.get(i));
+		System.out.println(result);
+		return result;
+
+
 
 	}
 
 	public ArrayList<Route>/* ?? */BellmanFord(ArrayList<Double> tab_routes,
 			int ville_dep, int ville_a)
 			{
+		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Route> PCC = new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
 		Set<Integer> PCCkeys;
@@ -185,36 +190,30 @@ public class GPS
 		// }
 		puthd(d);
 		puthi(pi);
-		PCCkeys = pi.keySet();
 
+		PCCkeys = pi.keySet();
 		PCCkeys = r.keySet();
 
-		// On remplit le resultat
-		if (ville_a<ville_dep)
+		Integer ville;
+		ville= ville_a;
+		while(ville!=ville_dep)
 		{
-			for (Integer i : PCCkeys)
-			{
-				if (i.compareTo(ville_a)<=0)
-					PCC.add(routes.get(r.get(i)));//		System.out.println(routes.get(r.get(i)));
+			Route tmp;
+			tmp =routes.get(r.get(ville));
+			PCC.add(tmp);
 
-			}
+			ville=tmp.getN1();
 		}
-		else
-		{
-			for (Integer i : PCCkeys)
-			{
-				if (i.compareTo(ville_dep)>0 && i.compareTo(ville_a)<=0)
-					PCC.add(routes.get(r.get(i)));
-
-
-			}
-		}
-
-		return PCC;
+		//		On inverse le resultat
+		for (int i=PCC.size()-1;i>=0;i--)
+			result.add(PCC.get(i));
+		System.out.println(result);
+		return result;
 
 			}
 
 	// VERIFIER LA MOY DES ETOILES
+
 	public void put_itineraire(ArrayList<Route> PCC)
 	{
 		String itineraire = new String("Ville Départ : ");
@@ -224,7 +223,7 @@ public class GPS
 		double longueur=0;
 		double l;
 		int cpt=0;
-//		System.out.println(PCC);
+		//          System.out.println(PCC);
 		// l’itinéraire sera
 		// affiché en donnant la séquence des routes empruntées et des lieux
 		// traversés ; sa longueur et son
@@ -255,15 +254,17 @@ public class GPS
 		itineraire += "Ville arrivée :";
 		ville = getville(villes.get(PCC.get(PCC.size() -1).getN2()));
 		itineraire += ville;
-		//		System.out.println(etoiles);
-		//		System.out.println(cpt);
-			System.out.println(itineraire);
+		//              System.out.println(etoiles);
+		//              System.out.println(cpt);
+		System.out.println(itineraire);
 		System.out.println("Longueur de l'itinéraire : "+longueur);
 		System.out.print("Intérêt touristique: ");
 		for(int i =1;i<=(etoiles/cpt);i++)
 			System.out.print("*");
 
 	}
+
+
 
 	public String getville(Ville ville)
 	{
@@ -377,7 +378,7 @@ public class GPS
 		for (Integer i : PCCkeys)
 		{
 
-			System.out.print(h.get(i));
+			System.out.print(h.get(i)+" ");
 		}
 		System.out.println("]");
 	}
