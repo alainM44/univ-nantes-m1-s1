@@ -38,8 +38,8 @@ public class Parseur
 	public void parse(GrapheOriente graph, HashMap<Integer, Ville> villes,
 			HashMap<Integer, Route> routes, ArrayList<Object> max)
 	{
-		int nbVille = 0;
-		int nbRoute = 0;
+		int nbVille = 1;
+		int nbRoute = 1;
 		String nomTemp;
 		int n1Temp;
 		int n2Temp;
