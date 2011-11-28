@@ -1,3 +1,20 @@
 \chapter{Guide d'utilisation}
 \section{Manuel}
 \section{Erreurs non prises en compte}
+Une grande partie des erreurs ignorées volontairement sont celles engendrées par le contrôles des informations saisies par l'utilisateur. La gestion de ce type  d'erreurs se fait simplement avec des comparaisons de chaînes de caractères. Le but de ce projet étant avant tout la programation réseau nous avons décidé de ne pas perdre de temps sur ce type opérations. Nous avons eu l'occasion à de très nombreuses reprises de le faire dans la rédaction de notre code. 
+\begin{itemize}
+\item
+Pour les opération de download et upload. Il est impératif de d'entrer le nom exact du fichier. 
+\item
+Dowload file  : Une fois sélectionée, l'utlisateur devra taper le nom exact du fichier à télécharger. Eventuellement il peut copier coller le nom du fichier qui l'intéresse à partir du résultat du listing du serveur qu'il aura opéreé au préalable.
+\item
+Upload file : Une fois sélectionée, l'utlisateur devra taper le nom exact du fichier qu'il veut transmettre au serveur. Celui sera stocjé dans le dossier du serveur selon la syntaxe suivante \textit{outnomdefichier}.
+\item
+Enter a commande : Permet d'entrer une commande sans paramètres : ls, du pwd ...
+\item
+Quit : Le client se déconnecte du serveur et se termine.
+\item
+Eteindre le server : Permet de terminer le processus serveur. Bien que non cohérent avec le principe d'utilisation d'un serveur FTP, cela est pratique pour des tests. Cela permet entre autres de fermer correctement les différentes socket pour relancer de nouveaux serveurs.
+\end{itemize}
+
+
