@@ -124,19 +124,24 @@ options   :  ACCOL_G option ACCOL_D {numberInColonne = malloc(nbcol * sizeof(int
    redigeOption(nbseparateur>=nbcol/2, positionnement);}
 ;
 
+/*option permet de connaitre le nombre de colonnes et de separateur*/
 option    : SEPAR option {nbseparateur++;}
 | MOT option {nbcol =+ strlen($1);}
 | SEPAR {nbseparateur++;}
 | MOT {nbcol =+ strlen($1);}
 ;
 
+/*parcourt toutes les lignes*/
 lignes    : ligne FIN_LIGNE  blancs lignes{}
 | ligne FIN_LIGNE blancs {}
 | TRAIT_HOR blancs lignes;
 | TRAIT_HOR blancs
 ;
 
-
+/*Lorsqu'une ligne est traité on recupère la valeur renvoyée par colonnes et on l'affiche entre deux balise */
+/*Et l'on reinitialise les variables "numberInLine" qui dit si la ligne ne contient que des valeurs numeriques */
+/*colonneCourante indique le numero de la colonne parcouru lors du parcours d'une ligne*/
+/*sumLigne va conserver la sum de toutes les valeurs numériques de la ligne */
 ligne     : colonnes {
   if (numberInLine)
     {
@@ -149,10 +154,13 @@ ligne     : colonnes {
   sumLine = 0;}
 ;
 
+/*Défini l'apparence des colonnes*/
 colonnes  :blancs colonne blancs SEPAR_COL  colonnes {$$= strcat($2, $5);}
 | blancs colonne blancs {$$ = $2;}
 ;
 
+/*colonne va lister tout ce que peut contenir une colonne (entier, reel, mot... */
+/*colonne renvoie une chaine de caractères fourni par la fonction redigeColonne*/
 colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );
    numberInColonne[colonneCourant] = 0;
    numberInLine = 0;
@@ -180,9 +188,14 @@ colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );
    sumLine += $9;
  }
 ;
+/*phrase permet de gérer des suite de mots séparer par des blancs*/
 phrase : phrase blancs  mots {$$= strcat(strcat($1, $2),$3);}
 | mots        {$$ = $1;}
 ;
+
+/*mots corresponds aux chaines des caractères composées de lettres ou de chiffres*/
+/*et aux formules latex de la forme : {\d phrase} et \d{phrase} pour géré les symboles particuliers ou les mises en formes*/
+/*On peut constater que la mise en forme est ignoré. Seule la phrase est recopiée*/
 mots      : MOT     {$$ = $1;}
 | ACCOL_G ANTISLASH MOT SPACE phrase  ACCOL_D {$$= $5;}
 |ANTISLASH MOT ACCOL_G phrase ACCOL_D {$$ = $4;}
@@ -201,7 +214,7 @@ void yyerror(char *s)
 
 char tab[]= "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"   \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>\n<head><head/>\n<body>";
 
-
+/*redige le champ d'option du tableau html*/
 void redigeOption( int border, char * pos)
 {
   fprintf(yyout, "style=text-align: %s; width: 90%%; border=\"", pos);
@@ -212,6 +225,10 @@ void redigeOption( int border, char * pos)
   fprintf(yyout,"\"cellpadding=\"2\" cellspacing=\"2\">\n<tbody>\n<tr>");
 }
 
+/*renvoie une chaine de caractère contenant le code d'une colonne en html*/
+/*texte est une string correspondant à la valeur à mettre dans la colonne*/
+/*pos l'alignement dans la colonne*/
+/*si multicolumn est à 1 alors colspan indique la taille de colspan*/
 char* redigeColonne(char* texte, char* pos, int multicolumn, int colspan)
 {
   char* retour = malloc(sizeof(char)*1000);
@@ -226,6 +243,7 @@ char* redigeColonne(char* texte, char* pos, int multicolumn, int colspan)
   return retour;
 }
 
+/*idem que redigecolumn mais pour les reels*/
 char* redigeColonneReel(double val, char* pos, int multicolumn, int colspan)
 {
   char* retour = malloc(sizeof(char)*1000);
@@ -239,7 +257,7 @@ char* redigeColonneReel(double val, char* pos, int multicolumn, int colspan)
     }
   return retour;
 }
-
+/*idem que redigecolumn mais pour les entiers*/
 char* redigeColonneEntier(int val, char* pos, int multicolumn, int colspan)
 {
   char* retour = malloc(sizeof(char)*1000);
