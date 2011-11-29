@@ -24,6 +24,7 @@ public class Parseur
 	 * procédurale, les arguments fournis et servent ainsi à stocker les
 	 * résultats
 	 * 
+	 * @return retourne l'annuaire inversé qui à un nom de ville ou de route associe son id
 	 * @param graph
 	 *            le graphe correspondant au fichier
 	 * @param villes
@@ -35,7 +36,7 @@ public class Parseur
 	 * @param imax
 	 *            La plus grande valeur de qualité
 	 */
-	public void parse(GrapheOriente graph, HashMap<Integer, Ville> villes,
+	public HashMap<String, Integer> parse(GrapheOriente graph, HashMap<Integer, Ville> villes,
 			HashMap<Integer, Route> routes, ArrayList<Object> max)
 	{
 		int nbVille = 0;
@@ -111,7 +112,6 @@ public class Parseur
 			else
 				System.out.println("erreur " + valeur);
 		}
-
-		System.out.println(graph);
+return annuaireInverse;
 	}
 }
