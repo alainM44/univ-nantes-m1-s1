@@ -1,0 +1,15 @@
+$TTL 3D
+@	IN	SOA	sall_lopes.prive.fr. administrateur.macguiver.fr. (
+			20111118    ;
+			8H          ;
+			2H          ;
+			4W          ;
+			1D )        ;
+		NS	sall_lopes.prive.fr.
+
+
+localhost	A	127.0.0.1
+sall_lopes A 192.168.1.7
+
+
+station1    A 192.168.1.7

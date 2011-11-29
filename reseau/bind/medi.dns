@@ -1,0 +1,17 @@
+$TTL 3D
+@	IN	SOA	serveur.macguiver.fr. administrateur.macguiver.fr. (
+			199609206   ;
+			8H          ;
+			2H          ;
+			4W          ;
+			1D )        ;
+		NS	serveur.medi.fr.
+		MX	10 mail.medi.fr.
+
+localhost	A	127.0.0.1
+serveur	A	192.168.1.10
+
+ftp		CNAME	serveur.macguiver.fr.
+mail	CNAME   serveur.macguiver.fr.
+
+station1    A 192.168.1.4

@@ -1,0 +1,14 @@
+$TTL 3D
+@	IN	SOA	john.macguiver.fr. administrateur.macguiver.fr. (
+			20111118    ;
+			8H          ;
+			2H          ;
+			4W          ;
+			1D )        ;
+		NS	john.macguiver.fr.
+
+
+localhost	A	127.0.0.1
+john   A  192.168.1.10
+
+
