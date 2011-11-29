@@ -27,7 +27,7 @@ public interface GrapheOriente
 	 * 
 	 * @return int valeur de l'id
 	 */
-	public int ajouterA(int n1, int n2);
+	public int ajouterA(int n1, int n2, int id);
 
 	/**
 	 * Supprime l'arete entre n1 et n2 du graphe ayant comme identifiant id

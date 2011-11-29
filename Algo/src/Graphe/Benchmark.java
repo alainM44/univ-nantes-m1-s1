@@ -134,12 +134,14 @@ public class Benchmark
 
 	private static ArrayList<Integer> creerArcs(GrapheOriente graph, int nbNoeuds)
 	{
+		int k = 0;
 		ArrayList<Integer> listeId = new ArrayList<Integer>();
 		for (int i = 0; i < nbNoeuds; i++)
 		{
 			for (int j = i + 1; j < nbNoeuds; j++)
 			{
-				listeId.add(graph.ajouterA(i, j));
+				listeId.add(graph.ajouterA(i, j, k));
+				k++;
 			}
 		}
 		return listeId;

@@ -100,7 +100,7 @@ public class Parseur
 				qualiteTemp = decoupe[0].length();
 				if (qualiteTemp > (Integer)max.get(1))
 					max.set(1, qualiteTemp);
-				graph.ajouterA(n1Temp, n2Temp);
+				graph.ajouterA(n1Temp, n2Temp, nbRoute);
 				routeTemp = new Route(n1Temp, n2Temp, nbRoute, nomTemp,
 						longueurTemp, qualiteTemp);
 				routes.put(nbRoute, routeTemp);

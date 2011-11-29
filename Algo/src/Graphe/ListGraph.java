@@ -18,14 +18,13 @@ public class ListGraph extends AbstractGrapheOriente
 	}
 
 	@Override
-	public int ajouterA(int n1, int n2)
+	public int ajouterA(int n1, int n2, int id)
 	{
 
 		Iterator<Encapsulateur<Integer>> iter = graphe.get(n1).iterator();
 		Encapsulateur<Integer> encaps;
 
 		nbArc++;
-		idGenerator++;
 		// On augmente le nb d'arc associe au noeud
 		iter.next().changeNbArc(1);
 		while (iter.hasNext())
@@ -33,16 +32,16 @@ public class ListGraph extends AbstractGrapheOriente
 			encaps = iter.next();
 			if (encaps.getValeur() == n2)
 			{
-				encaps.ajouterArc(idGenerator);
-				return idGenerator;
+				encaps.ajouterArc(id);
+				return id;
 			}
 		}
 
-		encaps = new Encapsulateur<Integer>(n2, idGenerator);
+		encaps = new Encapsulateur<Integer>(n2, id);
 		graphe.get(n1).addLast(encaps);// Permet d'assurer que le premier element reste
 		// le meme le noeud
 
-		return idGenerator;
+		return id;
 	}
 
 	@Override
@@ -62,7 +61,7 @@ public class ListGraph extends AbstractGrapheOriente
 		Iterator<Encapsulateur<Integer>> iter = aux.iterator();
 		Encapsulateur<Integer> encaps;
 
-		idGenerator++;
+		id++;
 		// On décremente le nb d'arc au niveau du noeud
 		iter.next().changeNbArc(-1);
 		encaps = iter.next();

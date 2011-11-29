@@ -53,35 +53,35 @@ public class MatMain {
 			graphe.ajouterN(4);
 			graphe.ajouterN(5);
 			//i = graphe.ajouterA(3, 8);
-			i = graphe.ajouterA(0, 1);
+			i = graphe.ajouterA(0, 1,0);
 			listeId.add( i);
 			System.out.println(graphe);
 
-			i = graphe.ajouterA(1, 2);
+			i = graphe.ajouterA(1, 2,1);
 			listeId.add( i);
 			System.out.println(graphe);
 
-			i = graphe.ajouterA(2, 3);
+			i = graphe.ajouterA(2, 3,2);
 			listeId.add( i);
 			System.out.println(graphe);
 
-			i = graphe.ajouterA(3, 4);
+			i = graphe.ajouterA(3, 4,3);
 			listeId.add( i);
 			System.out.println(graphe);
 
-			i = graphe.ajouterA(4, 1);
+			i = graphe.ajouterA(4, 1,4);
 			listeId.add( i);
 			System.out.println(graphe);
 
-			i = graphe.ajouterA(2, 5);
+			i = graphe.ajouterA(2, 5,5);
 			listeId.add( i);
 			System.out.println(graphe);
 			
-			i = graphe.ajouterA(5, 0);
+			i = graphe.ajouterA(5, 0,6);
 			listeId.add( i);
 			System.out.println(graphe);
 			
-			i = graphe.ajouterA(5, 0);
+			i = graphe.ajouterA(5, 0,7);
 			listeId.add( i);
 			System.out.println(graphe);
 			

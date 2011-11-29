@@ -18,17 +18,16 @@ public class MatGraph extends AbstractGrapheOriente{
 	}
 
 	@Override
-	public int ajouterA(int n1, int n2) {//position du noeud 
-		idGenerator++;
+	public int ajouterA(int n1, int n2, int id) {//position du noeud 
 		nbArc++;	
 		if(	graph.get(n1,n2).listeIdArc ==null)
 			graph.get(n1,n2).listeIdArc =new ArrayList<Integer>();
 		else
-		graph.get(n1,n2).ajouterArc(idGenerator);
+		graph.get(n1,n2).ajouterArc(id);
 		graph.get(n1,n2).setValeur(true);
 		tabnoeuds.get(n1).nbArc++;
 		//graph.ta
-		return idGenerator;
+		return id;
 	}
 	@Override
 	public void supprimerA(int id, int n1, int n2) { // odre du noeud !!!!! 1 pour 1er 2 pour  2eme... l'arc doit exister
