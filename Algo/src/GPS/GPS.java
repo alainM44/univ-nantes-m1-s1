@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.crypto.dsig.spec.HMACParameterSpec;
+
 import Graphe.AbstractGrapheOriente;
 import Graphe.Arc;
 import Graphe.ListGraph;
@@ -21,6 +24,7 @@ public class GPS {
 	AbstractGrapheOriente graph;
 	HashMap<Integer, Ville> villes;
 	HashMap<Integer, Route> routes;
+	HashMap<String, Integer> annuaireInverse;
 
 	public GPS(File fichier) {
 		ArrayList<Object> max = new ArrayList<Object>();
@@ -29,7 +33,7 @@ public class GPS {
 		villes = new HashMap<Integer, Ville>();
 		routes = new HashMap<Integer, Route>();
 		Parseur parseur = new Parseur(fichier);
-		parseur.parse(graph, villes, routes, max);
+		annuaireInverse = parseur.parse(graph, villes, routes, max);
 		imax = (Integer) max.get(1);
 		dmax = (Double) max.get(0);
 	}
