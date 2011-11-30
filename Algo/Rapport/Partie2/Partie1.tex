@@ -2,15 +2,14 @@
 
 
 \section{Algorithme de plus court chemin}
-Les deux methodes demandées pour le calul d'itinéaire (par agrégation et à détour borné), il est necessaire  d'employer un algoritme de plus court chemin.
-Notre choix de d'algorithme s'est orienté vers celui Bellman Ford. Son avantage par rapport à celui de Dijkstra est qu'il est capable de détecter un circuit absorbant. Il peut de la sorte informer l'utilisateur l'echec de a recherche d'un itinéraire compromis selon ces paramètres. 
+Les deux methodes demandées pour le calul d'itinéaire (par agrégation et à détour borné), il est necessaire  d'employer un algorithme de plus court chemin.
+Notre choix de d'algorithme s'est orienté vers celui Bellman-Ford. Son avantage par rapport à celui de Dijkstra est qu'il est capable de détecter un circuit absorbant. Il peut de la sorte informer l'utilisateur l'echec de a recherche d'un itinéraire compromis selon ces paramètres. 
 
-IMPLEMENTATION DE DIJKSTRA QUAND MEME ??
 
 
 \section{Methode Agrégation}
 L'objectif de cette methode est d'obtenir un plus court chemin avec une pondération particulière pour routes calculée au préalable.
-Il suffit donc d'appliquer un algorithme standard de parcours de graph en fournissant toutes les pondérations de chaques routes et villes que l'on aura calculé au préalable. N Nous avons procédé de cette manière. Ainsi la fonction $get_agregat(Route route, double A)$ permet de donner l'agrégat d'une route. Elle est utilisée par  $public ArrayList<Double> agregation(double A)$ qui retourne un tableau de ces pondération indicé par l'id des routes. Ce tableau est ensuite fourni en paramètre à l'Algorithme de Bellman Ford. Celui ci pourra alors procéder au relâchement des arcs en fonctions de ces pondérations. 
+Il suffit donc d'appliquer un algorithme standard de parcours de graph en fournissant toutes les pondérations de chaques routes et villes que l'on aura calculé au préalable. N Nous avons procédé de cette manière. Ainsi la fonction $get_agregat(Route route, double A)$ permet de donner l'agrégat d'une route. Elle est utilisée par  $public ArrayList<Double> agregation(double A)$ qui retourne un tableau de ces pondération indicé par l'id des routes. Ce tableau est ensuite fourni en paramètre à l'Algorithme de Bellman Ford. Celui ci pourra alors procéder au relâchement des arcs en fonctions de ces pondérations. Dans le cas ou une route améliorante est trouvé, celle ci est stockée dans une hash map à la clef de valeur id de la ville destination de cette route. A la fin de l'algorithme de Bellman-Ford  nous avons notre plus court chemin par rapport aux agrégations pré calculées dans cette hash map. Les opérations qui suivent servent uniquement à stocker ce chemin dans le bon sens dans une ArrayList. L'opération d'affichage a en effet du resultat sous cette forme pour le traiter.
 
 \section{Detour Borné}
  
