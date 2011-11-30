@@ -1,4 +1,6 @@
-\chapter{PARTIE2}
+\chapter{Algorithmes mis en oeuvre}
+
+
 \section{Algorithme de plus court chemin}
 Les deux methodes demandées pour le calul d'itinéaire (par agrégation et à détour borné), il est necessaire  d'employer un algoritme de plus court chemin.
 Notre choix de d'algorithme s'est orienté vers celui Bellman Ford. Son avantage par rapport à celui de Dijkstra est qu'il est capable de détecter un circuit absorbant. Il peut de la sorte informer l'utilisateur l'echec de a recherche d'un itinéraire compromis selon ces paramètres. 
@@ -10,6 +12,7 @@ IMPLEMENTATION DE DIJKSTRA QUAND MEME ??
 L'objectif de cette methode est d'obtenir un plus court chemin avec une pondération particulière pour routes calculée au préalable.
 Il suffit donc d'appliquer un algorithme standard de parcours de graph en fournissant toutes les pondérations de chaques routes et villes que l'on aura calculé au préalable. N Nous avons procédé de cette manière. Ainsi la fonction $get_agregat(Route route, double A)$ permet de donner l'agrégat d'une route. Elle est utilisée par  $public ArrayList<Double> agregation(double A)$ qui retourne un tableau de ces pondération indicé par l'id des routes. Ce tableau est ensuite fourni en paramètre à l'Algorithme de Bellman Ford. Celui ci pourra alors procéder au relâchement des arcs en fonctions de ces pondérations. 
 
+\section{Detour Borné}
  
 Méthode d’agrégation
 La méthode d’agrégation consiste à considérer une fonction de pondération w des arcs du graphe
