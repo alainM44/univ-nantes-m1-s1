@@ -99,11 +99,11 @@ public class MatMain {
 //			listeId.add( i);
 //			System.out.println(graphe);
 
-
-			System.out.println(graphe.connexite());
+			AlgorithmeGraphe test = new AlgorithmeGraphe(graphe);
+			System.out.println(test.connexite());
 			System.out.println(graphe.listeArcs());//TODO listeArc déconne, à refaire
-			System.out.println(graphe.acyclicite());
-			System.out.println(graphe.simple());
+			System.out.println(test.acyclicite());
+			System.out.println(test.simple());
 //			test.DFS(6, true);
 //			try
 //			{

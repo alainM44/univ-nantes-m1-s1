@@ -1,7 +1,7 @@
 package Graphe;
 import java.util.ArrayList;
 
-public interface GrapheOriente
+public interface GrapheOriente 
 {
 
 	/**
@@ -88,21 +88,5 @@ public interface GrapheOriente
 	 * @return Le nombre d'arc du graphe
 	 */
 	public int NombreArcs();
-
-	public boolean simple();
-
-	public boolean connexite();
-
-	/**
-	 * @param n
-	 *            : noeud de départ
-	 * @param option
-	 *            : si vrai alors parcourir tout le graphe
-	 * @param typeParcours
-	 *            : 0 pour DFS, 1 pour BFS
-	 */
-	public void afficheParcours(int i, int j, boolean b);
-
-	public boolean acyclicite();
 	
 }

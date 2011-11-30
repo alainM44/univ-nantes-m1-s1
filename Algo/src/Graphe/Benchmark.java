@@ -36,14 +36,16 @@ public class Benchmark
 		System.out.println("===LISTE DES ARCS===");
 
 		mili = System.currentTimeMillis();
-		graphe.listeArcs();
+		ArrayList<Arc> listeArcs = graphe.listeArcs();
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("temps = " + mili);
+
+		AlgorithmeGraphe test = new AlgorithmeGraphe(graphe);
 
 //		System.out.println("===ACYCLIQUE===");
 //
 //		mili = System.currentTimeMillis();
-//		verif = graphe.acyclicite();
+//		verif = test.acyclicite();
 //		mili = System.currentTimeMillis() - mili;
 //		System.out.println(verif);
 //		System.out.println("temps = " + mili);
@@ -51,7 +53,7 @@ public class Benchmark
 		System.out.println("===SIMPLE===");
 
 		mili = System.currentTimeMillis();
-		verif = graphe.simple();
+		verif = test.simple();
 		mili = System.currentTimeMillis() - mili;
 		System.out.println(verif);
 		System.out.println("temps = " + mili);
@@ -59,7 +61,7 @@ public class Benchmark
 		System.out.println("===CONNEXE===");
 
 		mili = System.currentTimeMillis();
-		verif = graphe.connexite();
+		verif = test.connexite();
 		mili = System.currentTimeMillis() - mili;
 		System.out.println(verif);
 		System.out.println("temps = " + mili);
@@ -80,25 +82,25 @@ public class Benchmark
 		
 		System.out.println("===ARCS SORTANTS===");
 		mili = System.currentTimeMillis();
-		graphe.listerArcsSortants(0);
+		listeArcs = graphe.listerArcsSortants(0);
 		mili = System.currentTimeMillis() - mili;
 //		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);
 		
 		System.out.println("===ARCS ENTRANTS===");
 		mili = System.currentTimeMillis();
-		graphe.listerArcsEntrants(n-1);
+		listeArcs = graphe.listerArcsEntrants(n-1);
 		mili = System.currentTimeMillis() - mili;
 //		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);
 
 		mili = System.currentTimeMillis();
-		graphe.afficheParcours(0, 0, true);
+		test.afficheParcours(0, 0, true);
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("\ntemps = " + mili);
 
 		mili = System.currentTimeMillis();
-		graphe.afficheParcours(1, 0, true);
+		test.afficheParcours(1, 0, true);
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("\ntemps = " + mili);
 
