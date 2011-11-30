@@ -65,11 +65,12 @@ public class GPS {
 	}
 
 	public ArrayList<Double> agregation(double A) {
-		// ArrayList<Route> result = new ArrayList<Route>();
-
+		ArrayList<Arc> listearcs = new ArrayList<Arc>();
+		listearcs = graph.listeArcs();
 		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
 		for (int i = 0; i < graph.NombreArcs(); i++) {
-			routes_ponderation.add(get_agregat(routes.get(i), A));
+			routes_ponderation.add(get_agregat(routes.get(listearcs.get(i)
+					.getId()), A));
 		}
 		// System.out.println(routes_ponderation);
 		return routes_ponderation;
@@ -90,40 +91,40 @@ public class GPS {
 		// Pour stocker la route du PCC permettant d'acceder au noeud référencé
 		// par sa la clef de cette route
 		HashMap<Integer, Integer> r = new HashMap<Integer, Integer>();
-	
+
 		// INITIALISATION DES TABS
 		for (Integer noeud : listeNoeud) {
-			d.put(noeud, Double.MAX_VALUE); 
+			d.put(noeud, Double.MAX_VALUE);
 			pi.put(noeud, -1);
 		}
 		d.put(0, 0.0);
 		pi.put(0, 0);
 
 		for (int villecourante = 0; villecourante < graph.NombreNoeuds() - 1; villecourante++) {
-			for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++) {
+
+			for (Arc arc : graph.listeArcs()) {
 				// si d[v]>d[u]+w(u v)
-				if (d.get(routes.get(routecourante).getN2()) > (d.get(routes
-						.get(routecourante).getN1()) + tab_routes
-						.get(routecourante))
-						&& (d.get(routes.get(routecourante).getN2()) != null)) {
+
+				if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes
+						.get(arc.getId()))
+						&& (d.get(arc.getN2()) != null)) {
 					// d[v]<- d[u]+w(u v)
-					d.put(routes.get(routecourante).getN2(), tab_routes
-							.get(routecourante)
-							+ (d.get(routes.get(routecourante).getN1())));
+					d.put(arc.getN2(), tab_routes.get(arc.getId())
+							+ (d.get(arc.getN1())));
 					// π[v]<- u
-					pi.put(routes.get(routecourante).getN2(), routes.get(
-							routecourante).getN1());
+					pi.put(arc.getN2(), arc.getN1());
 					// route reliant π[v]<-u
-					r.put(routes.get(routecourante).getN2(), routecourante);
+					r.put(arc.getN2(), arc.getId());
 					// System.out.println("MAJ");
 				}
 			}
 		}
 		// VERIFICATION DE CIRCUIT ABSORBANT
-		for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++) {
+
+		for (Arc arc : graph.listeArcs()) {
 			// si d[v]>d[u]+w(u v)
-			if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(
-					routecourante).getN1()) + tab_routes.get(routecourante))) {
+			if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes.get(arc
+					.getId()))) {
 				// CIRCUIT ABSORBANT
 				return PCC; // VIDE
 
@@ -168,7 +169,7 @@ public class GPS {
 		// Pour stocker la route du PCC permettant d'acceder au noeud référencé
 		// par sa la clef de cette route
 		HashMap<Integer, Integer> r = new HashMap<Integer, Integer>();
-	
+
 		// INITIALISATION DES TABS
 		for (Integer noeud : listeNoeud) {
 			d.put(noeud, Double.MAX_VALUE);
@@ -176,36 +177,36 @@ public class GPS {
 		}
 		d.put(ville_dep, 0.0);
 		pi.put(ville_dep, ville_dep);
-
 		for (int villecourante = 0; villecourante < graph.NombreNoeuds() - 1; villecourante++) {
-			for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++) {
+
+			for (Arc arc : graph.listeArcs()) {
 				// si d[v]>d[u]+w(u v)
-				if (d.get(routes.get(routecourante).getN2()) > (d.get(routes
-						.get(routecourante).getN1()) + tab_routes
-						.get(routecourante))) {
+				if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes
+						.get(arc.getId()))
+						&& (d.get(arc.getN2()) != null)) {
 					// d[v]<- d[u]+w(u v)
-					d.put(routes.get(routecourante).getN2(), tab_routes
-							.get(routecourante)
-							+ (d.get(routes.get(routecourante).getN1())));
+					d.put(arc.getN2(), tab_routes.get(arc.getId())
+							+ (d.get(arc.getN1())));
 					// π[v]<- u
-					pi.put(routes.get(routecourante).getN2(), routes.get(
-							routecourante).getN1());
+					pi.put(arc.getN2(), arc.getN1());
 					// route reliant π[v]<-u
-					r.put(routes.get(routecourante).getN2(), routecourante);
+					r.put(arc.getN2(), arc.getId());
 					// System.out.println("MAJ");
 				}
 			}
 		}
 		// VERIFICATION DE CIRCUIT ABSORBANT
-		for (int routecourante = 0; routecourante < graph.NombreArcs(); routecourante++) {
+
+		for (Arc arc : graph.listeArcs()) {
 			// si d[v]>d[u]+w(u v)
-			if (d.get(routes.get(routecourante).getN2()) > (d.get(routes.get(
-					routecourante).getN1()) + tab_routes.get(routecourante))
-					&& (d.get(routes.get(routecourante).getN2()) != null)) {
+			if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes.get(arc
+					.getId()))) {
 				// CIRCUIT ABSORBANT
 				return PCC; // VIDE
+
 			}
 		}
+		
 		PCCkeys = pi.keySet();
 		PCCkeys = r.keySet();
 		Integer ville;
@@ -237,10 +238,12 @@ public class GPS {
 		return BellmanFord(tab_routes, annuaireInverse.get(ville_dep),
 				annuaireInverse.get(ville_a));
 	}
-/**
- * Affichage des PCC selon les consignes du sujet.
- * @param PCC
- */
+
+	/**
+	 * Affichage des PCC selon les consignes du sujet.
+	 * 
+	 * @param PCC
+	 */
 	public void put_itineraire(List<Route> PCC) {
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
@@ -256,7 +259,7 @@ public class GPS {
 		l = PCC.get(0).getLongueur();
 		longueur += l;
 		ville = getville(villes.get(PCC.get(0).getN2()));
-		itineraire += "route " + route + "vers :" + ville + " longeueur : " + l
+		itineraire += "route " + route + "vers :" + ville + " longueur : " + l
 				+ "\n";
 		etoiles += villes.get(PCC.get(0).getN1()).getQualite()
 				+ PCC.get(0).getQualite()
@@ -270,7 +273,7 @@ public class GPS {
 			etoiles += PCC.get(i).getQualite()
 					+ villes.get(PCC.get(i).getN2()).getQualite();
 			cpt += 2;
-			itineraire += "route " + route + "vers :" + ville + " longeueur : "
+			itineraire += "route " + route + "vers :" + ville + " longueur : "
 					+ l + "\n";
 		}
 		itineraire += "Ville arrivée :";
@@ -282,7 +285,6 @@ public class GPS {
 		for (int i = 1; i <= (etoiles / cpt); i++)
 			System.out.print("*");
 		System.out.println("");
-
 	}
 
 	public String getville(Ville ville) {

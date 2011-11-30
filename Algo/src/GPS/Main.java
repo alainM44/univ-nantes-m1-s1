@@ -13,9 +13,7 @@ import Graphe.ListGraph;
 public class Main
 {
 
-	/**
-	 * @param args
-	 */
+	
 	static String villea;
 	static String villed;
 	static double A;
