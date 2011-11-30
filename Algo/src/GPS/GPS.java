@@ -245,6 +245,9 @@ public class GPS {
 	 * @param PCC
 	 */
 	public void put_itineraire(List<Route> PCC) {
+		if(PCC.size()==0)
+			System.out.println("PAS DE CHEMINS, circuit absorbant ?");
+		
 		String itineraire = new String("Ville Départ : ");
 		String ville = new String("");
 		String route = new String("");
