@@ -1,0 +1,18 @@
+$TTL 3D
+@	IN	SOA	nserveur.mazone.fr. administrateur.mazone.fr. (
+			20111118        ; Serial
+			28800           ; Refresh
+			7200            ; Retry
+			604800          ; Expire  
+			86400)          ; Minimum TTL
+		NS	nserveur.mazone.fr.
+		    NS	st-11.mazone.fr.
+
+1  PTR nserveur.mazone.fr.
+
+; les stations
+
+200     PTR     st-11.mazone.fr.
+
+
+

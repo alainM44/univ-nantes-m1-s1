@@ -1,0 +1,12 @@
+$TTL 3D
+@	IN	SOA	john.macguiver.fr. administrateur.macguiver.fr. (
+			20111118        ;
+			28800           ;
+			7200            ;
+			604800          ;   
+			86400)          ;
+		NS	macguiver.fr.
+
+10  PTR john.macguiver.fr.
+11 PTR michael.
+

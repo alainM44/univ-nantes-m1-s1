@@ -1,0 +1,12 @@
+$TTL 3D
+@	IN	SOA	serveur.medi.fr. administrateur.medi.fr. (
+			199609206       ;
+			28800           ;
+			7200            ;
+			604800          ;   
+			86400)          ;
+		NS	serveur.medi.fr.
+
+
+4   PTR station1
+

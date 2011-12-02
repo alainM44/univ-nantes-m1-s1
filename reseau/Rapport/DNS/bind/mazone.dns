@@ -1,0 +1,18 @@
+$TTL 3D
+@	IN	SOA	nserveur.mazone.fr. administrateur.mazone.fr. (
+			199609206   ;
+			8H          ;
+			2H          ;
+			4W          ;
+			1D )        ;
+		NS	nserveur.mazone.fr.
+		NS	st-11.mazone.fr.
+		MX	10 st-11.mazone.fr.
+
+localhost	A	127.0.0.1
+nserveur	A	192.168.0.10
+
+ftp		CNAME	st-11.mazone.fr.
+mail	CNAME   st-11.mazone.fr.
+
+station1    A 192.168.0.3
