@@ -2,20 +2,45 @@
 
 \section{A quoi sert l'enregistrement du type A ?}
 il s'agit du type de base établissant la correspondance entre un nom canonique et une adresse IP. Par ailleurs il peut exister plusieurs enregistrements A, correspondant aux différentes machines du réseau (serveurs). 
+
+
 \section{Trouver l'adresse IP de $berlioz.elysee.fr$}
+$ping berlioz.elysee.fr$
 PING berlioz.elysee.fr (62.160.71.251) 56(84) bytes of data. 
 
 \section{Trouver le nom et l'adresse du serveur de nom de domaine $elysee.fr$}
-Non-authoritative answer: 
-elysee.fr	nameserver = berlioz.elysee.fr. 
-Authoritative answers can be found from: 
-berlioz.elysee.fr	internet address = 84.233.174.57 
-berlioz.elysee.fr	internet address = 62.160.71.251 
+$ dig ns elysee.fr$
+; <<>> DiG 9.7.3 <<>> ns elysee.fr
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 13252
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;elysee.fr.			IN	NS
+
+;; ANSWER SECTION:
+elysee.fr.		58945	IN	NS	ns1.oleane.net.
+elysee.fr.		58945	IN	NS	berlioz.elysee.fr.
+elysee.fr.		58945	IN	NS	ns0.oleane.net.
+
+;; ADDITIONAL SECTION:
+berlioz.elysee.fr.	76370	IN	A	84.233.174.57
+berlioz.elysee.fr.	76370	IN	A	62.160.71.251
+
+;; Query time: 0 msec
+;; SERVER: 172.16.129.3#53(172.16.129.3)
+;; WHEN: Fri Dec  2 17:01:09 2011
+;; MSG SIZE  rcvd: 127
+
 
 \section{A quoi sert l'enregistrement du type NS ?}
+$nslookup -type=NS berlioz.elysee.fr$
 Il correspond au serveur de noms ayant autorité sur le domaine. 
 
 \section{Quelle est l'autorité administrative de ce domaine ?}
+$ dig soa elysee.fr$
+
 elysee.fr 
 	origin = berlioz.elysee.fr 
 	mail addr = postmaster.elysee.fr 
@@ -28,21 +53,28 @@ elysee.fr
 \section{A quoi sert l'enregistrement du type SOA ?}
 (Start Of Authority) : le champ SOA permet de décrire le serveur de nom ayant autorité sur la zone, ainsi que l'adresse électronique du contact technique (dont le caractère « @ » est remplacé par un point). 
 
-\section{Quel est l'alias de la machine rr.wikimedia.org?}
+\section{Quel est l'alias de la machine?}
+$ host rr.wikimedia.org$
+rr.wikimedia.org is an alias for rr.esams.wikimedia.org.
+ou
+$nslookup -type=SOA  rr.wikimedia.org$
 rr.wikimedia.org	canonical name = rr.esams.wikimedia.org. 
 
 \section{A quoi sert l'enregistrement du type CNAME ?}
 (Canonical Name) : il permet de faire correspondre un alias au nom canonique. Il est particulièrement utile pour fournir des noms alternatifs correspondant aux différents services d'une même machine.
 
 \section{Est-ce qu'une machine pourrait avoir plusieurs noms et plusieurs adresses IP ?}
+
 Une machine peut avoir plusieurs nom et plusieurs adresses grâce à l'option PTR et CNAME.
 
 
 \section{Quel est le nom DNS associé à l'adresse 193.51.208.13 ?}
+$nslookup -type=CNAME 193.51.208.13$
  	name = dns.inria.fr. 
 \section{A quoi sert l'enregistrement du type PTR ?}
 un pointeur vers une autre partie de l'espace de noms de domaines. 
 \section{Quel est le serveur de courrier du domaine inria.fr ?}
+$$ host inria.fr$
 Non-authoritative answer: 
 inria.fr	mail exchanger = 10 mail1-smtp-roc.national.inria.fr. 
 inria.fr	mail exchanger = 10 mail4-smtp-sop.national.inria.fr.
