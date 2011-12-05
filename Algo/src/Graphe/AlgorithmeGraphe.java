@@ -1,4 +1,5 @@
 package Graphe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -10,7 +11,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AlgorithmeGraphe
 {
-	GrapheOriente	monGraphe;
+	GrapheOriente monGraphe;
 
 	public AlgorithmeGraphe(GrapheOriente graphe)
 	{
@@ -29,7 +30,8 @@ public class AlgorithmeGraphe
 	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
 	 *         départ.
 	 */
-	public HashMap<Integer, Integer> DFS(int n, boolean option, HashMap<Integer, Integer> horloge)
+	public HashMap<Integer, Integer> DFS(int n, boolean option,
+			HashMap<Integer, Integer> horloge)
 	{
 		int temps = 0;
 		ArrayList<Integer> listeNoeud = monGraphe.listeNoeuds();
@@ -58,7 +60,8 @@ public class AlgorithmeGraphe
 		return pi;
 	}
 
-	private int Visiter(int n, int temps, HashMap<Integer, Integer> couleur, HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
+	private int Visiter(int n, int temps, HashMap<Integer, Integer> couleur,
+			HashMap<Integer, Integer> pi, HashMap<Integer, Integer> d)
 	{
 		ArrayList<Integer> voisins = monGraphe.listerSuccesseurs(n);
 		d.put(temps, n);
@@ -89,7 +92,8 @@ public class AlgorithmeGraphe
 	 * @return : pi une hashmap de noeuds d'arrivés indicé par leur noeud de
 	 *         départ.
 	 */
-	public HashMap<Integer, Integer> BFS(int n, boolean option, HashMap<Integer, Integer> horloge)
+	public HashMap<Integer, Integer> BFS(int n, boolean option,
+			HashMap<Integer, Integer> horloge)
 	{
 		int temps = 0;
 		int noeudCourant;
@@ -97,7 +101,8 @@ public class AlgorithmeGraphe
 		// 0 est la couleur blanche, 1 la couleur grise, 2 la couleur noire
 		HashMap<Integer, Integer> couleur = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-		ArrayBlockingQueue<Integer> file = new ArrayBlockingQueue<Integer>(monGraphe.NombreNoeuds());
+		ArrayBlockingQueue<Integer> file = new ArrayBlockingQueue<Integer>(
+				monGraphe.NombreNoeuds());
 
 		for (Integer noeud : listeNoeud)
 		{
@@ -150,7 +155,7 @@ public class AlgorithmeGraphe
 						}
 						pi.put(noeud, noeud);
 						break;// Sinon on pourrait ajouter plusieurs noeuds à la
-						      // file
+						// file
 					}
 				}
 			}
@@ -171,8 +176,7 @@ public class AlgorithmeGraphe
 		HashMap<Integer, Integer> horloge = new HashMap<Integer, Integer>();
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 
-		switch (typeParcours)
-		{
+		switch (typeParcours) {
 		case 0:
 			pi = DFS(n, option, horloge);
 			System.out.println("\n===DFS===");
@@ -185,7 +189,8 @@ public class AlgorithmeGraphe
 		}
 		for (int i : horloge.keySet())
 		{
-			System.out.print("[" + i + "]" + pi.get(horloge.get(i)) + "->" + horloge.get(i) + " ");
+			System.out.print("[" + i + "]" + pi.get(horloge.get(i)) + "->"
+					+ horloge.get(i) + " ");
 		}
 	}
 
@@ -193,6 +198,7 @@ public class AlgorithmeGraphe
 	{
 		HashMap<Integer, TreeSet<Integer>> listeAcces = new HashMap<Integer, TreeSet<Integer>>();
 		ArrayList<Arc> listeArcs = monGraphe.listeArcs();
+		// On ne prend pas en compte les arcs allant d'un noeud à lui-même
 		for (Arc monArc : listeArcs)
 		{
 			int n1 = monArc.getN1();
@@ -218,23 +224,31 @@ public class AlgorithmeGraphe
 	private boolean trouveBoucle(HashMap<Integer, TreeSet<Integer>> listeAcces)
 	{
 		boolean termine = false;
+		//Le treeSet va permettre la gestion automatique des doublons
 		TreeSet<Integer> acces;
 		TreeSet<Integer> temp;
 		int tailleAvantModif;
+		// La boucle se termine lorsqu'il n'y a plus de modification sur
+		// listeAcces
 		while (!termine)
 		{
 			termine = true;
+			// Pour chaque noeud, on construit un ensemble contenant les noeuds
+			// accessibles
 			for (Integer noeud : listeAcces.keySet())
 			{
 				temp = new TreeSet<Integer>();
 				acces = listeAcces.get(noeud);
 				tailleAvantModif = acces.size();
+				// Pour chaque noeud accessible, on ajoute la liste de ses
+				// noeuds accessibles à celle du noeuds de départ
 				for (Integer noeudAccessible : acces)
 				{
 					if (listeAcces.get(noeudAccessible) != null)
 						temp.addAll(listeAcces.get(noeudAccessible));
 				}
 				acces.addAll(temp);
+				//Si un noeud se contient lui-même, le programme détecte une boucle
 				if (acces.contains(noeud))
 					return true;
 				if (tailleAvantModif != acces.size())
@@ -252,6 +266,7 @@ public class AlgorithmeGraphe
 		ArrayList<Integer> listeNoeuds = monGraphe.listeNoeuds();
 		int nbNoeuds = monGraphe.NombreNoeuds();
 
+		//On vérifie que tout noeud est accède à tous les autres
 		for (Integer noeud : listeNoeuds)
 		{
 			horloge = new HashMap<Integer, Integer>();
@@ -269,28 +284,27 @@ public class AlgorithmeGraphe
 		int n1;
 		int n2;
 
+		//On vérifie qu'il n'existe qu'un arc par conteneur
 		for (Arc monArc : listeArcs)
 		{
 			n1 = monArc.getN1();
 			n2 = monArc.getN2();
 			if (n1 == n2)
 				return false;
+			else if (chercheNonSimple.get(n1) == null)
+			{
+				TreeSet<Integer> aux = new TreeSet<Integer>();
+				aux.add(n2);
+				chercheNonSimple.put(n1, aux);
+			}
+			else if (chercheNonSimple.get(n1).contains(n2))
+			{
+				return false;
+			}
 			else
-				if (chercheNonSimple.get(n1) == null)
-				{
-					TreeSet<Integer> aux = new TreeSet<Integer>();
-					aux.add(n2);
-					chercheNonSimple.put(n1, aux);
-				}
-				else
-					if (chercheNonSimple.get(n1).contains(n2))
-					{
-						return false;
-					}
-					else
-					{
-						chercheNonSimple.get(n1).add(n2);
-					}
+			{
+				chercheNonSimple.get(n1).add(n2);
+			}
 		}
 		return true;
 	}
