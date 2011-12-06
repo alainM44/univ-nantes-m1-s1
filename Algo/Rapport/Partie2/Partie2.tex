@@ -1,9 +1,20 @@
 \chapter{Analyse théorique}
-\section{BLA}
-BLABLABLABLABLABLABLABLABLA
+\section{Etudes de cas}
+\subsection{Cas de la méthode d'agrégation}
+
+Cette methode repose principalement sur l'algorithme de Bellman-Ford de compléxité : O(|N|*|A|) où |N| est le nombre de ville et |A| le nombre de routes.
+Il faut aussi fournir le tableau des agrégations. Cette opération consite à opérer pour chaque route la formule et l'ajouter dans un tableau. Sa compléxité est donc en O(|A|).
+La methode se termine par quelques manipulations pour fournir le plus court chemin dans une ArrayList (cf 2.2). Les deux parcours de ces opérations sont en O(|R|) taille maximun du plus court chemin.
+\\
+Nous avons donc au total une compléxité de O(|A|*|N|).
+
+Le choix de l'implémentation du graph est choisie selon la performance de $listeArcs$. Sa compléxité est de O(|N|+|A|) pour la liste d'adjacence et en (O|N|²) pour la matrice d'adjacence. Le choix de liste d'adjacence est donc à privilégier.
+
+\subsection{Cas de la méthode par detour borné}
+ ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN ROMAIN
 
 \section{Conclusion}%% methode la plus efficace
-BLABLABLABLA
+methode la plus efficacemethode la plus efficacemethode la plus efficacemethode la plus efficacemethode la plus efficacemethode la plus efficacemethode la plus efficace
 
 
 \clearpage
