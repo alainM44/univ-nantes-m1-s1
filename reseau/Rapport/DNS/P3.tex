@@ -5,11 +5,13 @@ il s'agit du type de base établissant la correspondance entre un nom canonique 
 
 
 \section{Trouver l'adresse IP de $berlioz.elysee.fr$}
-$ping berlioz.elysee.fr$
+ping berlioz.elysee.fr \newline
 PING berlioz.elysee.fr (62.160.71.251) 56(84) bytes of data. 
 
-\section{Trouver le nom et l'adresse du serveur de nom de domaine $elysee.fr$}
-$ dig ns elysee.fr$
+\section{Trouver le nom et l'adresse du serveur de nom de domaine $elysee.fr$.}
+dig ns elysee.fr
+\begin{verbatim}
+
 ; <<>> DiG 9.7.3 <<>> ns elysee.fr
 ;; global options: +cmd
 ;; Got answer:
@@ -32,15 +34,13 @@ berlioz.elysee.fr.	76370	IN	A	62.160.71.251
 ;; SERVER: 172.16.129.3#53(172.16.129.3)
 ;; WHEN: Fri Dec  2 17:01:09 2011
 ;; MSG SIZE  rcvd: 127
-
+\end{verbatim}
 
 \section{A quoi sert l'enregistrement du type NS ?}
-$nslookup -type=NS berlioz.elysee.fr$
-Il correspond au serveur de noms ayant autorité sur le domaine. 
+Name Server : Donne des informations sur le  serveur de noms ayant autorité sur le domaine. 
 
 \section{Quelle est l'autorité administrative de ce domaine ?}
-$ dig soa elysee.fr$
-
+ dig soa elysee.fr\newline
 elysee.fr 
 	origin = berlioz.elysee.fr 
 	mail addr = postmaster.elysee.fr 
@@ -51,17 +51,17 @@ elysee.fr
 	minimum = 86400 	
 
 \section{A quoi sert l'enregistrement du type SOA ?}
-(Start Of Authority) : le champ SOA permet de décrire le serveur de nom ayant autorité sur la zone, ainsi que l'adresse électronique du contact technique (dont le caractère « @ » est remplacé par un point). 
+Start Of Authority : décrit le serveur de nom ayant autorité sur la zone et l'adresse électronique du contact technique (avec le caractère « @ » est remplacé par un point). 
 
 \section{Quel est l'alias de la machine?}
-$ host rr.wikimedia.org$
+host rr.wikimedia.org \newline
 rr.wikimedia.org is an alias for rr.esams.wikimedia.org.
 ou
-$nslookup -type=SOA  rr.wikimedia.org$
+nslookup -type=SOA  rr.wikimedia.org
 rr.wikimedia.org	canonical name = rr.esams.wikimedia.org. 
 
 \section{A quoi sert l'enregistrement du type CNAME ?}
-(Canonical Name) : il permet de faire correspondre un alias au nom canonique. Il est particulièrement utile pour fournir des noms alternatifs correspondant aux différents services d'une même machine.
+Canonical Name : Permet de faire correspondre un alias au nom canonique. Il est très utilisé  pour fournir des noms alternatifs correspondant aux différents services d'une même machine.
 
 \section{Est-ce qu'une machine pourrait avoir plusieurs noms et plusieurs adresses IP ?}
 
@@ -69,22 +69,28 @@ Une machine peut avoir plusieurs nom et plusieurs adresses grâce à l'option PT
 
 
 \section{Quel est le nom DNS associé à l'adresse 193.51.208.13 ?}
-$nslookup -type=CNAME 193.51.208.13$
- 	name = dns.inria.fr. 
+nslookup -type=CNAME 193.51.208.13\newline
+\begin{verbatim}
+name = dns.inria.fr. 
+\end{verbatim}
+
+
 \section{A quoi sert l'enregistrement du type PTR ?}
-un pointeur vers une autre partie de l'espace de noms de domaines. 
+Donne un pointeur vers une autre partie de l'espace de noms de domaines. 
 \section{Quel est le serveur de courrier du domaine inria.fr ?}
-$$ host inria.fr$
+host inria.fr
+\begin{verbatim}
 Non-authoritative answer: 
 inria.fr	mail exchanger = 10 mail1-smtp-roc.national.inria.fr. 
 inria.fr	mail exchanger = 10 mail4-smtp-sop.national.inria.fr.
-
+\end{verbatim}
 
 
 \section{A quoi sert l'enregistrement du type MX ?}
-(Mail eXchange) : correspond au serveur de gestion du courrier. Lorsqu'un utilisateur envoie un courrier électronique à une adresse (utilisateur@domaine), le serveur de courrier sortant interroge le serveur de nom ayant autorité sur le domaine afin d'obtenir l'enregistrement MX. Il peut exister plusieurs MX par domaine, afin de fournir une redondance en cas de panne du serveur de messagerie principal. Ainsi l'enregistrement MX permet de définir une priorité avec une valeur pouvant aller de 0 à 65 535 : 
-\section{Trouver les noms et adresses des serveurs de noms du domaine $columbia.edu$.r}
-Avec la commande $dig -q columbia.edu$
+Mail eXchange: référence le serveur de gestion du courrier. Lorsqu'un utilisateur envoie un mail à une adresse (utilisateur@domaine), le serveur de courrier sortant emet une requête au serveur de nom ayant autorité sur le domaine afin d'obtenir l'enregistrement MX. Plusieurs MX par domaine peuvent exister afin de fournir une redondance en cas de panne du serveur de messagerie principal. De la sorte, l'enregistrement MX permet de définir une priorité avec une valeur pouvant aller de 0 à 65 535.
+\section{Trouver les noms et adresses des serveurs de noms du domaine $columbia.edu$.}
+Avec la commande dig -q columbia.edu \newline
+\begin{verbatim}
 ;; AUTHORITY SECTION:
 columbia.edu.		94	IN	NS	ns1.lse.ac.uk.
 columbia.edu.		94	IN	NS	dns2.itd.umich.edu.
@@ -96,5 +102,5 @@ columbia.edu.		94	IN	NS	ext-ns1.columbia.edu.
 adns1.berkeley.edu.	97254	IN	A	128.32.136.3
 adns2.berkeley.edu.	151906	IN	A	128.32.136.14
 ext-ns1.columbia.edu.	890	IN	A	128.59.59.165
-
+\end{verbatim}
 
