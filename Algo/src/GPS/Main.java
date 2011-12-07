@@ -116,14 +116,14 @@ public class Main
 		menu();
 		long mili = 0;
 		File fich = new File(fichier);
-		GPS monGPS = new GPS(fich);
+		GPS monGPS = new GPS(fich, Implementation);
 		if (Methode.compareTo("a") == 0)
 		{
 			System.out.println("Saisisser A");
 			A = Main.lireDouble();
 			mili = System.currentTimeMillis();
 			HashMap<Integer, Double> ponderation = monGPS.agregation(A);
-			System.out.println(ponderation);
+		//	System.out.println(ponderation);
 			monGPS.put_itineraire(monGPS.BellmanFord(ponderation, villed,
 					villea));
 			mili = System.currentTimeMillis() - mili;
@@ -135,7 +135,7 @@ public class Main
 		//	System.out.println("Merci pour" + K);
 			mili = System.currentTimeMillis();
 			monGPS.put_itineraire((monGPS.detourBorne(K, villed, villea)));
-			mili = System.currentTimeMillis();
+			mili = System.currentTimeMillis() - mili;
 
 		}
 		else
