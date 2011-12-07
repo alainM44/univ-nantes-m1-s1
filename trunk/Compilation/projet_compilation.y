@@ -27,7 +27,6 @@
   void initialiseTabReel(float* tab, int size);
   void changeTab(int* tab, int deb, int end);
   void sommeColonne(char* chaine, char* position, int* appliqueSomme, float* toutesSommes, int nbFois);
-  void afficheTabDebug(int* tab, int size);
  %}
 
 //
@@ -161,7 +160,7 @@ colonnes  :blancs colonne blancs SEPAR_COL  colonnes {$$= strcat($2, $5);}
 
 /*colonne va lister tout ce que peut contenir une colonne (entier, reel, mot... */
 /*colonne renvoie une chaine de caractères fourni par la fonction redigeColonne*/
-colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );
+colonne   : phrase  {$$ = redigeColonne($1, positionnement, 0,0 );
    numberInColonne[colonneCourant] = 0;
    numberInLine = 0;
    colonneCourant++;}
@@ -189,19 +188,20 @@ colonne   : phrase   {$$ = redigeColonne($1, positionnement, 0,0 );
  }
 ;
 /*phrase permet de gérer des suite de mots séparer par des blancs*/
-phrase : phrase blancs  mots {$$= strcat(strcat($1, $2),$3);}
+phrase : mots  phrase {$$= strcat($1, $2);}
 | mots        {$$ = $1;}
 ;
 
 /*mots corresponds aux chaines des caractères composées de lettres ou de chiffres*/
 /*et aux formules latex de la forme : {\d phrase} et \d{phrase} pour géré les symboles particuliers ou les mises en formes*/
 /*On peut constater que la mise en forme est ignoré. Seule la phrase est recopiée*/
-mots      : MOT     {$$ = $1;}
-| ACCOL_G ANTISLASH MOT SPACE phrase  ACCOL_D {$$= $5;}
-|ANTISLASH MOT ACCOL_G phrase ACCOL_D {$$ = $4;}
+mots      : MOT  blancs   {$$ =strcat( $1,$2);}
+| ACCOL_G ANTISLASH MOT SPACE phrase  ACCOL_D blancs{$$= strcat($5,$7);}
+|ANTISLASH MOT ACCOL_G phrase ACCOL_D blancs {$$ = strcat($4,$6);}
+|ANTISLASH MOT blancs{$$=strcat($2,$3);}
 ;
 
-blancs    : SPACE blancs {$$ = strcat($1, $2);}
+blancs    : blancs SPACE {$$ = strcat($2, $1);}
 | {$$ ="";}
 ;
 
@@ -272,6 +272,7 @@ char* redigeColonneEntier(int val, char* pos, int multicolumn, int colspan)
   return retour;
 }
 
+/*Permet d'initialiser numberInColonne*/
 void initialiseTabBool(int* tab, int size)
 {
   int i;
@@ -281,6 +282,7 @@ void initialiseTabBool(int* tab, int size)
     }
 }
 
+/*Permet d'initialiser sumColonne*/
 void initialiseTabReel(float* tab, int size)
 {
   int i;
@@ -290,6 +292,7 @@ void initialiseTabReel(float* tab, int size)
     }
 }
 
+/*permet de changer les valeurs de numberInColonne dans le cas d'une multicolumn*/
 void changeTab(int* tab, int deb, int quantity)
 {
   int i;
@@ -299,6 +302,7 @@ void changeTab(int* tab, int deb, int quantity)
     }
 }
 
+/* Fonction ajoutant la colonne de somme d'une ligne*/
 void ajouteColonne(char* chaine, char* position, float num)
  {
    char* aCopier=malloc(100* sizeof(char));
@@ -307,6 +311,7 @@ void ajouteColonne(char* chaine, char* position, float num)
    free(aCopier);
  }
 
+/* Fonction d'ajouter la somme des colonnes en fin de tableau*/
 void sommeColonne(char* chaine, char* position, int* appliqueSomme, float* toutesSommes, int nbFois)
   {
     int i, bool;
