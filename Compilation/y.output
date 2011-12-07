@@ -3,15 +3,18 @@ Terminals unused in grammar
    OPTION_T
 
 
-État 4 conflits: 1 décalage/réduction
-État 17 conflits: 1 décalage/réduction
-État 39 conflits: 1 décalage/réduction
-État 53 conflits: 1 décalage/réduction
-État 61 conflits: 1 décalage/réduction
-État 66 conflits: 1 décalage/réduction
-État 92 conflits: 1 décalage/réduction
+État 27 conflits: 1 décalage/réduction
+État 51 conflits: 1 décalage/réduction
+État 71 conflits: 1 décalage/réduction
+État 74 conflits: 1 décalage/réduction
+État 75 conflits: 1 décalage/réduction
+État 80 conflits: 1 décalage/réduction
+État 88 conflits: 1 décalage/réduction
+État 99 conflits: 1 décalage/réduction
 État 105 conflits: 1 décalage/réduction
-État 116 conflits: 1 décalage/réduction
+État 108 conflits: 1 décalage/réduction
+État 114 conflits: 1 décalage/réduction
+État 123 conflits: 1 décalage/réduction
 
 
 Grammaire
@@ -68,15 +71,16 @@ Grammaire
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL ACCOL_D
 
-   34 phrase: phrase blancs mots
+   34 phrase: mots phrase
    35       | mots
 
-   36 mots: MOT
-   37     | ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D
-   38     | ANTISLASH MOT ACCOL_G phrase ACCOL_D
+   36 mots: MOT blancs
+   37     | ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D blancs
+   38     | ANTISLASH MOT ACCOL_G phrase ACCOL_D blancs
+   39     | ANTISLASH MOT blancs
 
-   39 blancs: SPACE blancs
-   40       | /* vide */
+   40 blancs: blancs SPACE
+   41       | /* vide */
 
 
 Terminaux, suivis des règles où ils apparaissent
@@ -99,13 +103,13 @@ SEPAR (270) 17 19
 FIN (271) 3 7 9 12
 ACCOL_G (272) 2 3 4 5 6 7 8 9 11 12 13 16 31 32 33 37 38
 ACCOL_D (273) 2 3 4 5 6 7 8 9 11 12 13 16 31 32 33 37 38
-ANTISLASH (274) 37 38
+ANTISLASH (274) 37 38 39
 CROCH_G (275) 8
 CROCH_D (276) 8
 ENTIER (277) 29 31 32 33
 REEL (278) 30 33
-MOT (279) 8 11 12 18 20 36 37 38
-SPACE (280) 37 39
+MOT (279) 8 11 12 18 20 36 37 38 39
+SPACE (280) 37 40
 
 
 Non-terminaux, suivis des règles où ils apparaissent
@@ -149,10 +153,10 @@ colonne (43)
 phrase (44)
     à gauche: 34 35, à droite: 13 28 31 34 37 38
 mots (45)
-    à gauche: 36 37 38, à droite: 34 35
+    à gauche: 36 37 38 39, à droite: 34 35
 blancs (46)
-    à gauche: 39 40, à droite: 1 2 7 8 11 13 15 21 22 23 24 26 27
-    34 39
+    à gauche: 40 41, à droite: 1 2 7 8 11 13 15 21 22 23 24 26 27
+    36 37 38 39 40
 
 
 état 0
@@ -169,650 +173,632 @@ blancs (46)
 
     2 debLatex: DC . blancs GFX blancs DEB ACCOL_G DOC ACCOL_D blancs
 
-    SPACE  décalage et aller à l'état 4
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 5
+    blancs  aller à l'état 4
 
 
 état 2
 
     0 $accept: fichier . $end
 
-    $end  décalage et aller à l'état 6
+    $end  décalage et aller à l'état 5
 
 
 état 3
 
     1 fichier: debLatex . blancs init tableau end blancs endLatex blancs
 
-    SPACE  décalage et aller à l'état 4
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 7
+    blancs  aller à l'état 6
 
 
 état 4
 
-   39 blancs: SPACE . blancs
+    2 debLatex: DC blancs . GFX blancs DEB ACCOL_G DOC ACCOL_D blancs
+   40 blancs: blancs . SPACE
 
-    SPACE  décalage et aller à l'état 4
-
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 8
+    GFX    décalage et aller à l'état 7
+    SPACE  décalage et aller à l'état 8
 
 
 état 5
-
-    2 debLatex: DC blancs . GFX blancs DEB ACCOL_G DOC ACCOL_D blancs
-
-    GFX  décalage et aller à l'état 9
-
-
-état 6
 
     0 $accept: fichier $end .
 
     $défaut  accepter
 
 
-état 7
+état 6
 
     1 fichier: debLatex blancs . init tableau end blancs endLatex blancs
+   40 blancs: blancs . SPACE
 
-    DEB  décalage et aller à l'état 10
+    DEB    décalage et aller à l'état 9
+    SPACE  décalage et aller à l'état 8
 
-    init      aller à l'état 11
-    tabledeb  aller à l'état 12
+    init      aller à l'état 10
+    tabledeb  aller à l'état 11
+
+
+état 7
+
+    2 debLatex: DC blancs GFX . blancs DEB ACCOL_G DOC ACCOL_D blancs
+
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 12
 
 
 état 8
 
-   39 blancs: SPACE blancs .
+   40 blancs: blancs SPACE .
 
-    $défaut  réduction par utilisation de la règle 39 (blancs)
+    $défaut  réduction par utilisation de la règle 40 (blancs)
 
 
 état 9
 
-    2 debLatex: DC blancs GFX . blancs DEB ACCOL_G DOC ACCOL_D blancs
+    6 init: DEB . ACCOL_G TABULAR ACCOL_D
+    8 tabledeb: DEB . ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 13
+    ACCOL_G  décalage et aller à l'état 13
 
 
 état 10
 
-    6 init: DEB . ACCOL_G TABULAR ACCOL_D
-    8 tabledeb: DEB . ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs
+    1 fichier: debLatex blancs init . tableau end blancs endLatex blancs
 
     ACCOL_G  décalage et aller à l'état 14
+
+    tableau  aller à l'état 15
+    options  aller à l'état 16
 
 
 état 11
 
-    1 fichier: debLatex blancs init . tableau end blancs endLatex blancs
+    4 init: tabledeb . posdeb DEB ACCOL_G TABULAR ACCOL_D
+    5     | tabledeb . DEB ACCOL_G TABULAR ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 15
+    DEB  décalage et aller à l'état 17
 
-    tableau  aller à l'état 16
-    options  aller à l'état 17
+    posdeb  aller à l'état 18
 
 
 état 12
 
-    4 init: tabledeb . posdeb DEB ACCOL_G TABULAR ACCOL_D
-    5     | tabledeb . DEB ACCOL_G TABULAR ACCOL_D
+    2 debLatex: DC blancs GFX blancs . DEB ACCOL_G DOC ACCOL_D blancs
+   40 blancs: blancs . SPACE
 
-    DEB  décalage et aller à l'état 18
-
-    posdeb  aller à l'état 19
+    DEB    décalage et aller à l'état 19
+    SPACE  décalage et aller à l'état 8
 
 
 état 13
 
-    2 debLatex: DC blancs GFX blancs . DEB ACCOL_G DOC ACCOL_D blancs
+    6 init: DEB ACCOL_G . TABULAR ACCOL_D
+    8 tabledeb: DEB ACCOL_G . TABLE ACCOL_D CROCH_G MOT CROCH_D blancs
 
-    DEB  décalage et aller à l'état 20
+    TABLE    décalage et aller à l'état 20
+    TABULAR  décalage et aller à l'état 21
 
 
 état 14
 
-    6 init: DEB ACCOL_G . TABULAR ACCOL_D
-    8 tabledeb: DEB ACCOL_G . TABLE ACCOL_D CROCH_G MOT CROCH_D blancs
+   16 options: ACCOL_G . option ACCOL_D
 
-    TABLE    décalage et aller à l'état 21
-    TABULAR  décalage et aller à l'état 22
+    SEPAR  décalage et aller à l'état 22
+    MOT    décalage et aller à l'état 23
+
+    option  aller à l'état 24
 
 
 état 15
 
-   16 options: ACCOL_G . option ACCOL_D
+    1 fichier: debLatex blancs init tableau . end blancs endLatex blancs
 
-    SEPAR  décalage et aller à l'état 23
-    MOT    décalage et aller à l'état 24
+    FIN  décalage et aller à l'état 25
 
-    option  aller à l'état 25
+    end  aller à l'état 26
 
 
 état 16
 
-    1 fichier: debLatex blancs init tableau . end blancs endLatex blancs
+   15 tableau: options . blancs lignes
 
-    FIN  décalage et aller à l'état 26
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    end  aller à l'état 27
+    blancs  aller à l'état 27
 
 
 état 17
 
-   15 tableau: options . blancs lignes
+    5 init: tabledeb DEB . ACCOL_G TABULAR ACCOL_D
+   11 posdeb: DEB . ACCOL_G MOT ACCOL_D blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 28
+    ACCOL_G  décalage et aller à l'état 28
 
 
 état 18
 
-    5 init: tabledeb DEB . ACCOL_G TABULAR ACCOL_D
-   11 posdeb: DEB . ACCOL_G MOT ACCOL_D blancs
+    4 init: tabledeb posdeb . DEB ACCOL_G TABULAR ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 29
+    DEB  décalage et aller à l'état 29
 
 
 état 19
 
-    4 init: tabledeb posdeb . DEB ACCOL_G TABULAR ACCOL_D
+    2 debLatex: DC blancs GFX blancs DEB . ACCOL_G DOC ACCOL_D blancs
 
-    DEB  décalage et aller à l'état 30
+    ACCOL_G  décalage et aller à l'état 30
 
 
 état 20
 
-    2 debLatex: DC blancs GFX blancs DEB . ACCOL_G DOC ACCOL_D blancs
+    8 tabledeb: DEB ACCOL_G TABLE . ACCOL_D CROCH_G MOT CROCH_D blancs
 
-    ACCOL_G  décalage et aller à l'état 31
+    ACCOL_D  décalage et aller à l'état 31
 
 
 état 21
 
-    8 tabledeb: DEB ACCOL_G TABLE . ACCOL_D CROCH_G MOT CROCH_D blancs
+    6 init: DEB ACCOL_G TABULAR . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 32
 
 
 état 22
 
-    6 init: DEB ACCOL_G TABULAR . ACCOL_D
+   17 option: SEPAR . option
+   19       | SEPAR .
 
-    ACCOL_D  décalage et aller à l'état 33
+    SEPAR  décalage et aller à l'état 22
+    MOT    décalage et aller à l'état 23
+
+    $défaut  réduction par utilisation de la règle 19 (option)
+
+    option  aller à l'état 33
 
 
 état 23
 
-   17 option: SEPAR . option
-   19       | SEPAR .
+   18 option: MOT . option
+   20       | MOT .
 
-    SEPAR  décalage et aller à l'état 23
-    MOT    décalage et aller à l'état 24
+    SEPAR  décalage et aller à l'état 22
+    MOT    décalage et aller à l'état 23
 
-    $défaut  réduction par utilisation de la règle 19 (option)
+    $défaut  réduction par utilisation de la règle 20 (option)
 
     option  aller à l'état 34
 
 
 état 24
 
-   18 option: MOT . option
-   20       | MOT .
+   16 options: ACCOL_G option . ACCOL_D
 
-    SEPAR  décalage et aller à l'état 23
-    MOT    décalage et aller à l'état 24
-
-    $défaut  réduction par utilisation de la règle 20 (option)
-
-    option  aller à l'état 35
+    ACCOL_D  décalage et aller à l'état 35
 
 
 état 25
 
-   16 options: ACCOL_G option . ACCOL_D
+    7 end: FIN . ACCOL_G TABULAR ACCOL_D blancs posend blancs caption tableend
 
-    ACCOL_D  décalage et aller à l'état 36
+    ACCOL_G  décalage et aller à l'état 36
 
 
 état 26
 
-    7 end: FIN . ACCOL_G TABULAR ACCOL_D blancs posend blancs caption tableend
+    1 fichier: debLatex blancs init tableau end . blancs endLatex blancs
 
-    ACCOL_G  décalage et aller à l'état 37
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 37
 
 
 état 27
 
-    1 fichier: debLatex blancs init tableau end . blancs endLatex blancs
+   15 tableau: options blancs . lignes
+   40 blancs: blancs . SPACE
 
-    SPACE  décalage et aller à l'état 4
+    TRAIT_HOR  décalage et aller à l'état 38
+    SPACE      décalage et aller à l'état 8
 
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    SPACE     [réduction par utilisation de la règle 41 (blancs)]
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    blancs  aller à l'état 38
+    lignes    aller à l'état 39
+    ligne     aller à l'état 40
+    colonnes  aller à l'état 41
+    blancs    aller à l'état 42
 
 
 état 28
 
-   15 tableau: options blancs . lignes
+    5 init: tabledeb DEB ACCOL_G . TABULAR ACCOL_D
+   11 posdeb: DEB ACCOL_G . MOT ACCOL_D blancs
 
-    TRAIT_HOR  décalage et aller à l'état 39
-    SPACE      décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    lignes    aller à l'état 40
-    ligne     aller à l'état 41
-    colonnes  aller à l'état 42
-    blancs    aller à l'état 43
+    TABULAR  décalage et aller à l'état 43
+    MOT      décalage et aller à l'état 44
 
 
 état 29
 
-    5 init: tabledeb DEB ACCOL_G . TABULAR ACCOL_D
-   11 posdeb: DEB ACCOL_G . MOT ACCOL_D blancs
+    4 init: tabledeb posdeb DEB . ACCOL_G TABULAR ACCOL_D
 
-    TABULAR  décalage et aller à l'état 44
-    MOT      décalage et aller à l'état 45
+    ACCOL_G  décalage et aller à l'état 45
 
 
 état 30
 
-    4 init: tabledeb posdeb DEB . ACCOL_G TABULAR ACCOL_D
+    2 debLatex: DC blancs GFX blancs DEB ACCOL_G . DOC ACCOL_D blancs
 
-    ACCOL_G  décalage et aller à l'état 46
+    DOC  décalage et aller à l'état 46
 
 
 état 31
 
-    2 debLatex: DC blancs GFX blancs DEB ACCOL_G . DOC ACCOL_D blancs
+    8 tabledeb: DEB ACCOL_G TABLE ACCOL_D . CROCH_G MOT CROCH_D blancs
 
-    DOC  décalage et aller à l'état 47
+    CROCH_G  décalage et aller à l'état 47
 
 
 état 32
-
-    8 tabledeb: DEB ACCOL_G TABLE ACCOL_D . CROCH_G MOT CROCH_D blancs
-
-    CROCH_G  décalage et aller à l'état 48
-
-
-état 33
 
     6 init: DEB ACCOL_G TABULAR ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 6 (init)
 
 
-état 34
+état 33
 
    17 option: SEPAR option .
 
     $défaut  réduction par utilisation de la règle 17 (option)
 
 
-état 35
+état 34
 
    18 option: MOT option .
 
     $défaut  réduction par utilisation de la règle 18 (option)
 
 
-état 36
+état 35
 
    16 options: ACCOL_G option ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 16 (options)
 
 
-état 37
+état 36
 
     7 end: FIN ACCOL_G . TABULAR ACCOL_D blancs posend blancs caption tableend
 
-    TABULAR  décalage et aller à l'état 49
+    TABULAR  décalage et aller à l'état 48
+
+
+état 37
+
+    1 fichier: debLatex blancs init tableau end blancs . endLatex blancs
+   40 blancs: blancs . SPACE
+
+    FIN    décalage et aller à l'état 49
+    SPACE  décalage et aller à l'état 8
+
+    endLatex  aller à l'état 50
 
 
 état 38
 
-    1 fichier: debLatex blancs init tableau end blancs . endLatex blancs
-
-    FIN  décalage et aller à l'état 50
-
-    endLatex  aller à l'état 51
-
-
-état 39
-
    23 lignes: TRAIT_HOR . blancs lignes
    24       | TRAIT_HOR . blancs
 
-    SPACE  décalage et aller à l'état 4
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 52
+    blancs  aller à l'état 51
 
 
-état 40
+état 39
 
    15 tableau: options blancs lignes .
 
     $défaut  réduction par utilisation de la règle 15 (tableau)
 
 
-état 41
+état 40
 
    21 lignes: ligne . FIN_LIGNE blancs lignes
    22       | ligne . FIN_LIGNE blancs
 
-    FIN_LIGNE  décalage et aller à l'état 53
+    FIN_LIGNE  décalage et aller à l'état 52
 
 
-état 42
+état 41
 
    25 ligne: colonnes .
 
     $défaut  réduction par utilisation de la règle 25 (ligne)
 
 
-état 43
+état 42
 
    26 colonnes: blancs . colonne blancs SEPAR_COL colonnes
    27         | blancs . colonne blancs
+   40 blancs: blancs . SPACE
 
-    FUSION     décalage et aller à l'état 54
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    ENTIER     décalage et aller à l'état 57
-    REEL       décalage et aller à l'état 58
-    MOT        décalage et aller à l'état 59
+    FUSION     décalage et aller à l'état 53
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    ENTIER     décalage et aller à l'état 56
+    REEL       décalage et aller à l'état 57
+    MOT        décalage et aller à l'état 58
+    SPACE      décalage et aller à l'état 8
 
-    colonne  aller à l'état 60
-    phrase   aller à l'état 61
-    mots     aller à l'état 62
+    colonne  aller à l'état 59
+    phrase   aller à l'état 60
+    mots     aller à l'état 61
+
+
+état 43
+
+    5 init: tabledeb DEB ACCOL_G TABULAR . ACCOL_D
+
+    ACCOL_D  décalage et aller à l'état 62
 
 
 état 44
 
-    5 init: tabledeb DEB ACCOL_G TABULAR . ACCOL_D
+   11 posdeb: DEB ACCOL_G MOT . ACCOL_D blancs
 
     ACCOL_D  décalage et aller à l'état 63
 
 
 état 45
 
-   11 posdeb: DEB ACCOL_G MOT . ACCOL_D blancs
+    4 init: tabledeb posdeb DEB ACCOL_G . TABULAR ACCOL_D
 
-    ACCOL_D  décalage et aller à l'état 64
+    TABULAR  décalage et aller à l'état 64
 
 
 état 46
 
-    4 init: tabledeb posdeb DEB ACCOL_G . TABULAR ACCOL_D
+    2 debLatex: DC blancs GFX blancs DEB ACCOL_G DOC . ACCOL_D blancs
 
-    TABULAR  décalage et aller à l'état 65
+    ACCOL_D  décalage et aller à l'état 65
 
 
 état 47
 
-    2 debLatex: DC blancs GFX blancs DEB ACCOL_G DOC . ACCOL_D blancs
+    8 tabledeb: DEB ACCOL_G TABLE ACCOL_D CROCH_G . MOT CROCH_D blancs
 
-    ACCOL_D  décalage et aller à l'état 66
+    MOT  décalage et aller à l'état 66
 
 
 état 48
 
-    8 tabledeb: DEB ACCOL_G TABLE ACCOL_D CROCH_G . MOT CROCH_D blancs
+    7 end: FIN ACCOL_G TABULAR . ACCOL_D blancs posend blancs caption tableend
 
-    MOT  décalage et aller à l'état 67
+    ACCOL_D  décalage et aller à l'état 67
 
 
 état 49
 
-    7 end: FIN ACCOL_G TABULAR . ACCOL_D blancs posend blancs caption tableend
+    3 endLatex: FIN . ACCOL_G DOC ACCOL_D
 
-    ACCOL_D  décalage et aller à l'état 68
+    ACCOL_G  décalage et aller à l'état 68
 
 
 état 50
 
-    3 endLatex: FIN . ACCOL_G DOC ACCOL_D
+    1 fichier: debLatex blancs init tableau end blancs endLatex . blancs
 
-    ACCOL_G  décalage et aller à l'état 69
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 69
 
 
 état 51
 
-    1 fichier: debLatex blancs init tableau end blancs endLatex . blancs
+   23 lignes: TRAIT_HOR blancs . lignes
+   24       | TRAIT_HOR blancs .
+   40 blancs: blancs . SPACE
 
-    SPACE  décalage et aller à l'état 4
+    TRAIT_HOR  décalage et aller à l'état 38
+    SPACE      décalage et aller à l'état 8
 
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    FIN       réduction par utilisation de la règle 24 (lignes)
+    SPACE     [réduction par utilisation de la règle 41 (blancs)]
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    blancs  aller à l'état 70
+    lignes    aller à l'état 70
+    ligne     aller à l'état 40
+    colonnes  aller à l'état 41
+    blancs    aller à l'état 42
 
 
 état 52
 
-   23 lignes: TRAIT_HOR blancs . lignes
-   24       | TRAIT_HOR blancs .
-
-    TRAIT_HOR  décalage et aller à l'état 39
-    SPACE      décalage et aller à l'état 4
-
-    FIN       réduction par utilisation de la règle 24 (lignes)
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    lignes    aller à l'état 71
-    ligne     aller à l'état 41
-    colonnes  aller à l'état 42
-    blancs    aller à l'état 43
-
-
-état 53
-
    21 lignes: ligne FIN_LIGNE . blancs lignes
    22       | ligne FIN_LIGNE . blancs
 
-    SPACE  décalage et aller à l'état 4
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 72
+    blancs  aller à l'état 71
 
 
-état 54
+état 53
 
    31 colonne: FUSION . ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase ACCOL_D
    32        | FUSION . ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER ACCOL_D
    33        | FUSION . ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 73
+    ACCOL_G  décalage et aller à l'état 72
+
+
+état 54
+
+   37 mots: ACCOL_G . ANTISLASH MOT SPACE phrase ACCOL_D blancs
+
+    ANTISLASH  décalage et aller à l'état 73
 
 
 état 55
 
-   37 mots: ACCOL_G . ANTISLASH MOT SPACE phrase ACCOL_D
+   38 mots: ANTISLASH . MOT ACCOL_G phrase ACCOL_D blancs
+   39     | ANTISLASH . MOT blancs
 
-    ANTISLASH  décalage et aller à l'état 74
+    MOT  décalage et aller à l'état 74
 
 
 état 56
-
-   38 mots: ANTISLASH . MOT ACCOL_G phrase ACCOL_D
-
-    MOT  décalage et aller à l'état 75
-
-
-état 57
 
    29 colonne: ENTIER .
 
     $défaut  réduction par utilisation de la règle 29 (colonne)
 
 
-état 58
+état 57
 
    30 colonne: REEL .
 
     $défaut  réduction par utilisation de la règle 30 (colonne)
 
 
+état 58
+
+   36 mots: MOT . blancs
+
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 75
+
+
 état 59
-
-   36 mots: MOT .
-
-    $défaut  réduction par utilisation de la règle 36 (mots)
-
-
-état 60
 
    26 colonnes: blancs colonne . blancs SEPAR_COL colonnes
    27         | blancs colonne . blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 76
 
 
-état 61
+état 60
 
    28 colonne: phrase .
-   34 phrase: phrase . blancs mots
 
-    SPACE  décalage et aller à l'état 4
-
-    SEPAR_COL  réduction par utilisation de la règle 28 (colonne)
-    FIN_LIGNE  réduction par utilisation de la règle 28 (colonne)
-    SPACE      [réduction par utilisation de la règle 28 (colonne)]
-    $défaut   réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 77
+    $défaut  réduction par utilisation de la règle 28 (colonne)
 
 
-état 62
+état 61
 
-   35 phrase: mots .
+   34 phrase: mots . phrase
+   35       | mots .
+
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    MOT        décalage et aller à l'état 58
 
     $défaut  réduction par utilisation de la règle 35 (phrase)
 
+    phrase  aller à l'état 77
+    mots    aller à l'état 61
 
-état 63
+
+état 62
 
     5 init: tabledeb DEB ACCOL_G TABULAR ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 5 (init)
 
 
-état 64
+état 63
 
    11 posdeb: DEB ACCOL_G MOT ACCOL_D . blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 78
 
 
-état 65
+état 64
 
     4 init: tabledeb posdeb DEB ACCOL_G TABULAR . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 79
 
 
-état 66
+état 65
 
     2 debLatex: DC blancs GFX blancs DEB ACCOL_G DOC ACCOL_D . blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 80
 
 
-état 67
+état 66
 
     8 tabledeb: DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT . CROCH_D blancs
 
     CROCH_D  décalage et aller à l'état 81
 
 
-état 68
+état 67
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D . blancs posend blancs caption tableend
 
-    SPACE  décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 82
 
 
-état 69
+état 68
 
     3 endLatex: FIN ACCOL_G . DOC ACCOL_D
 
     DOC  décalage et aller à l'état 83
 
 
-état 70
+état 69
 
     1 fichier: debLatex blancs init tableau end blancs endLatex blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
 
     $défaut  réduction par utilisation de la règle 1 (fichier)
 
 
-état 71
+état 70
 
    23 lignes: TRAIT_HOR blancs lignes .
 
     $défaut  réduction par utilisation de la règle 23 (lignes)
 
 
-état 72
+état 71
 
    21 lignes: ligne FIN_LIGNE blancs . lignes
    22       | ligne FIN_LIGNE blancs .
+   40 blancs: blancs . SPACE
 
-    TRAIT_HOR  décalage et aller à l'état 39
-    SPACE      décalage et aller à l'état 4
+    TRAIT_HOR  décalage et aller à l'état 38
+    SPACE      décalage et aller à l'état 8
 
     FIN       réduction par utilisation de la règle 22 (lignes)
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    SPACE     [réduction par utilisation de la règle 41 (blancs)]
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     lignes    aller à l'état 84
-    ligne     aller à l'état 41
-    colonnes  aller à l'état 42
-    blancs    aller à l'état 43
+    ligne     aller à l'état 40
+    colonnes  aller à l'état 41
+    blancs    aller à l'état 42
 
 
-état 73
+état 72
 
    31 colonne: FUSION ACCOL_G . ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase ACCOL_D
    32        | FUSION ACCOL_G . ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER ACCOL_D
@@ -821,44 +807,62 @@ blancs (46)
     ENTIER  décalage et aller à l'état 85
 
 
-état 74
+état 73
 
-   37 mots: ACCOL_G ANTISLASH . MOT SPACE phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH . MOT SPACE phrase ACCOL_D blancs
 
     MOT  décalage et aller à l'état 86
 
 
-état 75
+état 74
 
-   38 mots: ANTISLASH MOT . ACCOL_G phrase ACCOL_D
+   38 mots: ANTISLASH MOT . ACCOL_G phrase ACCOL_D blancs
+   39     | ANTISLASH MOT . blancs
 
     ACCOL_G  décalage et aller à l'état 87
+
+    ACCOL_G   [réduction par utilisation de la règle 41 (blancs)]
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 88
+
+
+état 75
+
+   36 mots: MOT blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
+
+    SPACE     [réduction par utilisation de la règle 36 (mots)]
+    $défaut  réduction par utilisation de la règle 36 (mots)
 
 
 état 76
 
    26 colonnes: blancs colonne blancs . SEPAR_COL colonnes
    27         | blancs colonne blancs .
+   40 blancs: blancs . SPACE
 
-    SEPAR_COL  décalage et aller à l'état 88
+    SEPAR_COL  décalage et aller à l'état 89
+    SPACE      décalage et aller à l'état 8
 
     $défaut  réduction par utilisation de la règle 27 (colonnes)
 
 
 état 77
 
-   34 phrase: phrase blancs . mots
+   34 phrase: mots phrase .
 
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    MOT        décalage et aller à l'état 59
-
-    mots  aller à l'état 89
+    $défaut  réduction par utilisation de la règle 34 (phrase)
 
 
 état 78
 
    11 posdeb: DEB ACCOL_G MOT ACCOL_D blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
 
     $défaut  réduction par utilisation de la règle 11 (posdeb)
 
@@ -873,7 +877,11 @@ blancs (46)
 état 80
 
     2 debLatex: DC blancs GFX blancs DEB ACCOL_G DOC ACCOL_D blancs .
+   40 blancs: blancs . SPACE
 
+    SPACE  décalage et aller à l'état 8
+
+    SPACE     [réduction par utilisation de la règle 2 (debLatex)]
     $défaut  réduction par utilisation de la règle 2 (debLatex)
 
 
@@ -881,9 +889,7 @@ blancs (46)
 
     8 tabledeb: DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D . blancs
 
-    SPACE  décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 90
 
@@ -891,8 +897,10 @@ blancs (46)
 état 82
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D blancs . posend blancs caption tableend
+   40 blancs: blancs . SPACE
 
-    FIN  décalage et aller à l'état 91
+    FIN    décalage et aller à l'état 91
+    SPACE  décalage et aller à l'état 8
 
     posend  aller à l'état 92
 
@@ -922,45 +930,50 @@ blancs (46)
 
 état 86
 
-   37 mots: ACCOL_G ANTISLASH MOT . SPACE phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT . SPACE phrase ACCOL_D blancs
 
     SPACE  décalage et aller à l'état 95
 
 
 état 87
 
-   38 mots: ANTISLASH MOT ACCOL_G . phrase ACCOL_D
+   38 mots: ANTISLASH MOT ACCOL_G . phrase ACCOL_D blancs
 
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    MOT        décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    MOT        décalage et aller à l'état 58
 
     phrase  aller à l'état 96
-    mots    aller à l'état 62
+    mots    aller à l'état 61
 
 
 état 88
 
-   26 colonnes: blancs colonne blancs SEPAR_COL . colonnes
+   39 mots: ANTISLASH MOT blancs .
+   40 blancs: blancs . SPACE
 
-    SPACE  décalage et aller à l'état 4
+    SPACE  décalage et aller à l'état 8
 
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    colonnes  aller à l'état 97
-    blancs    aller à l'état 43
+    SPACE     [réduction par utilisation de la règle 39 (mots)]
+    $défaut  réduction par utilisation de la règle 39 (mots)
 
 
 état 89
 
-   34 phrase: phrase blancs mots .
+   26 colonnes: blancs colonne blancs SEPAR_COL . colonnes
 
-    $défaut  réduction par utilisation de la règle 34 (phrase)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    colonnes  aller à l'état 97
+    blancs    aller à l'état 42
 
 
 état 90
 
     8 tabledeb: DEB ACCOL_G TABLE ACCOL_D CROCH_G MOT CROCH_D blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
 
     $défaut  réduction par utilisation de la règle 8 (tabledeb)
 
@@ -976,10 +989,7 @@ blancs (46)
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D blancs posend . blancs caption tableend
 
-    SPACE  décalage et aller à l'état 4
-
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
 
     blancs  aller à l'état 99
 
@@ -1002,27 +1012,21 @@ blancs (46)
 
 état 95
 
-   37 mots: ACCOL_G ANTISLASH MOT SPACE . phrase ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT SPACE . phrase ACCOL_D blancs
 
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    MOT        décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    MOT        décalage et aller à l'état 58
 
     phrase  aller à l'état 101
-    mots    aller à l'état 62
+    mots    aller à l'état 61
 
 
 état 96
 
-   34 phrase: phrase . blancs mots
-   38 mots: ANTISLASH MOT ACCOL_G phrase . ACCOL_D
+   38 mots: ANTISLASH MOT ACCOL_G phrase . ACCOL_D blancs
 
     ACCOL_D  décalage et aller à l'état 102
-    SPACE    décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 77
 
 
 état 97
@@ -1042,9 +1046,12 @@ blancs (46)
 état 99
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs . caption tableend
+   40 blancs: blancs . SPACE
 
     CAPTION  décalage et aller à l'état 104
+    SPACE    décalage et aller à l'état 8
 
+    SPACE     [réduction par utilisation de la règle 14 (caption)]
     $défaut  réduction par utilisation de la règle 14 (caption)
 
     caption  aller à l'état 105
@@ -1056,56 +1063,52 @@ blancs (46)
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G . option ACCOL_D ACCOL_G ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G . option ACCOL_D ACCOL_G REEL ACCOL_D
 
-    SEPAR  décalage et aller à l'état 23
-    MOT    décalage et aller à l'état 24
+    SEPAR  décalage et aller à l'état 22
+    MOT    décalage et aller à l'état 23
 
     option  aller à l'état 106
 
 
 état 101
 
-   34 phrase: phrase . blancs mots
-   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase . ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase . ACCOL_D blancs
 
     ACCOL_D  décalage et aller à l'état 107
-    SPACE    décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 77
 
 
 état 102
 
-   38 mots: ANTISLASH MOT ACCOL_G phrase ACCOL_D .
+   38 mots: ANTISLASH MOT ACCOL_G phrase ACCOL_D . blancs
 
-    $défaut  réduction par utilisation de la règle 38 (mots)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 108
 
 
 état 103
 
    12 posend: FIN ACCOL_G MOT . ACCOL_D
 
-    ACCOL_D  décalage et aller à l'état 108
+    ACCOL_D  décalage et aller à l'état 109
 
 
 état 104
 
    13 caption: CAPTION . ACCOL_G phrase ACCOL_D blancs
 
-    ACCOL_G  décalage et aller à l'état 109
+    ACCOL_G  décalage et aller à l'état 110
 
 
 état 105
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs caption . tableend
 
-    FIN  décalage et aller à l'état 110
+    FIN  décalage et aller à l'état 111
 
     FIN       [réduction par utilisation de la règle 10 (tableend)]
     $défaut  réduction par utilisation de la règle 10 (tableend)
 
-    tableend  aller à l'état 111
+    tableend  aller à l'état 112
 
 
 état 106
@@ -1114,169 +1117,182 @@ blancs (46)
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option . ACCOL_D ACCOL_G ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option . ACCOL_D ACCOL_G REEL ACCOL_D
 
-    ACCOL_D  décalage et aller à l'état 112
+    ACCOL_D  décalage et aller à l'état 113
 
 
 état 107
 
-   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D .
+   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D . blancs
 
-    $défaut  réduction par utilisation de la règle 37 (mots)
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 114
 
 
 état 108
+
+   38 mots: ANTISLASH MOT ACCOL_G phrase ACCOL_D blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
+
+    SPACE     [réduction par utilisation de la règle 38 (mots)]
+    $défaut  réduction par utilisation de la règle 38 (mots)
+
+
+état 109
 
    12 posend: FIN ACCOL_G MOT ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 12 (posend)
 
 
-état 109
+état 110
 
    13 caption: CAPTION ACCOL_G . phrase ACCOL_D blancs
 
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    MOT        décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    MOT        décalage et aller à l'état 58
 
-    phrase  aller à l'état 113
-    mots    aller à l'état 62
-
-
-état 110
-
-    9 tableend: FIN . ACCOL_G TABLE ACCOL_D
-
-    ACCOL_G  décalage et aller à l'état 114
+    phrase  aller à l'état 115
+    mots    aller à l'état 61
 
 
 état 111
+
+    9 tableend: FIN . ACCOL_G TABLE ACCOL_D
+
+    ACCOL_G  décalage et aller à l'état 116
+
+
+état 112
 
     7 end: FIN ACCOL_G TABULAR ACCOL_D blancs posend blancs caption tableend .
 
     $défaut  réduction par utilisation de la règle 7 (end)
 
 
-état 112
+état 113
 
    31 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D . ACCOL_G phrase ACCOL_D
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D . ACCOL_G ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D . ACCOL_G REEL ACCOL_D
 
-    ACCOL_G  décalage et aller à l'état 115
-
-
-état 113
-
-   13 caption: CAPTION ACCOL_G phrase . ACCOL_D blancs
-   34 phrase: phrase . blancs mots
-
-    ACCOL_D  décalage et aller à l'état 116
-    SPACE    décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 77
+    ACCOL_G  décalage et aller à l'état 117
 
 
 état 114
 
-    9 tableend: FIN ACCOL_G . TABLE ACCOL_D
+   37 mots: ACCOL_G ANTISLASH MOT SPACE phrase ACCOL_D blancs .
+   40 blancs: blancs . SPACE
 
-    TABLE  décalage et aller à l'état 117
+    SPACE  décalage et aller à l'état 8
+
+    SPACE     [réduction par utilisation de la règle 37 (mots)]
+    $défaut  réduction par utilisation de la règle 37 (mots)
 
 
 état 115
+
+   13 caption: CAPTION ACCOL_G phrase . ACCOL_D blancs
+
+    ACCOL_D  décalage et aller à l'état 118
+
+
+état 116
+
+    9 tableend: FIN ACCOL_G . TABLE ACCOL_D
+
+    TABLE  décalage et aller à l'état 119
+
+
+état 117
 
    31 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G . phrase ACCOL_D
    32        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G . ENTIER ACCOL_D
    33        | FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G . REEL ACCOL_D
 
-    ACCOL_G    décalage et aller à l'état 55
-    ANTISLASH  décalage et aller à l'état 56
-    ENTIER     décalage et aller à l'état 118
-    REEL       décalage et aller à l'état 119
-    MOT        décalage et aller à l'état 59
+    ACCOL_G    décalage et aller à l'état 54
+    ANTISLASH  décalage et aller à l'état 55
+    ENTIER     décalage et aller à l'état 120
+    REEL       décalage et aller à l'état 121
+    MOT        décalage et aller à l'état 58
 
-    phrase  aller à l'état 120
-    mots    aller à l'état 62
-
-
-état 116
-
-   13 caption: CAPTION ACCOL_G phrase ACCOL_D . blancs
-
-    SPACE  décalage et aller à l'état 4
-
-    SPACE     [réduction par utilisation de la règle 40 (blancs)]
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 121
-
-
-état 117
-
-    9 tableend: FIN ACCOL_G TABLE . ACCOL_D
-
-    ACCOL_D  décalage et aller à l'état 122
+    phrase  aller à l'état 122
+    mots    aller à l'état 61
 
 
 état 118
 
-   32 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER . ACCOL_D
+   13 caption: CAPTION ACCOL_G phrase ACCOL_D . blancs
 
-    ACCOL_D  décalage et aller à l'état 123
+    $défaut  réduction par utilisation de la règle 41 (blancs)
+
+    blancs  aller à l'état 123
 
 
 état 119
 
-   33 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL . ACCOL_D
+    9 tableend: FIN ACCOL_G TABLE . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 124
 
 
 état 120
 
-   31 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase . ACCOL_D
-   34 phrase: phrase . blancs mots
+   32 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER . ACCOL_D
 
     ACCOL_D  décalage et aller à l'état 125
-    SPACE    décalage et aller à l'état 4
-
-    $défaut  réduction par utilisation de la règle 40 (blancs)
-
-    blancs  aller à l'état 77
 
 
 état 121
 
-   13 caption: CAPTION ACCOL_G phrase ACCOL_D blancs .
+   33 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL . ACCOL_D
 
-    $défaut  réduction par utilisation de la règle 13 (caption)
+    ACCOL_D  décalage et aller à l'état 126
 
 
 état 122
+
+   31 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase . ACCOL_D
+
+    ACCOL_D  décalage et aller à l'état 127
+
+
+état 123
+
+   13 caption: CAPTION ACCOL_G phrase ACCOL_D blancs .
+   40 blancs: blancs . SPACE
+
+    SPACE  décalage et aller à l'état 8
+
+    SPACE     [réduction par utilisation de la règle 13 (caption)]
+    $défaut  réduction par utilisation de la règle 13 (caption)
+
+
+état 124
 
     9 tableend: FIN ACCOL_G TABLE ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 9 (tableend)
 
 
-état 123
+état 125
 
    32 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G ENTIER ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 32 (colonne)
 
 
-état 124
+état 126
 
    33 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G REEL ACCOL_D .
 
     $défaut  réduction par utilisation de la règle 33 (colonne)
 
 
-état 125
+état 127
 
    31 colonne: FUSION ACCOL_G ENTIER ACCOL_D ACCOL_G option ACCOL_D ACCOL_G phrase ACCOL_D .
 

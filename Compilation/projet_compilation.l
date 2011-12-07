@@ -36,28 +36,28 @@ space [ \t\n]*
 
 /*rules analyseur lexico*/
 %%
-{deb}           {return DEB;}
-{document}      {return DOC;}
-{documentclass} {return DC;}   /* permet de recuperer \documentclass{article} en debut de fichier*/
-{graphicx}      {return GFX;}  /* permet de recuperer \usepackage{graphix} en debut de fichier*/
-{table}         {return TABLE;}
-{tabular}       {return TABULAR;}
-{caption}       {return CAPTION;}
-{fusion}        {return FUSION;}
-{trait_hor}     {return TRAIT_HOR;}
-{separ_col}     {return SEPAR_COL;}
-{fin_ligne}     {return FIN_LIGNE;}
-{separ}         {return SEPAR;}
-{fin}           {return FIN;}
-{accol_G}       {return ACCOL_G;}
-{accol_D}       {return ACCOL_D;}
-{entier}        {yylval.entier=atoi(yytext);return ENTIER; }
-{reel}          {yylval.reel=atof(yytext);return REEL; }
-{word}          {yylval.str=strdup(yytext);return MOT;}
-{space}         {yylval.str=strdup(yytext);return SPACE;}
-{antislash}     {return ANTISLASH;}
-{croch_G}       {return CROCH_G;}
-{croch_D}       {return CROCH_D;}
+{deb}           {printf("DEB ");return DEB;}
+{document}      {printf("");return DOC;}
+{documentclass} {printf("");return DC;}   /* permet de recuperer \documentclass{article} en debut de fichier*/
+{graphicx}      {printf("");return GFX;}  /* permet de recuperer \usepackage{graphix} en debut de fichier*/
+{table}         {printf("");return TABLE;}
+{tabular}       {printf("");return TABULAR;}
+{caption}       {printf("");return CAPTION;}
+{fusion}        {printf("FUSION ");return FUSION;}
+{trait_hor}     {printf("TH ");return TRAIT_HOR;}
+{separ_col}     {printf("SC ");return SEPAR_COL;}
+{fin_ligne}     {printf("FL ");return FIN_LIGNE;}
+{separ}         {printf("SEPAR ");return SEPAR;}
+{fin}           {printf("FIN ");return FIN;}
+{accol_G}       {printf("AG ");return ACCOL_G;}
+{accol_D}       {printf("AD ");return ACCOL_D;}
+{entier}        {printf("INT ");yylval.entier=atoi(yytext);return ENTIER; }
+{reel}          {printf("REEL ");yylval.reel=atof(yytext);return REEL; }
+{word}          {printf("MOT ");yylval.str=strdup(yytext);return MOT;}
+{space}         {printf("SPACEZ ");yylval.str=strdup(yytext);return SPACE;}
+{antislash}     {printf("SLASH ");return ANTISLASH;}
+{croch_G}       {printf("CG ");return CROCH_G;}
+{croch_D}       {printf("CD ");return CROCH_D;}
 
 .             {printf("/n%serreur/n", yytext);}
 

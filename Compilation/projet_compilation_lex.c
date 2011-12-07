@@ -807,113 +807,113 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 39 "projet_compilation.l"
-{return DEB;}
+{printf("DEB ");return DEB;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 40 "projet_compilation.l"
-{return DOC;}
+{printf("");return DOC;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 41 "projet_compilation.l"
-{return DC;}   /* permet de recuperer \documentclass{article} en debut de fichier*/
+{printf("");return DC;}   /* permet de recuperer \documentclass{article} en debut de fichier*/
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 42 "projet_compilation.l"
-{return GFX;}  /* permet de recuperer \usepackage{graphix} en debut de fichier*/
+{printf("");return GFX;}  /* permet de recuperer \usepackage{graphix} en debut de fichier*/
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 43 "projet_compilation.l"
-{return TABLE;}
+{printf("");return TABLE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 44 "projet_compilation.l"
-{return TABULAR;}
+{printf("");return TABULAR;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 45 "projet_compilation.l"
-{return CAPTION;}
+{printf("");return CAPTION;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 46 "projet_compilation.l"
-{return FUSION;}
+{printf("FUSION ");return FUSION;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 47 "projet_compilation.l"
-{return TRAIT_HOR;}
+{printf("TH ");return TRAIT_HOR;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 48 "projet_compilation.l"
-{return SEPAR_COL;}
+{printf("SC ");return SEPAR_COL;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 49 "projet_compilation.l"
-{return FIN_LIGNE;}
+{printf("FL ");return FIN_LIGNE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 50 "projet_compilation.l"
-{return SEPAR;}
+{printf("SEPAR ");return SEPAR;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 51 "projet_compilation.l"
-{return FIN;}
+{printf("FIN ");return FIN;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 52 "projet_compilation.l"
-{return ACCOL_G;}
+{printf("AG ");return ACCOL_G;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 53 "projet_compilation.l"
-{return ACCOL_D;}
+{printf("AD ");return ACCOL_D;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 54 "projet_compilation.l"
-{yylval.entier=atoi(yytext);return ENTIER; }
+{printf("INT ");yylval.entier=atoi(yytext);return ENTIER; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 55 "projet_compilation.l"
-{yylval.reel=atof(yytext);return REEL; }
+{printf("REEL ");yylval.reel=atof(yytext);return REEL; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 56 "projet_compilation.l"
-{yylval.str=strdup(yytext);return MOT;}
+{printf("MOT ");yylval.str=strdup(yytext);return MOT;}
 	YY_BREAK
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
 #line 57 "projet_compilation.l"
-{yylval.str=strdup(yytext);return SPACE;}
+{printf("SPACEZ ");yylval.str=strdup(yytext);return SPACE;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 58 "projet_compilation.l"
-{return ANTISLASH;}
+{printf("SLASH ");return ANTISLASH;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 59 "projet_compilation.l"
-{return CROCH_G;}
+{printf("CG ");return CROCH_G;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 60 "projet_compilation.l"
-{return CROCH_D;}
+{printf("CD ");return CROCH_D;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
