@@ -69,11 +69,12 @@ public class Main
 			fichier = adresse;
 		else
 			fichier += adresse;
+		//System.out.println("Merci pour" + fichier);
 		System.out.println("Choix l'implémentations de la structure de graphe");
 		System.out.println("Tapez l pour utiliser une liste d'adjacence ");
 		System.out.println("Tapez m pour utiliser une matrice d'adjacence ");
 		Implementation = Main.lireLettre();
-		System.out.println("Merci pour" + Implementation);
+	
 		System.out.println("Choix de la méthode de la calcul d'itinéraire");
 		System.out.println("Tapez a pour la méthode par agrégation");
 		System.out.println("Tapez d Pour la méthode detour borné ");
@@ -110,6 +111,7 @@ public class Main
 
 	public static void main(String[] args) throws IOException
 	{
+		
 		Main.getpwd();
 		menu();
 		long mili = 0;
@@ -119,20 +121,18 @@ public class Main
 		{
 			System.out.println("Saisisser A");
 			A = Main.lireDouble();
-			System.out.println("Merci pour" + A);
 			mili = System.currentTimeMillis();
-			ArrayList<Double> ponderation = monGPS.agregation(A);
+			HashMap<Integer, Double> ponderation = monGPS.agregation(A);
+			System.out.println(ponderation);
 			monGPS.put_itineraire(monGPS.BellmanFord(ponderation, villed,
 					villea));
 			mili = System.currentTimeMillis() - mili;
-
 		}
 		else if (Methode.compareTo("d") == 0)
 		{
-
 			System.out.println("Saisissez K");
 			K = Main.lireDouble();
-			System.out.println("Merci pour" + K);
+		//	System.out.println("Merci pour" + K);
 			mili = System.currentTimeMillis();
 			monGPS.put_itineraire((monGPS.detourBorne(K, villed, villea)));
 			mili = System.currentTimeMillis();
@@ -141,7 +141,7 @@ public class Main
 		else
 			System.out.println("ERROR : choix de methode");
 		System.out.println("Temps de calcul de l'itinéraire: " + mili
-				+ " milli sec");
+				+ " milli secs");
 
 	}
 

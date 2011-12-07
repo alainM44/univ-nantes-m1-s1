@@ -45,7 +45,6 @@ public class GPS {
 			graph = new MatGraph();
 		}
 		ArrayList<Object> max = new ArrayList<Object>();
-
 		Parseur parseur = new Parseur(fichier);
 		parseur.parse(graph, villes, routes, max);
 		imax = (Integer) max.get(1);
@@ -60,17 +59,23 @@ public class GPS {
 		result = A * route.getLongueur() / dmax - (1 - A)
 				* (route.getQualite() + villes.get(route.getN2()).getQualite())
 				/ (2 * imax);
+	//	System.out.println(result);
 		return result;
 
 	}
-
-	public ArrayList<Double> agregation(double A) {
+/**
+ * Renvoit le tableau des pondérations de chaques as
+ * @param A
+ * 			Fourni par l'utilisateur
+ * @return
+ */
+	public HashMap<Integer, Double> agregation(double A) {
 		ArrayList<Arc> listearcs = new ArrayList<Arc>();
 		listearcs = graph.listeArcs();
-		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
-		for (int i = 0; i < graph.NombreArcs(); i++) {
-			routes_ponderation.add(get_agregat(routes.get(listearcs.get(i)
-					.getId()), A));
+		 HashMap<Integer, Double> routes_ponderation = new  HashMap<Integer, Double>();
+		 
+			for (Arc arc : graph.listeArcs()) {
+			routes_ponderation.put(arc.getId(),get_agregat(routes.get(arc.getId()), A));
 		}
 		// System.out.println(routes_ponderation);
 		return routes_ponderation;
@@ -82,7 +87,7 @@ public class GPS {
 	 *            La table des pondération indicé par l'id des routes
 	 * @return Plus court chemin selon la methode d'agrégation
 	 */
-	public ArrayList<Route> BellmanFord(ArrayList<Double> tab_routes) {
+	public ArrayList<Route> BellmanFord(HashMap<Integer, Double> tab_routes) {
 		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Route> PCC = new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
@@ -101,10 +106,8 @@ public class GPS {
 		pi.put(0, 0);
 
 		for (int villecourante = 0; villecourante < graph.NombreNoeuds() - 1; villecourante++) {
-
 			for (Arc arc : graph.listeArcs()) {
 				// si d[v]>d[u]+w(u v)
-
 				if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes
 						.get(arc.getId()))
 						&& (d.get(arc.getN2()) != null)) {
@@ -120,7 +123,6 @@ public class GPS {
 			}
 		}
 		// VERIFICATION DE CIRCUIT ABSORBANT
-
 		for (Arc arc : graph.listeArcs()) {
 			// si d[v]>d[u]+w(u v)
 			if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes.get(arc
@@ -157,8 +159,7 @@ public class GPS {
 	 *            id de la ville d'arrivée
 	 * @return Plus court chemin selon la methode d'agrégation
 	 */
-
-	public ArrayList<Route> BellmanFord(ArrayList<Double> tab_routes,
+	public ArrayList<Route> BellmanFord(HashMap<Integer, Double> tab_routes,
 			int ville_dep, int ville_a) {
 		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Route> PCC = new ArrayList<Route>();
@@ -201,12 +202,12 @@ public class GPS {
 			// si d[v]>d[u]+w(u v)
 			if (d.get(arc.getN2()) > (d.get(arc.getN1()) + tab_routes.get(arc
 					.getId()))) {
-				// CIRCUIT ABSORBANT
+						// CIRCUIT ABSORBANT
 				return PCC; // VIDE
 
 			}
 		}
-		
+		//puthi(r);
 		PCCkeys = pi.keySet();
 		PCCkeys = r.keySet();
 		Integer ville;
@@ -220,7 +221,7 @@ public class GPS {
 		// On inverse le resultat
 		for (int i = PCC.size() - 1; i >= 0; i--)
 			result.add(PCC.get(i));
-		return result;
+				return result;
 	}
 
 	/**
@@ -233,7 +234,7 @@ public class GPS {
 	 *            Nom de la ville d'arrivée
 	 * @return
 	 */
-	public ArrayList<Route> BellmanFord(ArrayList<Double> tab_routes,
+	public ArrayList<Route> BellmanFord(HashMap<Integer, Double> tab_routes,
 			String ville_dep, String ville_a) {
 		return BellmanFord(tab_routes, annuaireInverse.get(ville_dep),
 				annuaireInverse.get(ville_a));
@@ -299,7 +300,11 @@ public class GPS {
 		return result;
 
 	}
-
+/**
+ *  Affichage d'une route
+ * @param route
+ * @return
+ */
 	public String getroute(Route route) {
 		String result = new String("");
 		result += route.getNom();
@@ -356,12 +361,12 @@ public class GPS {
 	 *         chemin multiplié par K
 	 */
 	public LinkedList<Route> detourBorne(double K, int depart, int arrivee) {
-		ArrayList<Double> routes_ponderation = new ArrayList<Double>();
+		HashMap<Integer, Double> routes_ponderation = new HashMap<Integer, Double>();
 		ArrayList<Route> PCC = null;
 		double bornePCC = 0;
 
-		for (int i = 0; i < routes.size(); i++) {
-			routes_ponderation.add(routes.get(i).getLongueur());
+		for (Arc arc : graph.listeArcs()) {
+			routes_ponderation.put(arc.getId(),routes.get(arc.getId()).getLongueur());
 		}
 
 		PCC = BellmanFord(routes_ponderation, depart, arrivee);
