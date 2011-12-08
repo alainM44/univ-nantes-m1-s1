@@ -1,13 +1,10 @@
 DROP TABLE Etudiant_tab;
-DROP TABLE Personnel_tab;
 DROP TABLE Cursus_tab;
 DROP TABLE GroupeTD_tab;
 DROP TABLE GroupeTP_tab;
 DROP TABLE UE_tab;
---DROP TABLE  Vacataire_tab;
-DROP TABLE  Titulaire_tab;
-
-
+DROP TABLE Vacataire_tab;
+DROP TABLE Titulaire_tab;
 DROP TYPE Etudiant_REF_NT FORCE;
 DROP TYPE Cursus_TY FORCE;
 DROP TYPE UE_TY FORCE;
@@ -22,6 +19,9 @@ DROP TYPE Cursus_REF_NT FORCE;
 DROP TYPE GroupeTD_REF_NT FORCE;
 DROP TYPE GroupeTP_REF_NT FORCE;
 DROP TYPE UE_REF_NT FORCE;
+
+SET LINESIZE 250
+
 -- Mémo pour le login
 -- source /etc/profile
 -- sqlplus admi9@cienetdb 
@@ -40,9 +40,8 @@ CREATE OR REPLACE TYPE Personnel_TY as object (
 	  not final;
 /
 
-CREATE OR REPLACE type Personnel_REF_VA as varray(2) of REF Personnel_TY;--pour les TP
+CREATE OR REPLACE type Personnel_REF_VA as varray(2) of REF Personnel_TY;
 /
-
 CREATE OR REPLACE TYPE UE_TY as object (
        	  intitule VARCHAR(25),
 	  id_code VARCHAR(25),
@@ -76,7 +75,6 @@ CREATE OR REPLACE TYPE Titulaire_TY UNDER Personnel_TY(
 /
 CREATE OR REPLACE TYPE Vacataire_TY UNDER Personnel_TY();
 /
-
 
 
 CREATE OR REPLACE TYPE Etudiant_TY as object (nom VARCHAR(25),
@@ -132,41 +130,17 @@ NESTED TABLE liste_ue STORE AS CU_UE_NT_TAB
 NESTED TABLE liste_tds STORE AS TD_NT_TAB
 ;
 
-create or replace FUNCTION volume_horaire_UE(IDCurs VARCHAR) RETURN NUMBER IS nb_h NUMBER;
-BEGIN
-  select sum(deref(column_value).nb_seance_cm) + sum(deref(column_value).nb_seance_td) + sum(deref(column_value).nb_seance_tp)
-  into nb_h
-  from cursus_tab c , table(c.liste_ue)
-  WHERE id_code = IDCurs;
-  RETURN nb_h * 80;
-END volume_horaire_UE;
-/
-
-
-
-
-CREATE OR REPLACE TYPE BODY Cursus_TY as 
-member function volume_horaire return NUMBER is 
-begin
-	RETURN VOLUME_HORAIRE_UE(id_code);
-	end;
-end;	
-/
-
  
- 
-
 CREATE TABLE Etudiant_tab of Etudiant_TY(  constraint etudiant_etu_pk PRIMARY KEY(nom))
 NESTED TABLE liste_cursus STORE AS Cursus_REF_NT_TAB;
 
- 
-Create table Titulaire_tab of titulaire_TY( constraint  titulaire_id_pk PRIMARY KEY(nom))
+Create table Titulaire_tab of Titulaire_TY( constraint  titulaire_id_pk PRIMARY KEY(nom))
 NESTED TABLE liste_ue STORE AS UE_REF_NT_TAB 
 NESTED TABLE liste_tds STORE AS GroupeTD_REF_NT_TAB
 NESTED TABLE liste_tps STORE AS GroupeTP_REF_NT_TAB
 ;
 
-Create table Vacataire_tab of vacataire_TY( constraint vacataire_id_pk PRIMARY KEY(nom))
+Create table Vacataire_tab of Vacataire_TY( constraint vacataire_id_pk PRIMARY KEY(nom))
 NESTED TABLE liste_ue STORE AS UE_REF_NT_TAB2 
 NESTED TABLE liste_tds STORE AS GroupeTD_REF_NT_TAB2
 NESTED TABLE liste_tps STORE AS GroupeTP_REF_NT_TAB2
@@ -183,68 +157,142 @@ CREATE TABLE  UE_tab of UE_TY(  constraint ue_id_code_pk PRIMARY KEY(id_code));
 
 
 ----------------------------------------------------------------------------------------------------------------
-------------------------------------------- INSERTION-------------------------------------------------------------
+------------------------------------------- FONCTIONS-----------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------
 
+create or replace FUNCTION volume_horaire_UE(IDCurs VARCHAR) RETURN NUMBER IS nb_h NUMBER;
+BEGIN
+--1TD
+--11TP =2/3TD
+--1CM=1.5TD
+  select sum(deref(column_value).nb_seance_cm)*1.5 + sum(deref(column_value).nb_seance_td) + (sum(deref(column_value).nb_seance_tp)*3)/2
+  into nb_h
+  from cursus_tab c , table(c.liste_ue)
+  WHERE id_code = IDCurs;
+  RETURN nb_h * 80;
+END volume_horaire_UE;
+/
+
+
+
+CREATE OR REPLACE TYPE BODY Cursus_TY as 
+member function volume_horaire return NUMBER is 
+begin
+	RETURN VOLUME_HORAIRE_UE(id_code);
+	end;
+end;	
+/
+
+----------------------------------------------------------------------------------------------------------------
+------------------------------------------- INSERTION-----------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+INSERT INTO GroupeTD_tab values (1,30,NULL,NULL,NULL);
+INSERT INTO GroupeTD_tab values (2,30,NULL,NULL,NULL);
+
+INSERT INTO UE_tab values ('ALGO','452657',15,10,10,NULL);
+INSERT INTO UE_tab values ('ANGLAIS','457741',15,10,10,NULL);
+INSERT INTO UE_tab values ('GLO','454467',15,15,10,NULL);
+INSERT INTO UE_tab values ('BD','457887',15,15,10,NULL);
 
 INSERT INTO Titulaire_tab values('MrALMA','Chri','LINA',
-(SELECT REF(C) FROM Cursus_tab C WHERE C.intitule='ALMA'),
+null,-- MAJ plus tard
 UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='ALGO')),
 GroupeTD_REF_NT((Select Ref(TD) FROM GroupeTD_tab TD WHERE TD.id=1)),
 GroupeTP_REF_NT((Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=1)));
      
 
+INSERT INTO Titulaire_tab values('ARDOUE','Ille','LINA',
+null,
+UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='GLO')),
+GroupeTD_REF_NT((Select Ref(TD) FROM GroupeTD_tab TD WHERE TD.id=1)),
+GroupeTP_REF_NT((Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=1)));
+
+INSERT INTO Titulaire_tab values('BRENDON','JEFF','LONDON',
+null,
+UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='ANGLAIS')),
+GroupeTD_REF_NT((Select Ref(TD) FROM GroupeTD_tab TD WHERE TD.id=1)),
+GroupeTP_REF_NT((Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=1)));
 
 
---5 ETUDIANT DANS LE CURSUS ALMA
-INSERT INTO Etudiant_tab values ('RINCE','Ramir',99453,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
-INSERT INTO Etudiant_tab values ('LINUX','blague',92573,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
-INSERT INTO Etudiant_tab values ('LUTIN','barbu',99543,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
-INSERT INTO Etudiant_tab values ('DELASOUL','eric',99783,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
-INSERT INTO Etudiant_tab values ('LINUX2','heu',97853,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
+INSERT INTO Vacataire_tab values('GEORGE','Sympas','LINA',
+null, -- n'est reponsable d'aucun cursus
+UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='BD')),
+GroupeTD_REF_NT((Select Ref(TD) FROM GroupeTD_tab TD WHERE TD.id=2)),
+GroupeTP_REF_NT((Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=2)));
 
 
-INSERT INTO Cursus_tab values ('ALMA','C12452','M1',
+--MISE A JORU DES UE POUR LEUR ATTRIBUER LEURS RESPONSABLES
+UPDATE ue_tab SET responsable_CM  = (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='MrALMA') WHERE intitule='ALGO';
+UPDATE ue_tab SET responsable_CM = (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='ARDOUE')WHERE intitule='GLO';
+UPDATE ue_tab SET responsable_CM = (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='BRENDON')WHERE intitule='ANGLAIS';
+UPDATE ue_tab SET responsable_CM = (Select Ref(T) FROM Vacataire_tab T WHERE T.nom='GEORGE')WHERE intitule='BD';
+
+
+
+
+
+--5 ETUDIANT DANS LE CURSUS MINFO NECESSAIRE
+INSERT INTO Etudiant_tab values ('RINCE','Ramir',99453,null);
+INSERT INTO Etudiant_tab values ('LINUX','blague',92573,null);
+INSERT INTO Etudiant_tab values ('LUTIN','barbu',98543,null);
+INSERT INTO Etudiant_tab values ('DELASOUL','eric',99783,null);
+INSERT INTO Etudiant_tab values ('LINUX2','heu',97853,null);
+
+
+INSERT INTO Cursus_tab values ('M1INFO','C12452','M1',
 (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='MrALMA'),
 GroupeTD_REF_NT((Select Ref(TD) FROM GroupeTD_tab TD WHERE TD.id=1)),
 Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='RINCE'),
 		(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LUTIN'),
 		(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='DELASOUL'),
 		(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LINUX'),
-		(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LUTIN')),
-UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='ALGO'),(Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='GLO')));
-
---INSERT INTO Etudiant2_REF_NT_TAB values ('RINCE','Ramir',99453,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
---ALTER TABLE Etudiant_tab MODIFY  liste_cursus  Cursus_REF_NT(('RINCE','Ramir',99453,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
---INSERT INTO Etudiant_tab values ('LINUX','blague',92573,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
---INSERT INTO Etudiant_tab values ('LUTIN','barbu',99543,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
---INSERT INTO Etudiant_tab values ('DELASOUL','eric',99783,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
---INSERT INTO Etudiant_tab values ('LINUX2','heu',97853,Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='ALMA')));
+		(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LINUX2')),
+UE_REF_NT((Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='ALGO'),
+		  (Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='GLO'),
+		  (Select Ref(UE) FROM UE_tab UE WHERE UE.intitule='ANGLAIS')));
 
 
 
 
+--IL FAUT MAINTENANT MODIFIER LES ATTRIBUTS DANS LA TABLE ETUDIANT, LA REFERENCE DES CURSUS (ALORS A NULLE) POUR QUELLE REFERENCE LE CURSUS ALMA
+UPDATE Etudiant_tab SET liste_cursus = Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO'))WHERE nom='RINCE';
+UPDATE Etudiant_tab SET liste_cursus = Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO'))WHERE nom='LUTIN';
+UPDATE Etudiant_tab SET liste_cursus = Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO'))WHERE nom='DELASOUL';
+UPDATE Etudiant_tab SET liste_cursus = Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO'))WHERE nom='LINUX';
+UPDATE Etudiant_tab SET liste_cursus = Cursus_REF_NT((Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO'))WHERE nom='LINUX2';
 
-INSERT INTO UE_tab values ('ALGO','452657',15,10,10,NULL);
-INSERT INTO UE_tab values ('ANGLAIS','45787',15,10,10,NULL);
-INSERT INTO UE_tab values ('GLO','454887',15,15,10,NULL);
+UPDATE Titulaire_tab SET cursus = (Select Ref(C) FROM Cursus_tab C WHERE C.intitule='M1INFO')WHERE nom='MrALMA';
 
-INSERT INTO GroupeTD_tab values(1,15,
-       	    		 (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='MrALMA'),
-			 Groupe_TP_REF_VA(NULL,NULL),
-			 Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='RINCE')));
+
 
 INSERT INTO GroupeTP_tab values(1,
 				Personnel_REF_VA((Select Ref(T) FROM Titulaire_tab T WHERE T.nom='MrALMA')),
-				Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='RINCE')));
+				Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='RINCE'),
+						(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='DELASOUL'),
+						(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LUTIN')));
+
+INSERT INTO GroupeTP_tab values(2,
+				Personnel_REF_VA((Select Ref(T) FROM Titulaire_tab T WHERE T.nom='ARDOUE')),
+				Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LINUX'),
+						(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='LINUX2')));
+
+
+UPDATE GroupeTD_tab SET responsable= (Select Ref(T) FROM Titulaire_tab T WHERE T.nom='MrALMA'),
+       		    	tps=Groupe_TP_REF_VA((Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=1),(Select Ref(TP) FROM GroupeTP_tab TP WHERE TP.id=2)),
+			 etudiants=Etudiant_REF_NT((Select Ref(E) FROM Etudiant_tab E WHERE E.nom='RINCE'),
+			 			(Select Ref(E) FROM Etudiant_tab E WHERE E.nom='DELASOUL'));
+
 
 ----------------------------------------------------------------------------------------------------------------
-------------------------------------------- REQUETE-------------------------------------------------------------
+------------------------------------------- REQUETES-------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------
-
-
+--1
 select deref(column_value).nom as ETU_ALMA
 from Cursus_tab c , table(c.etudiants)
-where c.intitule='ALMA';
+where c.intitule='M1INFO';
 
-
+--2
+SELECT C.volume_horaire() AS TEST_FONCTION_VOLUME
+FROM Cursus_tab C
+WHERE C.intitule='M1INFO';
