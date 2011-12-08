@@ -1,232 +1,225 @@
 package Graphe;
+
 import java.util.ArrayList;
 
+public class MatGraph extends AbstractGrapheOriente {
 
-
-
-public class MatGraph extends AbstractGrapheOriente{
-
-
-
-	ArrayList2D<Encapsulateur<Boolean>>graph;	
+	ArrayList2D<Encapsulateur<Boolean>> graph;
 	ArrayList<Encapsulateur<Integer>> tabnoeuds;
 
-	public MatGraph(){
+	public MatGraph() {
 		super();
-		graph = new ArrayList2D<Encapsulateur<Boolean>>() ;
+		graph = new ArrayList2D<Encapsulateur<Boolean>>();
 		tabnoeuds = new ArrayList<Encapsulateur<Integer>>();
 	}
 
+	/**
+	 * Complexité O(1)
+	 */
 	@Override
-	public int ajouterA(int n1, int n2, int id) {//position du noeud 
-		nbArc++;	
-		if(	graph.get(n1,n2).listeIdArc ==null)
-			graph.get(n1,n2).listeIdArc =new ArrayList<Integer>();
+	public int ajouterA(int n1, int n2, int id) {// position du noeud
+		nbArc++;
+		if (graph.get(n1, n2).listeIdArc == null)
+			graph.get(n1, n2).listeIdArc = new ArrayList<Integer>();
 		else
-		graph.get(n1,n2).ajouterArc(id);
-		graph.get(n1,n2).setValeur(true);
+			graph.get(n1, n2).ajouterArc(id);
+		graph.get(n1, n2).setValeur(true);
 		tabnoeuds.get(n1).nbArc++;
-		//graph.ta
+		// graph.ta
 		return id;
 	}
+
+	/**
+	 * Complexité O(1) Attention à l'odre du noeud ! 1 pour 1er 2 pour le
+	 * 2eme... l'arc doit exister
+	 */
 	@Override
-	public void supprimerA(int id, int n1, int n2) { // odre du noeud !!!!! 1 pour 1er 2 pour  2eme... l'arc doit exister
-		int listsize=graph.get(n1,n2).getListe().size();
-		for(int j=0;j<listsize;j++)
-		{
-			if (graph.get(n1,n2).getListe().get(j) == id) // en O de 1
+	public void supprimerA(int id, int n1, int n2) {
+		int listsize = graph.get(n1, n2).getListe().size();
+		for (int j = 0; j < listsize; j++) {
+			if (graph.get(n1, n2).getListe().get(j) == id) // en O de 1
 			{
-				graph.get(n1,n2).getListe().remove(j);
+				graph.get(n1, n2).getListe().remove(j);
 				graph.get(n1, n2).setValeur(false);
 			}
-		}	
+		}
 		tabnoeuds.get(n1).nbArc--;
-		nbArc--;	
+		nbArc--;
 	}
 
-
+	/**
+	 * Complexité O(1) si esoace alloué suffisant
+	 */
 	@Override
 	public void ajouterN(int n) {
-		//on ajoute une arraylist
+		// on ajoute une arraylist
 
 		graph.addLigne();
-		for(int i=0;i<nbNoeuds;i++)
-		{	
-			graph.getLine(i).add(new Encapsulateur<Boolean>(false));		//	graph.addCol(i,i,new Encapsulateur<Boolean>(false));
+		for (int i = 0; i < nbNoeuds; i++) {
+			graph.getLine(i).add(new Encapsulateur<Boolean>(false)); // graph.addCol(i,i,new
+			// Encapsulateur<Boolean>(false));
 		}
 		nbNoeuds++;
-		for(int i=0;i<nbNoeuds;i++)
-		{	
-			graph.getLine(nbNoeuds-1).add(new Encapsulateur<Boolean>(false));
+		for (int i = 0; i < nbNoeuds; i++) {
+			graph.getLine(nbNoeuds - 1).add(new Encapsulateur<Boolean>(false));
 		}
 
 		tabnoeuds.add(new Encapsulateur<Integer>(n));
-		//	nbNoeuds++;
+		// nbNoeuds++;
 	}
 
-
-
+	/**
+	 * Complexité O(N) (temps de recherche a partir de l'id, O(1) sinon)
+	 */
 	@Override
 	public void supprimerN(int n) {
-		int pos=0;
-//		ArrayList<Arc> arcasup= listerArcsEntrants(tabnoeuds.get(n).getValeur());
-		
-//		int taillelistearcs=arcasup.size();	
-//		for(int i=0;i<taillelistearcs;i++)
-//		{
-//			graph.get(i, tabnoeuds.get(n).valeur).setValeur(false);
-//			graph.get(tabnoeuds.get(n).getValeur(),i).listeIdArc.remove(arcasup.get(i)); // INUTILITE DE NB AR
-			//nbArc--;
-//			
-//		}
-		for(int i=0; i<nbNoeuds-1;i++) // parcours de n
+		int pos = 0;
+		for (int i = 0; i < nbNoeuds - 1; i++) // parcours de n
 		{
-			if (tabnoeuds.get(i).getValeur() ==n)
-			{
+			if (tabnoeuds.get(i).getValeur() == n) {
 				tabnoeuds.remove(i);
-				pos=i;
+				pos = i;
 			}
 		}
-		nbArc-=tabnoeuds.get(pos).getNbArc();
+		nbArc -= tabnoeuds.get(pos).getNbArc();
 		graph.suppCol(pos);
-		graph.suppLigne(pos); //en O de N
-	
+		graph.suppLigne(pos); // en O de N
+
 		nbNoeuds--;
-		//on supprime les arc entrant
+		// on supprime les arc entrant
 
 	}
 
-
+	/**
+	 * Complexité O(N²)
+	 */
 	@Override
 	public ArrayList<Arc> listeArcs() {
 		ArrayList<Arc> result = new ArrayList<Arc>();
 		int nbarctemp = nbArc;
-		int taillelistearcs;	
-		for(int i=0;i<nbNoeuds;i++)
-		{
-			for(int j=0;j<nbNoeuds;j++)
-			{
-				taillelistearcs =graph.get(i,j).listeIdArc.size();
-				nbarctemp-=taillelistearcs;
-				for(int k=0;k<taillelistearcs;k++)
-					result.add(new Arc(tabnoeuds.get(i).getValeur(), tabnoeuds.get(j).getValeur(), graph.get(i,j).listeIdArc.get(k)));
-				if(nbarctemp==0)
+		int taillelistearcs;
+		for (int i = 0; i < nbNoeuds; i++) {
+			for (int j = 0; j < nbNoeuds; j++) {
+				taillelistearcs = graph.get(i, j).listeIdArc.size();
+				nbarctemp -= taillelistearcs;
+				for (int k = 0; k < taillelistearcs; k++)
+					result.add(new Arc(tabnoeuds.get(i).getValeur(), tabnoeuds
+							.get(j).getValeur(), graph.get(i, j).listeIdArc
+							.get(k)));
+				if (nbarctemp == 0)
 					break;
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * Complexité O(N)
+	 */
 	@Override
 	public ArrayList<Integer> listeNoeuds() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		for(int i=0;i<nbNoeuds;i++)
+		for (int i = 0; i < nbNoeuds; i++)
 			result.add(tabnoeuds.get(i).valeur);
 		return result;
 	}
 
-
-
+	/**
+	 * Complexité O(N)
+	 */
 	@Override
 	public ArrayList<Integer> listerPredecesseurs(int n) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		int pos=-1;
-		for(int i=0;i<nbNoeuds;i++)
-		{
-			if (tabnoeuds.get(i).getValeur() ==n)
-			{
-				pos=i;
+		int pos = -1;
+		for (int i = 0; i < nbNoeuds; i++) {
+			if (tabnoeuds.get(i).getValeur() == n) {
+				pos = i;
 			}
 		}
-		if (pos==-1)
+		if (pos == -1)
 			System.out.println("erreur noeud inexistant");
 
-		for(int j=0;j<nbNoeuds;j++)
-		{
-			if( graph.get(j, pos).getValeur() )
+		for (int j = 0; j < nbNoeuds; j++) {
+			if (graph.get(j, pos).getValeur())
 				result.add(tabnoeuds.get(j).valeur);
 
 		}
 		return result;
 	}
 
+	/**
+	 * Complexité O(N)
+	 */
 	@Override
 	public ArrayList<Integer> listerSuccesseurs(int n) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
-		int pos=-1;
-		for(int i=0;i<nbNoeuds;i++)
-		{
-			if (tabnoeuds.get(i).getValeur() ==n)
-			{
-				pos=i;
+		int pos = -1;
+		for (int i = 0; i < nbNoeuds; i++) {
+			if (tabnoeuds.get(i).getValeur() == n) {
+				pos = i;
 			}
 		}
-		if (pos==-1)
+		if (pos == -1)
 			System.out.println("erreur noeud inexistant");
 
-		int	lignesize=graph.getLine(pos).size();
-		for(int j=0;j<lignesize;j++)
-		{
-			if( graph.get(pos, j).getValeur() )
+		int lignesize = graph.getLine(pos).size();
+		for (int j = 0; j < lignesize; j++) {
+			if (graph.get(pos, j).getValeur())
 				result.add(tabnoeuds.get(j).valeur);
 
 		}
 		return result;
 	}
 
-
-
+	/**
+	 * Complexité O(N+A)
+	 */
 	@Override
 	public ArrayList<Arc> listerArcsEntrants(int n) {
 		ArrayList<Arc> result = new ArrayList<Arc>();
-		int taillelistearcs;	
-		int pos=-1;
-		for(int i=0;i<nbNoeuds;i++)
-		{
-			if (tabnoeuds.get(i).getValeur() ==n)
-			{
-				pos=i;
+		int taillelistearcs;
+		int pos = -1;
+		for (int i = 0; i < nbNoeuds; i++) {
+			if (tabnoeuds.get(i).getValeur() == n) {
+				pos = i;
 			}
 		}
-		if (pos==-1)
+		if (pos == -1)
 			System.out.println("erreur noeud inexistant");
 
-		for(int j=0;j<nbNoeuds;j++)
-		{
-			if( graph.get(j,pos).getValeur() )
-			{
-				taillelistearcs= graph.get(j,pos).getListe().size();
-				for(int k=0;k<taillelistearcs;k++)
-					result.add(new Arc(j,n, graph.get(j,pos).listeIdArc.get(k)));
+		for (int j = 0; j < nbNoeuds; j++) {
+			if (graph.get(j, pos).getValeur()) {
+				taillelistearcs = graph.get(j, pos).getListe().size();
+				for (int k = 0; k < taillelistearcs; k++)
+					result.add(new Arc(j, n, graph.get(j, pos).listeIdArc
+							.get(k)));
 			}
 
 		}
 		return result;
-
 	}
-
+	/**
+	 * Complexité O(N+A)
+	 */
 	@Override
 	public ArrayList<Arc> listerArcsSortants(int n) {
-		int taillelistearcs;	
+		int taillelistearcs;
 		ArrayList<Arc> result = new ArrayList<Arc>();
-		int pos=-1;
-		for(int i=0;i<nbNoeuds;i++)
-		{
-			if (tabnoeuds.get(i).getValeur() ==n)
-			{
-				pos=i;
+		int pos = -1;
+		for (int i = 0; i < nbNoeuds; i++) {
+			if (tabnoeuds.get(i).getValeur() == n) {
+				pos = i;
 			}
 		}
-		if (pos==-1)
+		if (pos == -1)
 			System.out.println("erreur noeud inexistant");
 
-		for(int j=0;j<nbNoeuds;j++)
-		{
-			if( graph.get(pos,j).getValeur() )
-			{
-				taillelistearcs= graph.get(pos,j).getListe().size();
-				for(int k=0;k<taillelistearcs;k++)
-					result.add(new Arc(n, j, graph.get(pos,j).listeIdArc.get(k)));
+		for (int j = 0; j < nbNoeuds; j++) {
+			if (graph.get(pos, j).getValeur()) {
+				taillelistearcs = graph.get(pos, j).getListe().size();
+				for (int k = 0; k < taillelistearcs; k++)
+					result.add(new Arc(n, j, graph.get(pos, j).listeIdArc
+							.get(k)));
 			}
 
 		}
@@ -235,40 +228,34 @@ public class MatGraph extends AbstractGrapheOriente{
 
 	@Override
 	public String toString() {
-		String result =new String("0 ");
-		//PREMIERE LIGNE
-		for(int i = 0;i<nbNoeuds;i++)
-		{	
+		String result = new String("0 ");
+		// PREMIERE LIGNE
+		for (int i = 0; i < nbNoeuds; i++) {
 
-			result+=String.valueOf(tabnoeuds.get(i).getValeur());
+			result += String.valueOf(tabnoeuds.get(i).getValeur());
 
 		}
-		result+="\n";
-		//CORPS
-		for(int i = 1;i<=nbNoeuds;i++)
-		{
-			result+=String.valueOf(tabnoeuds.get(i-1).getValeur())+" ";
-			for(int j = 0;j<nbNoeuds;j++)
-			{
-				if(graph.get(i-1,j).getValeur())
-					result+="V";
+		result += "\n";
+		// CORPS
+		for (int i = 1; i <= nbNoeuds; i++) {
+			result += String.valueOf(tabnoeuds.get(i - 1).getValeur()) + " ";
+			for (int j = 0; j < nbNoeuds; j++) {
+				if (graph.get(i - 1, j).getValeur())
+					result += "V";
 				else
-					result+="F";
+					result += "F";
 			}
-			result+="\n";
+			result += "\n";
 		}
-		//tableau
-		for(int i =0; i<tabnoeuds.size();i++)
-			result+=i+":"+String.valueOf(tabnoeuds.get(i).getValeur())+";";
-		result+="\n";
-		result+="nb noeuds : "+nbNoeuds+"\n";
-		result+="nb arcs : "+nbArc+"\n";
-
-
-
+		// tableau
+		for (int i = 0; i < tabnoeuds.size(); i++)
+			result += i + ":" + String.valueOf(tabnoeuds.get(i).getValeur())
+					+ ";";
+		result += "\n";
+		result += "nb noeuds : " + nbNoeuds + "\n";
+		result += "nb arcs : " + nbArc + "\n";
 		return result;
 
 	}
-
 
 }

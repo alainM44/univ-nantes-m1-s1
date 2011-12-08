@@ -2,14 +2,10 @@ package GPS;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.crypto.dsig.spec.HMACParameterSpec;
-
 import Graphe.AbstractGrapheOriente;
 import Graphe.Arc;
 import Graphe.ListGraph;
@@ -80,10 +76,7 @@ public class GPS
 	 */
 	public HashMap<Integer, Double> agregation(double A)
 	{
-		ArrayList<Arc> listearcs = new ArrayList<Arc>();
-		listearcs = graph.listeArcs();
 		HashMap<Integer, Double> routes_ponderation = new HashMap<Integer, Double>();
-
 		for (Arc arc : graph.listeArcs())
 		{
 			routes_ponderation.put(arc.getId(), get_agregat(routes.get(arc
@@ -440,7 +433,7 @@ public class GPS
 				bornePCC, depart, arrivee, 0, 0, qualiteMax);
 	}
 
-	@SuppressWarnings("unchecked")
+
 	private LinkedList<Route> detourBorneIter(LinkedList<Route> cheminCourant,
 			LinkedList<Route> meilleurChemin,
 			HashMap<Integer, Integer> tabCouleurs, double bornePCC, int depart,
@@ -524,59 +517,4 @@ public class GPS
 		}
 		System.out.println("]");
 	}
-	// BAD NEWS : DIJKSTRA A REMPLACER PAR BELLMAN FORD
-	// PROBLEME AU NIVEAU DES FILES DE PRIORITES
-	// DE PLUS LA PONDERATION DE LA FONCTION PEUT RENVOYER DES VALEURS
-	// NEGATIVES, IL FAUT DONC UTILISER BELLMAN-FORD
-	// public ArrayList<Integer>/* ?? */Dijkstra(ArrayList<Double> tab_routes)
-	// {
-	// int noeudCourant;
-	// ArrayList<Integer> PCC = new ArrayList<Integer>();
-	// ArrayList<Integer> listeNoeud = graph.listeNoeuds();
-	// Set<Integer> PCCkeys;
-	// Set<Integer> routeskeyx;
-	// HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
-	// PriorityQueue<Integer> file = new PriorityQueue<Integer>();
-	// HashMap<Integer, Double> d = new HashMap<Integer, Double>();
-	//
-	// for (Integer noeud : listeNoeud)
-	// {
-	// d.put(noeud, -1.0); // -1 ou l'infini ?
-	// pi.put(noeud, 0);
-	// }
-	// routeskeyx = pi.keySet();
-	// // on remplie la file
-	// for (Integer route : routeskeyx)
-	// {
-	// file.add(route);
-	// }
-	// // INIT
-	// d.put(1, 0.0);
-	// pi.put(1, 1);
-	//
-	// while (!file.isEmpty())
-	// {
-	// noeudCourant = file.poll();
-	// for (Integer voisin : graph.listerSuccesseurs(noeudCourant)) //
-	// {
-	// if (d.get(noeudCourant) < tab_routes.get(voisin)
-	// + d.get(noeudCourant))
-	// {
-	// d.put(noeudCourant, tab_routes.get(voisin)
-	// + d.get(noeudCourant));
-	// pi.put(voisin, noeudCourant);
-	//
-	// }
-	// }
-	// }
-	// PCCkeys = pi.keySet();
-	//
-	// // On remplit le resultat
-	// for (Integer i : PCCkeys)
-	// {
-	// PCC.add(pi.get(i));
-	// }
-	// return PCC;
-	// }
-
 }
