@@ -1,0 +1,14 @@
+\chapter{Choix de modélisation}
+De manière générale, nous avons décidé d'utiliser des références (et des doubles références) pour \textbf{toutes} les associations ou compositions. Ce choix permet une conception de la base de donnée dans un esprit orienté objet. Ainsi aucun objet est dupliqué et le gain d'espace est non négligeable. En revanche les insertion de tuples sont trés longues et laborieuses comme nous l'a confirmé la pratique..
+\section{Table imbriquées}
+En accord avec notre démarche précédament décrite, nous avons utilisé que des tables imbriquées. Lors cas d'utilisation sont lorsqu'il est necessaire d'utiliser des associations ou compositions de cardinalités élévés.
+\section{Vecteurs}
+Nous les avons utilisés lorsque la cardinalité de l'objet était différente de 1 mais pas «trop grande». A nouveau au lieu d'objets, nous avons stocké des références.
+\section{Ordre de création}
+Avec notre choix de conception décrit plus haut, l'odre de création de type s'est imposé. Il est en effet impossible de créer un type contenant des références ou des dépendance avant les types référencés.
+\section{Elements ajoutés}
+Nous n'avons ajoutés aucun nouveaux éléments. Nous avons voulu créer uniquement les les objets et relations du diagramme UML. Ce qui par la suite s'est avéré être une  grosse erreur (cf 1.2.2).
+\section{Elements modifiés}
+Nous n'avons modifié aucun éléments. Pour les mêmes raisons décrites au paragraphe précédent.
+
+\clearpage

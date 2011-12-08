@@ -1,0 +1,58 @@
+\chapter{Introduction}
+\section{Presentation du problème}
+L'objectif de ce tp est de modéliser une bases de données Objet-Relationnelle simple, à partir d'un diagramme de classe UML présenté dans le sujet. Cela permet une manipulation riche des différent outils que propose l'objet-Relationnelle simple.
+\newline
+\begin{figure}[!h] 
+\centering
+  \includegraphics[scale=0.45]{s.png}
+  \caption{Diagramme de classe du sujet}
+\end{figure} 
+
+\clearpage
+\section{Base de donnée conçue}
+\subsection{Travail réalisé}
+Dans cette partie nous allons détailler les différentes composantes que nous avons crées. Puis nous listerons les parties manquantes et pourquoi nous ne les avons pas réalisées.\renewcommand{\labelitemi}{$\bullet$}
+\begin{itemize}
+\item
+Chaque classe du diagramme de classe été modelisée par un type.
+\item
+Chaque type a une table associées sauf pour Personnel\_TY. En en effet on considère que concrètement il n'existe que des instances de Vacataire \_TY et Titutlaire\_TY.
+\item
+Chaque relation ou composition du diagramme de classe est modélisée dans notre base de données par les moyens suivants 
+\begin{itemize}
+\item
+Tables imbriquées
+\item
+Tables imbriquées de références
+\item
+Vecteurs
+\item
+Références ou des références des deux types cités ci-dessus
+\end{itemize}
+\item
+Des insertion pour chacunes de ses tables.
+\item
+La methode volume\_horaire() de cursus respectant les coefficiant donnés  (1TD 1TP=2/3TD 1CM=1.5TD)
+\end{itemize}
+
+\clearpage 
+
+\subsection{Elements manquants}
+Nous n'avons pas été en mesure de réaliser les opérations suivantes : 
+\begin{itemize}
+\item
+A tout moment empecher que la base de donnée soit dans un état incohérent. Nous n'avons pas mis en place de triggers necessaires à la vérifications des différents problèmes 
+\item
+La méthode volume\_horaire\_EquiTD de Titulaire est redéfinie. Dans son calcul 1TP=1TD.
+\item
+La requête permettant de donner la liste des personnels intervenant dans le cursus M1 Info
+\item
+La requête permettant de donner : la liste des vacataires intervenant dans le cursus M1 Info
+\end{itemize}
+Les longues recherches pour tenter de parvenir à réaliser ces opérations nous ont amené à comprendre que notre conception ellemême est en cause. En effet il est necessaire de posseder différentes tables supplémentaires pour faire les liens entre certaines entitiés. Par exemple la création de table du type «appartient\_td» et la création de vues les utilisant ces tables. Avec ces outils la réalisation de ces fonction manquantes seraient aisées. Cependant nous nous en somme rendu compte très tard (quelques jours avec le rendu) avec la découverte de cet exemple similaire : \url{http://madoc2.matll.fr/module_fichier/telecharger.php?id_fichier=301}.
+ Nous avons cependant  décidé qu'il était un peu tard pour tout reprendre de 0. De plus il était difficile en adoptant cette manière de ne pas «copier» un tel code. Nous avons donc choisi de garder le notre et ses défaults.
+
+
+
+
+
