@@ -1,0 +1,26 @@
+\select@language {french}
+\contentsline {chapter}{\numberline {1}Pr\IeC {\'e}sentation de DNS}{2}
+\contentsline {chapter}{\numberline {2}Travail effectu\IeC {\'e}}{3}
+\contentsline {section}{\numberline {2.1}Presentation du materiel utilis\IeC {\'e}}{3}
+\contentsline {section}{\numberline {2.2}Details des configurations effectu\IeC {\'e}es}{3}
+\contentsline {subsection}{\numberline {2.2.1}named.conf}{3}
+\contentsline {subsection}{\numberline {2.2.2}macguiver.conf}{3}
+\contentsline {subsection}{\numberline {2.2.3}macguiver.dns}{4}
+\contentsline {subsection}{\numberline {2.2.4}macguiver.rev}{4}
+\contentsline {subsection}{\numberline {2.2.5}resolv.conf}{5}
+\contentsline {section}{\numberline {2.3}Tests effectu\IeC {\'e}s}{5}
+\contentsline {chapter}{\numberline {3}Enregistrement DNS}{6}
+\contentsline {section}{\numberline {3.1}A quoi sert l'enregistrement du type A ?}{6}
+\contentsline {section}{\numberline {3.2}Trouver l'adresse IP de $berlioz.elysee.fr$}{6}
+\contentsline {section}{\numberline {3.3}Trouver le nom et l'adresse du serveur de nom de domaine $elysee.fr$.}{6}
+\contentsline {section}{\numberline {3.4}A quoi sert l'enregistrement du type NS ?}{7}
+\contentsline {section}{\numberline {3.5}Quelle est l'autorit\IeC {\'e} administrative de ce domaine ?}{7}
+\contentsline {section}{\numberline {3.6}A quoi sert l'enregistrement du type SOA ?}{7}
+\contentsline {section}{\numberline {3.7}Quel est l'alias de la machine?}{7}
+\contentsline {section}{\numberline {3.8}A quoi sert l'enregistrement du type CNAME ?}{8}
+\contentsline {section}{\numberline {3.9}Est-ce qu'une machine pourrait avoir plusieurs noms et plusieurs adresses IP ?}{8}
+\contentsline {section}{\numberline {3.10}Quel est le nom DNS associ\IeC {\'e} \IeC {\`a} l'adresse 193.51.208.13 ?}{8}
+\contentsline {section}{\numberline {3.11}A quoi sert l'enregistrement du type PTR ?}{8}
+\contentsline {section}{\numberline {3.12}Quel est le serveur de courrier du domaine inria.fr ?}{8}
+\contentsline {section}{\numberline {3.13}A quoi sert l'enregistrement du type MX ?}{8}
+\contentsline {section}{\numberline {3.14}Trouver les noms et adresses des serveurs de noms du domaine $columbia.edu$.}{9}

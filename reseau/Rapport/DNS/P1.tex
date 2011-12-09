@@ -1,9 +1,76 @@
 \chapter{Travail effectué}
 
 \section{Presentation du materiel utilisé}
-BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH 
+La création et la configuration du serveur DNS ont été faite dans la salle de réseau sur les ordinateurs détachés du réseau de l'université. L'adresse de notre machine était le 192.168.1.10
 \section{Details des configurations effectuées}
-BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH BLAH 
+Voici nos différents fichiers de configurations pour le DNS
+\subsection{named.conf}
+Pour named.conf seule la ligne suivante à été ajouté au fichier :
+\begin{verbatim}
+include "/etc/bind/macguiver.conf";
+\end{verbatim}
+\subsection{macguiver.conf}
+\begin{verbatim}
+// creation d'une zone macguiver.fr
+zone "macguiver.fr" {
+    type master;   
+    file "/etc/bind/macguiver.dns";
+    };
+
+// pour la resolution inverse
+zone "1.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/macguiver.rev";
+    };
+ \end{verbatim}
+ 
+ Ce fichier fourni les fichiers de paramètres du DNS ainsi que le fichier pour la résolution inverse.
+
+\subsection{macguiver.dns}
+\begin{verbatim}
+$TTL 3D
+@	IN	SOA	john.macguiver.fr. administrateur.macguiver.fr. (
+			20111118    ;
+			8H          ;
+			2H          ;
+			4W          ;
+			1D )        ;
+		NS	john.macguiver.fr.
+
+
+localhost	A	127.0.0.1
+john   A  192.168.1.10
+michael A 192.168.1.11
+\end{verbatim}
+
+Le fichier détail les paramètres du DNS tel que le serveur ou les noms associés à certains adresses.
+
+\subsection{macguiver.rev}
+\begin{verbatim}
+
+$TTL 3D
+@	IN	SOA	john.macguiver.fr. administrateur.macguiver.fr. (
+			20111118        ;
+			28800           ;
+			7200            ;
+			604800          ;   
+			86400)          ;
+		NS	macguiver.fr.
+
+10  PTR john.macguiver.fr.
+11 PTR michael.
+\end{verbatim}
+\subsection{resolv.conf}
+\begin{verbatim}
+nameserver 127.0.0.1
+nameserver 192.168.1.10
+nameserver 192.168.1.11
+\end{verbatim}
+On peut voir que notre machine pourra interroger deux serveurs DNS, celui de notre machine et celui de notre voisin.
+
+\section{Tests effectués}
+Nous avons donc demandé à notre voisin la machine 192.168.1.11 de configurer son fichier resolv.conf pour que nous soyons leurs serveur DNS référant. Une fois les modifications effectuées notre voisin a pu nous pinguer en faisant un "ping john" et elle a aussi pu se pinguer en faisant un "ping michael".
+Enfin nous avons pingué, par son nom, une machine définie par le DNS de notre voisin.
 
 \clearpage
 
