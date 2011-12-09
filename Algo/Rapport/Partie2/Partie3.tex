@@ -1,25 +1,22 @@
-\chapter{Analyse experimentale}
+\chapter{Analyse expérimentale}
 \section{Introduction}
 Tous nos tests sont effectués en respectant les démarches suivantes : 
 \begin{itemize}
 \item
-Les relevés temporels sont ceux de l'utilisation CPU. Dans un soucis de minimiser les facteurs faussant les relevés (impacts d'autres processus actifs), nous avons essayé d'avoir un minimun de processus actifs pendant les relevés.
+Les relevés temporels sont ceux de l'utilisation CPU. Dans un soucis de minimiser les facteurs faussant les relevés (impacts d'autres processus actifs), nous avons essayé d'avoir un minimum de processus actifs pendant les relevés.
 \item
-Chaques tests a été effectué 3 fois. Le resultat final étant la moyenne de ces trois tests.
+Chaque tests a été effectué 3 fois. Le résultat final étant la moyenne de ces trois tests.
 \item
-Les tests ont pour objectif de confronter nos raisonement lors de l'analyse théorique (cf : )
+Les tests ont pour objectif de confronter nos raisonnement lors de l'analyse théorique (cf : )
 
 \end{itemize}
-Le premier test consiste à étudier les temps d’exécution des deux méthodes selon le nombre de nœuds et la structure choisie. La densité est fixé à 0,5 soit $0.5*N^3$ arcs. Le paramètre A est fixé à 1 pour éviter les chemins absorbants et K est aussi fixé à 1
+Le premier test consiste à étudier les temps exécution des deux méthodes selon le nombre de nœuds et la structure choisie. La densité est fixé à 0,5 soit $0.5*N^3$ arcs. Le paramètre A est fixé à 1 pour éviter les chemins absorbants et K est aussi fixé à 1
 Le second test consiste à étudier les temps d'exécution de la méthode détour borné en faisant varier K. La structure est une liste, la densité fixé à 0,5. Les tests ont été réalisés sur différents nombre de nœuds.
 \section{Étude comparative}
 \subsection{Premier test}
-Pour le premier test (Annexe 1), le fait de fixer A à 1 n'est pas contraignant pour la complexité puisque le temps de calcul sera le même (ou du moins négligeable) pour toute valeur de A. Fixer la valeur de K est bien plus contraignant comme le montrera le second test mais cela permet de voir que, pour une borne minimale, le facteur exponentiel disparaît presque totalement (ce pourrait ce pendant ne pas être le cas, en particulier si tous les chemins ont une valeur proche du PCC.
-Pour le premier test nous devrions donc avoir un coût proche de celui de Bellman-Ford c'est à dire en O(A*N) soit d'après notre densité $O(N³)$ or l'on peut voir que lorsque nous multiplions par deux le nombre de nœuds, nous multiplions par dix le temps d'exécution. On peut supposer que cette évaluation est juste. On peut remarquer que les deux méthodes sont très proches et que leur coût provient essentiellement de Bellman-Ford. Enfin on peut observer une légère différence entre la structure en Liste et en Matrice, on peut supposer que cela provient du coût lors de l'appel de listeArcs. 
+Pour le premier test (Annexe 1), le fait de fixer A à 1 n'est pas contraignant pour la complexité puisque le temps de calcul sera le même (ou du moins négligeable) pour toute valeur de A. Fixer la valeur de K est bien plus contraignant comme le montrera le second test mais cela permet de voir que, pour une borne minimale, le facteur exponentiel disparaît presque totalement (ce pourrait ce pendant ne pas être le cas, en particulier si tous les chemins ont une valeur proche du PCC. Pour le premier test nous devrions donc avoir un coût proche de celui de Bellman-Ford c'est à dire en O(A*N) soit d'après notre densité $O(N³)$ or l'on peut voir que lorsque nous multiplions par deux le nombre de nœuds, nous multiplions par dix le temps d'exécution. On peut supposer que cette évaluation est juste. On peut remarquer que les deux méthodes sont très proches et que leurs coûts proviennent essentiellement de Bellman-Ford. Enfin on peut observer une légère différence entre la structure en Liste et en Matrice, on peut supposer que cela provient du coût lors de l'appel de listeArcs. 
 \subsection{Second test}
-Le second test (Annexe 2) fait clairement ressortir le facteur exponentiel de la méthode détour borné. Lorsque K augmente, l'algorithme va mettre plus de temps pour s'arrêter étant donné qu'il y aura nécessairement des chemins plus long qui ont été ignoré lors d'un parcours avec un K faible.
-Les tests ont été effectués en faisant varié le nombre de nœuds, bien que dispensable il mettent en évidence le facteur sus-nommé. Cependant le premier test effectué met en évidence que l'effet de K sur la complexité n'est pas continue et qu'à partir d'une valeur donné l'algorithme mettra toujours le même temps pour s'exécuter. 
-K joue donc un rôle d'amortisseur sur la complexité, celle-ci ne dépendant que du nombre de chemins.
+Le second test (Annexe 2) fait clairement ressortir le facteur exponentiel de la méthode détour borné. Lorsque K augmente, l'algorithme va mettre plus de temps pour s'arrêter étant donné que il y aura nécessairement des chemins plus long qui ont été ignorés lors d'un parcours avec un K faible. Les tests ont été effectués en faisant varié le nombre de nœuds, bien que dispensable il mettent en évidence le facteur sus-nommé. Cependant le premier test effectué met en évidence que l'effet de K sur la complexité n'est pas continue et que à partir d'une valeur donné l'algorithme mettra toujours le même temps pour s'exécuter. K joue donc un rôle d'amortisseur sur la complexité, celle-ci ne dépendant que du nombre de chemins.
 %– une analyse expérimentale de la complexité temporelle des algorithmes présentés. Cette étude com-
 %parera en particulier l’impact du choix de telle ou telle structure sur les méthodes implémentées.
 %Elle sera réalisée sur des cartes routières variant de quelques dizaines à plusieurs milliers de nœuds

@@ -2,25 +2,32 @@
 
 \renewcommand{\labelitemi}{$\bullet$}
 \section{Problème à résoudre}
-L'objectif de ce projet est de réaliser un Global Positioning System «amélioré». Sans entrer dans les détails, un GPS est réalisé à partir d'une modelisation sous forme de graphe orienté d'une carte où les posistions sont des noeuds et les routes sont des arcs. L'application d'algorithmes de plus courts chemins sur ces graphes permettent alors de répondre au problème concrét du calcul d'iténéraires. Cependant il est rare, dans la vie réelle, que ce type de problème admette une unique contrainte. Ici nous allons travailler sur des graphes plus complexes (voir figure ci-après) par leurs nombres de paramètres
+L'objectif de ce projet est de réaliser un Global Positioning System «amélioré». Sans entrer dans les détails, un GPS est réalisé à partir d'une modélisation sous forme de graphe orienté d'une carte où les positions sont des nœuds et les routes sont des arcs. L'application d'algorithmes de plus courts chemins sur ces graphes permettent alors de répondre au problème concret du calcul d'itinéraires. Cependant il est rare, dans la vie réelle, que ce type de problème admette une unique contrainte. Ici nous allons travailler sur des graphes plus complexes (voir figure ci-après) par leurs nombres de paramètres
+\newline
+\newline
+\newline
 \begin{figure}[!h] 
 \begin{center}
   \includegraphics[scale=0.40]{g.png}
 \end{center}
+\caption{Exemple de graphe étudié}
 \end{figure} 
+
+
+\clearpage
+
 
 L'idée de réaliser un GPS prenant aussi en compte l'aspect touristique d'un lieu ou d'une route donne les opportunités suivantes : 
 \begin{itemize}
 \item
-Une étude approfondie des algorithmes sur les graphes étudiés en cours pour choisir le plus adapté en fonction du problème et de la structure de donnée concrète.
-\clearpage
+Une étude approfondie des algorithmes sur les graphes étudiés en cours pour choisir le plus adapté en fonction du problème et de la structure de données concrète.
 \item
-Des manipulations plus complexes de ces algorithmes puisqu'ils prennent plusieurs (et non un seul) paramètres en compte.
+Des manipulations plus complexes de ces algorithmes puisque ils prennent plusieurs (et non un seul) paramètres en compte.
 \item
 Ces différents choix de combinaisons d'implémentations et d'algorithmes entraînes des calculs variés.
 \end{itemize}
 
-Tous ces aspects sont au coeur même du module Structures complexes et algorithmique. La première partie du projet se contentait d'étudier et d'implémenter des structures et des algorithmes complexes. Au terme de l'ultime partie, nous réalisons à partir de ces outils  théoriques une application concrète.
+Tous ces aspects sont au cœur même du module Structures complexes et algorithmique. La première partie du projet se contentait d'étudier et d'implémenter des structures et des algorithmes complexes. Au terme de l'ultime partie, nous réalisons à partir de ces outils  théoriques une application concrète de ces outils abstraits.
 
 \clearpage
 
@@ -31,9 +38,9 @@ Dans la continuité de la première partie du projet, nous avons conçu de nouve
 
 \begin{itemize}
 \item
-Ville.java : Composée d'un nom et d'une entier qualilté dénombrant le nombre d'étoiles
+Ville.java : Composée d'un nom et d'une entier qualité dénombrant le nombre d'étoiles
 \item
-Route.java : Héritant de la classe Arc.java, posède un plus une longueur  et d'une qualité tout comme Ville.java
+Route.java : Héritant de la classe Arc.java, possède un plus une longueur  et d'une qualité tout comme Ville.java
 \item
 GPS.java : Comporte les différentes méthodes demandées dans le sujet. Le constructeur prend en compte les données fournies par le parseur ainsi que celle saisie sur l'entrée standards par l'utilisateur
 \item
@@ -55,6 +62,6 @@ Le nom de la ville d'arrivée.
 \item 
 La valeur (K ou A) du paramètre en fonction de la méthode choisie.
 \end{itemize}
-L'itinéraire calculé sera alors affiché selon les consignes du sujet. Le programme se termine par la suite. Il faut relancer le programme un autre calcul?
+L'itinéraire calculé sera alors affiché selon les consignes du sujet. Le programme se termine par la suite. Il faut relancer le programme un autre calcul.
  
 

@@ -1,26 +1,24 @@
 \chapter{Algorithmes mis en oeuvre}
 
 
-\section{Algorithme de plus court chemin}
-Les deux methodes demandées pour le calul d'itinéaire (par agrégation et à détour borné), il est necessaire  d'employer un algorithme de plus court chemin. Notre choix de d'algorithme s'est orienté vers celui Bellman-Ford. Son avantage par rapport à celui de Dijkstra est qu'il est capable de détecter un circuit absorbant. Il peut de la sorte informer l'utilisateur l'echec de a recherche d'un itinéraire compromis selon ces paramètres. 
+\section{Algorithme de plus courts chemins}
+Les deux methodes demandées pour le calul d'itinéaire (par agrégation et à détour borné), il est necessaire  d'employer un algorithme de plus courts chemins. Notre choix de d'algorithme s'est orienté vers celui Bellman-Ford. Son avantage par rapport à celui de Dijkstra est qu'il est capable de détecter un circuit absorbant. Il peut de la sorte informer l'utilisateur l'echec de la recherche d'un itinéraire compromis selon les paramètres fournis. 
 
 
 
-\section{Methode Agrégation}
-L'objectif de cette methode est d'obtenir un plus court chemin avec une pondération particulière pour routes calculée au préalable.
-Il suffit donc d'appliquer un algorithme standard de parcours de graphe en fournissant toutes les pondérations de chaques routes et villes que l'on aura calculé au préalable. N Nous avons procédé de cette manière. Ainsi la fonction $get_agregat(Route route, double A)$ permet de donner l'agrégat d'une route. Elle est utilisée par  $public ArrayList<Double> agregation(double A)$ qui retourne un tableau de ces pondération indicé par l'id des routes. Ce tableau est ensuite fourni en paramètre à l'Algorithme de Bellman Ford. Celui ci pourra alors procéder au relâchement des arcs en fonctions de ces pondérations. Dans le cas ou une route améliorante est trouvé, celle ci est stockée dans une hash map à la clef de valeur id de la ville destination de cette route. A la fin de l'algorithme de Bellman-Ford  nous avons notre plus court chemin par rapport aux agrégations pré calculées dans cette hash map. Les opérations qui suivent servent uniquement à stocker ce chemin dans le bon sens dans une ArrayList. L'opération d'affichage a en effet du resultat sous cette forme pour le traiter.
+\section{Méthode Agrégation}
+L'objectif de cette méthode est d'obtenir un plus court chemin avec une pondération particulière pour routes calculée au préalable.
+Il suffit donc d'appliquer un algorithme standard de parcours de graphe en fournissant toutes les pondérations de chaque routes et villes que l'on aura calculé au préalable. N Nous avons procédé de cette manière. Ainsi la fonction $get_agregat(Route route, double A)$ permet de donner l'agrégat d'une route. Elle est utilisée par  $public HashMap<Integer, Double> agregation(double A)$ qui retourne un tableau de ces pondération indicé par l'id des routes. Ce tableau est ensuite fourni en paramètre à l'Algorithme de Bellman Ford. Celui ci pourra alors procéder au relâchement des arcs en fonctions de ces pondérations. Dans le cas ou une route améliorante est trouvé, celle ci est stockée dans une hash map à la clef de valeur id de la ville destination de cette route. A la fin de l'algorithme de Bellman-Ford  nous avons notre plus court chemin par rapport aux agrégations pré calculées dans cette hash map. Les opérations qui suivent servent uniquement à stocker ce chemin dans le bon sens dans une ArrayList. L'opération d'affichage a en effet du résultat sous cette forme pour le traiter.
 
 \clearpage
 \section{Détour Borné}
-L'algorithme du détour borné consiste à trouver le plus court chemin entre deux points puis obtenir la longueur de ce chemin. L'algorithme implémenté utilise donc la méthode de Bellman-Ford déjà implémentée pour trouver le plus court chemins. Cependant étant donné que la pondération sur les arcs correspond au distance entre les villes, on peut affirmer qu'il n'y aura pas de circuit absorbant ; dans ce cas Dijkstra aurait permis d'avoir une meilleure complexité pour la recherche du PCC.
-Une fois le PCC trouvé, l'algorithme va parcourir presque tous les chemins possibles à partir du point d'origine et retourné une chemin borné par la longueur du PCC et un K >= 1. Pour l'implémenter nous avons utiliser une méthode itérative sur chaque arc. Ainsi lorsque l'on arrive sur un nœud le programme s’exécute comme suit :
+L'algorithme du détour borné consiste à trouver le plus court chemin entre deux points puis obtenir la longueur de ce chemin. L'algorithme implémenté utilise donc la méthode de Bellman-Ford déjà implémentée pour trouver le plus court chemin. Cependant étant donné que la pondération sur les arcs correspond aux distances entre les villes, on peut affirmer que il n'y aura pas de circuit absorbant. Dans ce cas Dijkstra aurait permis d'avoir une meilleure complexité pour la recherche du PCC.
+Une fois le PCC trouvé, l'algorithme va parcourir presque tous les chemins possibles à partir du point d'origine et retourner un chemin borné par la longueur du PCC et un K >= 1. Pour l'implémenter nous avons utilisé une méthode itérative sur chaque arc. Ainsi lorsque l'on arrive sur un nœud le programme s'exécute comme suit:
 \begin{itemize}
 \item
-Il vérifie s'il a atteint le nœud d'arrivée. Si oui il regarde s'il a une meilleure qualité que celui déjà stocké et le stocke le cas échéant.\item
-Le choix d'implémentation (l la liste d'adjacence et m pour la matrice d'adjacence).
+Il vérifie s'il a atteint le nœud d'arrivée. Si oui il regarde s'il a une meilleure qualité que celui déjà stocké et le stocke le cas échéant.
 \item
-Si le nœud n'est pas celui d'arrivée, il cherche tous les arcs sortants dont la longueur ajoutée à la longueur déjà parcouru ne dépasse pas la borne fixée et vérifie que le nœud d'arrivée n'a pas été encore parcouru. Le algorithme s'appelle sur chaque arc valide en grisant au préalable le nœud courant et en ajoutant l'arc au chemin parcouru (implémenté en pile). Une fois que la méthode sur les arcs se terminent toutes, l'algorithme remet à blanc le nœud courant et ôte l'arc du chemin parcouru.\item
-Le nom de la ville d'arrivée.
+Si le nœud n'est pas celui d'arrivée, il cherche tous les arcs sortants dont la longueur ajoutée à la longueur déjà parcourue ne dépasse pas la borne fixée et vérifie que le nœud d'arrivée n'a pas été encore parcouru. L'algorithme s'appelle sur chaque arc valide en grisant au préalable le nœud courant et en ajoutant l'arc au chemin parcouru (implémenté en pile). Une fois que la méthode sur les arcs se terminent toutes, l'algorithme remet à blanc le nœud courant et ôte l'arc du chemin parcouru.
 \end{itemize}
 
 
