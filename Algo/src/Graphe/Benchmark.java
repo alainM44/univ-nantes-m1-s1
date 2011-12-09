@@ -36,7 +36,7 @@ public class Benchmark
 		System.out.println("===LISTE DES ARCS===");
 
 		mili = System.currentTimeMillis();
-		ArrayList<Arc> listeArcs = graphe.listeArcs();
+		graphe.listeArcs();
 		mili = System.currentTimeMillis() - mili;
 		System.out.println("temps = " + mili);
 
@@ -82,14 +82,14 @@ public class Benchmark
 		
 		System.out.println("===ARCS SORTANTS===");
 		mili = System.currentTimeMillis();
-		listeArcs = graphe.listerArcsSortants(0);
+		graphe.listerArcsSortants(0);
 		mili = System.currentTimeMillis() - mili;
 //		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);
 		
 		System.out.println("===ARCS ENTRANTS===");
 		mili = System.currentTimeMillis();
-		listeArcs = graphe.listerArcsEntrants(n-1);
+		graphe.listerArcsEntrants(n-1);
 		mili = System.currentTimeMillis() - mili;
 //		System.out.println(listeArcs);
 		System.out.println("temps = " + mili);

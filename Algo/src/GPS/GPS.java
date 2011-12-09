@@ -144,9 +144,7 @@ public class GPS
 
 			}
 		}
-		Set<Integer> PCCkeys;
-		PCCkeys = pi.keySet();
-		PCCkeys = r.keySet();
+
 		Integer ville = graph.NombreNoeuds() - 1;
 		while (ville != 0)
 		{
@@ -178,7 +176,6 @@ public class GPS
 		ArrayList<Route> result = new ArrayList<Route>();
 		ArrayList<Route> PCC = new ArrayList<Route>();
 		ArrayList<Integer> listeNoeud = graph.listeNoeuds();
-		Set<Integer> PCCkeys;
 		HashMap<Integer, Integer> pi = new HashMap<Integer, Integer>();
 		HashMap<Integer, Double> d = new HashMap<Integer, Double>();
 		// Pour stocker la route du PCC permettant d'acceder au noeud référencé
@@ -228,8 +225,6 @@ public class GPS
 			}
 		}
 
-		PCCkeys = pi.keySet();
-		PCCkeys = r.keySet();
 		Integer ville;
 		ville = ville_a;
 		while (ville != ville_dep)
@@ -432,7 +427,6 @@ public class GPS
 		return detourBorneIter(cheminCourant, meilleurChemin, tabCouleurs,
 				bornePCC, depart, arrivee, 0, 0, qualiteMax);
 	}
-
 
 	private LinkedList<Route> detourBorneIter(LinkedList<Route> cheminCourant,
 			LinkedList<Route> meilleurChemin,

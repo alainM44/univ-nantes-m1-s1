@@ -15,7 +15,7 @@ public class Bench
 		String villea = "20";
 		File fich = new File("/comptes/E074862X/workspace/Algo/test/test0.dot");
 		monGPS = new GPS(fich, "l");
-//		ag(1, villea);
+		// ag(1, villea);
 		db(8, villea);
 
 	}
