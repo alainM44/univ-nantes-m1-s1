@@ -19,7 +19,7 @@ public interface GrapheOriente
 	public void supprimerN(int n);
 
 	/**
-	 * Ajoute l'arete entre n1 et n2 au graphe et retourne l'id de cette
+	 * Ajoute l'arete entre n1 et n2 au gr  aphe et retourne l'id de cette
 	 * arête
 	 * 
 	 * @param n1 : la valeur du Noeud de départ
